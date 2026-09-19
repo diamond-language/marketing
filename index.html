@@ -129,27 +129,22 @@
   <span class="tok-kw">def</span> <span class="tok-fn">value</span>() = <span class="tok-ivar">@value</span>
 <span class="tok-kw">end</span>
 
-values = [
-  Counter.new(<span class="tok-num">3</span>),
-  Counter.new(<span class="tok-num">1</span>),
-  Counter.new(<span class="tok-num">2</span>)
-]
-values.<span class="tok-fn">sort_by</span>() <span class="tok-kw">do</span> |counter|
-  counter.value()
-<span class="tok-kw">end</span>.<span class="tok-fn">map</span>() <span class="tok-kw">do</span> |counter|
-  counter.value()
-<span class="tok-kw">end</span>
-<span class="tok-comment"># =&gt; [1, 2, 3]</span></code></pre>
+Counter.<span class="tok-fn">new</span>(<span class="tok-num">3</span>) &gt; Counter.<span class="tok-fn">new</span>(<span class="tok-num">1</span>)
+<span class="tok-comment"># =&gt; true</span></code></pre>
 
             <pre class="hero-slide" data-hero-carousel-slide data-filename="point.di"><code><span class="tok-kw">struct</span> Point(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
 <span class="tok-kw">end</span>
 
-p = Point.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>)
-p.to_s()
+p1 = Point.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>)
+p2 = Point.<span class="tok-fn">new</span>(x: <span class="tok-num">1</span>, y: <span class="tok-num">2</span>)
+p1 == p2
+<span class="tok-comment"># =&gt; true</span>
+p1.to_s()
 <span class="tok-comment"># =&gt; "Point(x: 1, y: 2)"</span>
 
-<span class="tok-comment"># initialize/reader/==/to_s,</span>
-<span class="tok-comment"># generated -- one line</span></code></pre>
+<span class="tok-kw">def</span> <span class="tok-fn">choose</span>(v: Point | <span class="tok-const">Nil</span>) -&gt; Point | <span class="tok-const">Nil</span>
+  v
+<span class="tok-kw">end</span></code></pre>
 
             <pre class="hero-slide" data-hero-carousel-slide data-filename="classify.di"><code><span class="tok-kw">def</span> <span class="tok-fn">classify</span>(n: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span>
   <span class="tok-kw">case</span> n
@@ -160,24 +155,39 @@ p.to_s()
   <span class="tok-kw">end</span>
 <span class="tok-kw">end</span>
 
-<span class="tok-comment"># every case checked at compile</span>
-<span class="tok-comment"># time -- a gap is a compile error</span></code></pre>
+classify(<span class="tok-num">3</span>)
+<span class="tok-comment"># =&gt; "small"</span>
 
-            <pre class="hero-slide" data-hero-carousel-slide data-filename="workers.di"><code><span class="tok-comment"># real OS threads, isolated heaps</span>
+<span class="tok-comment"># every case checked at</span>
+<span class="tok-comment"># compile time -- exhaustive</span></code></pre>
+
+            <pre class="hero-slide" data-hero-carousel-slide data-filename="workers.di"><code><span class="tok-comment"># real OS threads, isolated heaps --</span>
+<span class="tok-comment"># values copy across the boundary</span>
 ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
 worker = Thread.<span class="tok-fn">new</span>(producer, ch)
 item = ch.receive()
 worker.join()
 
-<span class="tok-comment"># values copy across the boundary</span>
-<span class="tok-comment"># -- no locks, no shared state</span></code></pre>
+<span class="tok-comment"># restart-on-crash, one_for_one</span>
+sup = Supervisor.<span class="tok-fn">new</span>()
+sup.add_child(fetch_loop, url)
 
-            <pre class="hero-slide" data-hero-carousel-slide data-filename="shell"><code><span class="tok-comment"># denies fs, network, subprocess</span>
-<span class="tok-comment"># -- checked at every opcode</span>
+<span class="tok-comment"># a crash there never touches</span>
+<span class="tok-comment"># this thread, or any other</span></code></pre>
+
+            <pre class="hero-slide" data-hero-carousel-slide data-filename="shell"><code><span class="tok-comment"># denies filesystem, network, and</span>
+<span class="tok-comment"># subprocess access outright</span>
 diamond --sandbox untrusted.di
 
 <span class="tok-comment"># equivalently:</span>
-DIAMOND_SANDBOX=<span class="tok-num">1</span> diamond untrusted.di</code></pre>
+DIAMOND_SANDBOX=<span class="tok-num">1</span> diamond app.di
+
+<span class="tok-comment"># allow just what you need back:</span>
+DIAMOND_SANDBOX_ALLOW=network \
+  diamond --sandbox proxy.di
+
+<span class="tok-comment"># checked at every native opcode,</span>
+<span class="tok-comment"># not bolted on with a wrapper</span></code></pre>
           </div>
           <div class="hero-carousel-dots" data-hero-carousel-dots>
             <button type="button" class="hero-carousel-dot is-active" data-hero-carousel-dot aria-label="Classes &amp; mixins"></button>
