@@ -232,8 +232,8 @@ img, svg {
 
 .beta-ribbon {
   position: fixed;
-  top: -36px;
-  right: -36px;
+  top: 30px;
+  right: 30px;
   z-index: 150;
   transform: rotate(45deg);
   background: var(--gradient);
@@ -244,7 +244,7 @@ img, svg {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: center;
-  padding: 10px 70px;
+  padding: 7px 64px;
   box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.55);
   pointer-events: none;
 }
@@ -962,10 +962,10 @@ section {
     padding: 56px 0 56px;
   }
   .beta-ribbon {
-    top: -30px;
-    right: -30px;
+    top: 22px;
+    right: 22px;
     font-size: 12px;
-    padding: 8px 58px;
+    padding: 6px 56px;
   }
   .release-banner {
     flex-direction: column;
