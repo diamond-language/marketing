@@ -258,7 +258,7 @@ img, svg {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 56px;
-  align-items: center;
+  align-items: start;
 }
 
 .eyebrow {
@@ -368,6 +368,15 @@ img, svg {
 .code-window .filename {
   color: var(--text-dim);
   font-size: 13.5px;
+}
+
+.hero-carousel {
+  /* .hero-inner is align-items: start so slide-height changes don't
+     shift the card vertically -- this pushes the card's own top down
+     to line up with the H1 rather than the eyebrow pill above it
+     (eyebrow: 15px * body's 1.6 line-height + 12px padding + 22px
+     margin-bottom = 58px). */
+  margin-top: 58px;
 }
 
 .hero-carousel .filename {
