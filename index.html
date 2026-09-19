@@ -203,16 +203,17 @@ values.<span class="tok-fn">sort_by</span>() <span class="tok-kw">do</span> |cou
     <div class="container">
       <div class="section-head">
         <span class="eyebrow"><span class="dot"></span> See it in action</span>
-        <h2>The same language, four angles</h2>
-        <p>Classes and mixins, generated structs, exhaustive pattern matching, and
-          share-nothing concurrency — all checked at compile time where it counts.</p>
+        <h2>The same language, five angles</h2>
+        <p>Classes and mixins, generated structs, exhaustive pattern matching, real OS
+          threads and cooperative fibers, and a sandboxed runtime.</p>
       </div>
 
       <div class="tabs" data-group="code">
       <div class="tabs-nav" role="tablist" aria-label="Code examples">
         <button class="tab-btn active" data-tab="structs" role="tab" aria-selected="true">Structs &amp; types</button>
         <button class="tab-btn" data-tab="pattern" role="tab" aria-selected="false">Pattern matching</button>
-        <button class="tab-btn" data-tab="concurrency" role="tab" aria-selected="false">Concurrency</button>
+        <button class="tab-btn" data-tab="concurrency" role="tab" aria-selected="false">Threads &amp; channels</button>
+        <button class="tab-btn" data-tab="fibers" role="tab" aria-selected="false">Fibers</button>
         <button class="tab-btn" data-tab="sandbox" role="tab" aria-selected="false">Sandbox</button>
       </div>
 
@@ -266,7 +267,16 @@ p1.to_s()              <span class="tok-comment"># "Point(x: 1, y: 2)"</span>
       <div class="tab-panel" data-panel="concurrency">
         <div class="code-window">
           <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">workers.di</span></div>
-          <pre><code><span class="tok-comment"># Channel: an ongoing mailbox between isolated-heap threads</span>
+          <pre><code><span class="tok-comment"># Thread: real OS threads, each with its own isolated</span>
+<span class="tok-comment"># heap -- runs in parallel across CPU cores</span>
+<span class="tok-kw">def</span> <span class="tok-fn">square</span>(n) = n * n
+
+left = Thread.<span class="tok-fn">new</span>(square, <span class="tok-num">6</span>)
+right = Thread.<span class="tok-fn">new</span>(square, <span class="tok-num">7</span>)
+left.join()   <span class="tok-comment"># =&gt; 36</span>
+right.join()  <span class="tok-comment"># =&gt; 49</span>
+
+<span class="tok-comment"># Channel: an ongoing mailbox between isolated-heap threads</span>
 ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
 worker = Thread.<span class="tok-fn">new</span>(producer, ch)
 item = ch.receive()
@@ -280,6 +290,30 @@ sup.add_child(fetch_loop, <span class="tok-str">"https://example.com/feed"</span
         </div>
         <p class="tab-caption">Every value crossing a thread boundary is copied, never shared —
           no locks, no data races by construction.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="fibers">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">counter_fiber.di</span></div>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">make_counter</span>()
+  <span class="tok-kw">def</span> <span class="tok-fn">counter</span>()
+    i = <span class="tok-num">0</span>
+    loop <span class="tok-kw">do</span>
+      increment = Fiber.<span class="tok-fn">yield</span>(i)
+      i = i + increment
+    <span class="tok-kw">end</span>
+  <span class="tok-kw">end</span>
+  counter
+<span class="tok-kw">end</span>
+
+counter = Fiber.<span class="tok-fn">new</span>(make_counter())
+counter.resume(<span class="tok-num">0</span>)     <span class="tok-comment"># =&gt; 0</span>
+counter.resume(<span class="tok-num">10</span>)    <span class="tok-comment"># =&gt; 10</span>
+counter.resume(<span class="tok-num">5</span>)     <span class="tok-comment"># =&gt; 15</span></code></pre>
+        </div>
+        <p class="tab-caption">Cooperative concurrency within a single OS thread — a fiber runs
+          until it finishes or yields, never preempted in between. Reach for <code>Thread</code>
+          instead when work should actually run in parallel across cores.</p>
       </div>
 
       <div class="tab-panel" data-panel="sandbox">
@@ -469,6 +503,10 @@ DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
         </a>
         <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/threads.md" target="_blank" rel="noopener">
           <span><span class="label">Threads</span><span class="sub">Isolated heaps, Channel, Supervisor</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/fibers.md" target="_blank" rel="noopener">
+          <span><span class="label">Fibers</span><span class="sub">Cooperative concurrency, generators</span></span>
           <span class="arrow" aria-hidden="true">&rarr;</span>
         </a>
         <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/debugging.md" target="_blank" rel="noopener">
