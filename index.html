@@ -52,6 +52,7 @@
   <!-- ---------------- Hero ---------------- -->
   <section class="hero" id="top">
     <div class="hero-glow" aria-hidden="true"></div>
+    <div class="beta-ribbon" aria-hidden="true">Beta</div>
     <svg class="hero-facets" viewBox="0 0 1200 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs>
         <linearGradient id="facetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -72,7 +73,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> A research language, out in the open</span>
+          <span class="eyebrow"><span class="dot"></span> Open source, ready to install</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps the syntax, blocks, and object model that make Ruby comfortable to
             write — then adds gradual, checked static types and compiles it all to a
@@ -523,11 +524,34 @@ DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
     </div>
   </section>
 
+  <!-- ---------------- Release ---------------- -->
+  <section id="release">
+    <div class="container">
+      <div class="release-banner">
+        <div class="release-badge">v0.6.0</div>
+        <div class="release-body">
+          <h2>Just shipped</h2>
+          <ul class="release-list">
+            <li>The JIT now compiles dynamic dispatch — <code>self.method()</code>, a typed
+              parameter's <code>other.method()</code>, and <code>.new().method()</code> chains —
+              up to ~38% faster in hot loops.</li>
+            <li>Generic arithmetic JIT-compiles too, not just the <code>Int</code> fast path —
+              ~2.1x faster on dynamic int arithmetic, ~1.5x on hash-heavy code.</li>
+            <li>The Language Server can format code now (<code>textDocument/formatting</code>) —
+              validated against all 309 real <code>.di</code> files in this repo, zero
+              bailouts.</li>
+          </ul>
+          <a class="release-link" href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ---------------- CTA ---------------- -->
   <section>
     <div class="container">
       <div class="cta-banner">
-        <h2>Diamond is a research language, in the open</h2>
+        <h2>It's all on GitHub</h2>
         <p>The source, the design docs, and the roadmap all live on GitHub. Clone it, build it,
           break it.</p>
         <div class="hero-ctas">
