@@ -230,25 +230,6 @@ img, svg {
   pointer-events: none;
 }
 
-.beta-ribbon {
-  position: fixed;
-  top: 30px;
-  right: 30px;
-  z-index: 150;
-  transform: rotate(45deg);
-  background: var(--gradient);
-  color: var(--text);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-align: center;
-  padding: 7px 64px;
-  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.55);
-  pointer-events: none;
-}
-
 .hero .container {
   position: relative;
   z-index: 1;
@@ -960,12 +941,6 @@ section {
   }
   .hero {
     padding: 56px 0 56px;
-  }
-  .beta-ribbon {
-    top: 22px;
-    right: 22px;
-    font-size: 12px;
-    padding: 6px 56px;
   }
   .release-banner {
     flex-direction: column;
