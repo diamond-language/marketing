@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diamond — a compiled, Ruby-inspired language with real types</title>
+<meta name="description" content="Diamond is a Ruby-inspired language with gradual, checked static typing, compiled to a custom register-bytecode VM. Familiar syntax, real types, no shared mutable state.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="#top">
+      <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <defs>
+          <linearGradient id="logoGradHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4f46e5"/>
+            <stop offset="55%" stop-color="#2563eb"/>
+            <stop offset="100%" stop-color="#22d3ee"/>
+          </linearGradient>
+        </defs>
+        <path d="M11 5 L21 5 L28 13 L16 28 L4 13 Z" fill="url(#logoGradHeader)"/>
+        <path d="M11 5 L16 13 M21 5 L16 13 M4 13 L28 13 M16 13 L16 28" stroke="#090c14" stroke-width="1" stroke-opacity="0.32" stroke-linecap="round"/>
+        <path d="M11 5 L21 5" stroke="#fff" stroke-width="1" stroke-opacity="0.4" stroke-linecap="round"/>
+      </svg>
+      Diamond
+    </a>
+    <nav class="nav-links" id="nav-links">
+      <a href="#features">Features</a>
+      <a href="#code">Code</a>
+      <a href="#install">Install</a>
+      <a href="#docs">Docs</a>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="https://github.com/diamond-language/diamond" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-primary btn-sm" href="#install">Get started</a>
+      </div>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4.5H16M2 9H16M2 13.5H16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ---------------- Hero ---------------- -->
+  <section class="hero" id="top">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <svg class="hero-facets" viewBox="0 0 1200 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="facetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#4f46e5"/>
+          <stop offset="100%" stop-color="#22d3ee"/>
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke="url(#facetGrad)" stroke-width="1" opacity="0.35">
+        <polygon points="980,40 1120,140 1040,280 900,220"/>
+        <polygon points="1040,280 1120,140 1200,220 1160,360"/>
+        <polygon points="900,220 1040,280 980,400 840,340"/>
+        <polygon points="1040,280 1160,360 1080,460 980,400"/>
+        <polygon points="980,40 900,220 780,120 840,10"/>
+        <line x1="980" y1="40" x2="1040" y2="280"/>
+        <line x1="900" y1="220" x2="980" y2="400"/>
+      </g>
+    </svg>
+    <div class="container">
+      <div class="hero-inner">
+        <div>
+          <span class="eyebrow"><span class="dot"></span> A research language, out in the open</span>
+          <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
+          <p class="lead">Diamond keeps the syntax, blocks, and object model that make Ruby comfortable to
+            write — then adds gradual, checked static types and compiles it all to a
+            register-bytecode VM with inline caches and a JIT, instead of walking a tree.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="#install">Get started</a>
+            <a class="btn btn-ghost" href="https://github.com/diamond-language/diamond" target="_blank" rel="noopener">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+              View on GitHub
+            </a>
+          </div>
+          <div class="hero-meta">
+            <span><strong>MIT</strong> licensed</span>
+            <span><strong>C23</strong> VM core</span>
+            <span>Register bytecode <strong>+ JIT</strong></span>
+          </div>
+        </div>
+
+        <div class="code-window">
+          <div class="titlebar">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <span class="filename">counter.di</span>
+          </div>
+          <pre><code><span class="tok-kw">class</span> Counter
+  <span class="tok-kw">include</span> <span class="tok-const">Comparable</span>
+
+  <span class="tok-kw">def</span> <span class="tok-fn">initialize</span>(value: <span class="tok-const">Int</span>)
+    <span class="tok-ivar">@value</span> = value
+  <span class="tok-kw">end</span>
+
+  <span class="tok-kw">def</span> <span class="tok-fn">&lt;=&gt;</span>(other: Counter) = <span class="tok-ivar">@value</span> &lt;=&gt; other.value()
+  <span class="tok-kw">def</span> <span class="tok-fn">value</span>() = <span class="tok-ivar">@value</span>
+<span class="tok-kw">end</span>
+
+values = [Counter.new(<span class="tok-num">3</span>), Counter.new(<span class="tok-num">1</span>), Counter.new(<span class="tok-num">2</span>)]
+values.<span class="tok-fn">sort_by</span>() <span class="tok-kw">do</span> |counter|
+  counter.value()
+<span class="tok-kw">end</span>.<span class="tok-fn">map</span>() <span class="tok-kw">do</span> |counter|
+  counter.value()
+<span class="tok-kw">end</span>
+<span class="tok-comment"># =&gt; [1, 2, 3]</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ---------------- Features ---------------- -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><span class="dot"></span> Where it actually differs</span>
+        <h2>Familiar enough to skim, strict enough to trust</h2>
+        <p>Diamond borrows Ruby's object-model ideas — it isn't a compatibility project. Matching
+          Ruby's standard library or gem ecosystem is explicitly not a goal.</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 4L1 9L4 14M14 4L17 9L14 14M11 2L7 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Every call needs parentheses</h3>
+          <p><code>puts("x")</code>, not <code>puts "x"</code>; <code>Foo.new()</code>, not
+            <code>Foo.new</code>. No bare-call form, no ambiguity about what's being invoked.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 14V4M3 4L7 8M3 4L-1 8" transform="translate(1)" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 3h6M9 9h6M9 15h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Types are optional, but real</h3>
+          <p>Annotations, union types with nil narrowing, generics, and structural interfaces
+            (no <code>implements</code> — any matching class satisfies one) are checked at
+            compile time, not just documented.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 9H12M9 6V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Compiled, not just interpreted</h3>
+          <p>A Pratt compiler emits register bytecode for a VM with inline caches, object shapes,
+            and quickening. <code>diamond build</code> produces a standalone native executable —
+            no interpreter needed at run time.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="4" cy="4" r="2.2" stroke="currentColor" stroke-width="1.5"/><circle cx="14" cy="4" r="2.2" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="14" r="2.2" stroke="currentColor" stroke-width="1.5"/><path d="M5.8 5.2L7.5 12.2M12.2 5.2L10.5 12.2" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <h3>No shared mutable state</h3>
+          <p>Threads use isolated heaps; values copy across boundaries. A <code>Channel</code>
+            gives threads an ongoing mailbox, and a <code>Supervisor</code> restarts a crashed
+            worker automatically — Erlang's <code>one_for_one</code>, not exception handling.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L3 5v4c0 4 2.7 6.2 6 7 3.3-.8 6-3 6-7V5L9 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Sandboxing built into the language</h3>
+          <p><code>diamond --sandbox</code> denies filesystem, network, and subprocess access
+            for running untrusted code — checked at each opcode, not bolted on with a wrapper.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 13L13 3M13 3H7M13 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>No general <code>eval</code></h3>
+          <p><code>ClassName.compile_method</code> compiles a capture-free method body from a
+            source string — there's no arbitrary code evaluation in the calling scope.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------- Code tabs ---------------- -->
+  <section id="code">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><span class="dot"></span> See it in action</span>
+        <h2>The same language, four angles</h2>
+        <p>Classes and mixins, generated structs, exhaustive pattern matching, and
+          share-nothing concurrency — all checked at compile time where it counts.</p>
+      </div>
+
+      <div class="tabs" data-group="code">
+      <div class="tabs-nav" role="tablist" aria-label="Code examples">
+        <button class="tab-btn active" data-tab="structs" role="tab" aria-selected="true">Structs &amp; types</button>
+        <button class="tab-btn" data-tab="pattern" role="tab" aria-selected="false">Pattern matching</button>
+        <button class="tab-btn" data-tab="concurrency" role="tab" aria-selected="false">Concurrency</button>
+        <button class="tab-btn" data-tab="sandbox" role="tab" aria-selected="false">Sandbox</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="structs">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">point.di</span></div>
+          <pre><code><span class="tok-kw">struct</span> Point(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
+<span class="tok-kw">end</span>
+
+p1 = Point.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>)
+p2 = Point.<span class="tok-fn">new</span>(x: <span class="tok-num">1</span>, y: <span class="tok-num">2</span>)
+p1 == p2               <span class="tok-comment"># true</span>
+p1.to_s()              <span class="tok-comment"># "Point(x: 1, y: 2)"</span>
+
+<span class="tok-comment"># initialize/readers/==/to_s are generated -- gradual</span>
+<span class="tok-comment"># types and nil narrowing work the same as anywhere else</span>
+<span class="tok-kw">def</span> <span class="tok-fn">choose</span>(flag: <span class="tok-const">Bool</span>, value: Point | <span class="tok-const">Nil</span>) -&gt; Point | <span class="tok-const">Nil</span>
+  <span class="tok-kw">if</span> flag
+    value
+  <span class="tok-kw">else</span>
+    <span class="tok-const">nil</span>
+  <span class="tok-kw">end</span>
+<span class="tok-kw">end</span></code></pre>
+        </div>
+        <p class="tab-caption"><code>struct Name(field: Type, ...) ... end</code> generates
+          <code>initialize</code>, readers, <code>==</code>, and <code>to_s</code> — and still
+          composes with <code>include</code>, hand-written methods, and union types.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="pattern">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">classify.di</span></div>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">classify</span>(value: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span>
+  <span class="tok-kw">case</span> value
+  <span class="tok-kw">when</span> <span class="tok-num">0</span>
+    <span class="tok-str">"zero"</span>
+  <span class="tok-kw">when</span> <span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>
+    <span class="tok-str">"small"</span>
+  <span class="tok-kw">when</span> <span class="tok-num">4</span>..<span class="tok-num">10</span>
+    <span class="tok-str">"medium"</span>
+  <span class="tok-kw">else</span>
+    <span class="tok-str">"large"</span>
+  <span class="tok-kw">end</span>
+<span class="tok-kw">end</span></code></pre>
+        </div>
+        <p class="tab-caption">Matching over a union or a sealed class hierarchy is checked for
+          exhaustiveness at compile time — an uncovered case is a compile error, not a
+          runtime surprise.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="concurrency">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">workers.di</span></div>
+          <pre><code><span class="tok-comment"># Channel: an ongoing mailbox between isolated-heap threads</span>
+ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
+worker = Thread.<span class="tok-fn">new</span>(producer, ch)
+item = ch.receive()
+worker.join()
+
+<span class="tok-comment"># Supervisor: restart-on-crash, Erlang's one_for_one</span>
+sup = Supervisor.<span class="tok-fn">new</span>()
+sup.add_child(fetch_loop, <span class="tok-str">"https://example.com/feed"</span>)
+<span class="tok-comment"># a raise in fetch_loop restarts just that worker --</span>
+<span class="tok-comment"># siblings, and everything they hold, are untouched</span></code></pre>
+        </div>
+        <p class="tab-caption">Every value crossing a thread boundary is copied, never shared —
+          no locks, no data races by construction.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="sandbox">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">shell</span></div>
+          <pre><code><span class="tok-comment"># denies filesystem, network, and subprocess access --</span>
+<span class="tok-comment"># checked at every native opcode, applies to anything</span>
+<span class="tok-comment"># the program spawns (Thread, Supervisor) too</span>
+diamond --sandbox untrusted.di
+
+<span class="tok-comment"># equivalently:</span>
+DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
+        </div>
+        <p class="tab-caption">A real sandbox mode for running untrusted code, not a wrapper
+          script around the interpreter.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ---------------- Install ---------------- -->
+  <section id="install">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><span class="dot"></span> Install</span>
+        <h2>Build it, run it, ship it</h2>
+        <p>Diamond compiles from source today. Bytecode is cached automatically between runs,
+          and <code>diamond build</code> produces a self-contained native binary when you're
+          ready to ship. Pick your platform to get started.</p>
+      </div>
+
+      <div class="tabs" data-group="install">
+        <div class="tabs-nav" role="tablist" aria-label="Supported platforms">
+          <button class="tab-btn active" data-tab="ubuntu" role="tab" aria-selected="true">Ubuntu / Debian</button>
+          <button class="tab-btn" data-tab="macos" role="tab" aria-selected="false">macOS</button>
+          <button class="tab-btn" data-tab="fedora" role="tab" aria-selected="false">Fedora</button>
+          <button class="tab-btn" data-tab="alpine" role="tab" aria-selected="false">Alpine</button>
+          <button class="tab-btn" data-tab="freebsd" role="tab" aria-selected="false">FreeBSD</button>
+        </div>
+
+        <div class="tab-panel active" data-panel="ubuntu">
+          <div class="terminal-window">
+            <div class="titlebar">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <span class="filename">Ubuntu / Debian</span>
+              <button class="copy-btn" type="button" data-copy-target="term-ubuntu">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span class="copy-label">Copy</span>
+              </button>
+            </div>
+            <div class="terminal" id="term-ubuntu">
+              <div class="line comment"># Install system dependencies</div>
+              <div class="line">sudo apt install gcc libssl-dev libsqlite3-dev libpq-dev \</div>
+              <div class="line">  libmariadb-dev libcrypt-dev zlib1g-dev</div>
+              <div class="line comment gap"># Build Diamond</div>
+              <div class="line">make</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="macos">
+          <div class="terminal-window">
+            <div class="titlebar">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <span class="filename">macOS</span>
+              <button class="copy-btn" type="button" data-copy-target="term-macos">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span class="copy-label">Copy</span>
+              </button>
+            </div>
+            <div class="terminal" id="term-macos">
+              <div class="line comment"># Install system dependencies (Clang only -- no system GCC)</div>
+              <div class="line">brew install openssl@3 sqlite postgresql@16 mariadb-connector-c</div>
+              <div class="line comment gap"># Build Diamond</div>
+              <div class="line">make</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="fedora">
+          <div class="terminal-window">
+            <div class="titlebar">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <span class="filename">Fedora</span>
+              <button class="copy-btn" type="button" data-copy-target="term-fedora">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span class="copy-label">Copy</span>
+              </button>
+            </div>
+            <div class="terminal" id="term-fedora">
+              <div class="line comment"># Install system dependencies</div>
+              <div class="line">sudo dnf install gcc openssl-devel sqlite-devel libpq-devel \</div>
+              <div class="line">  mariadb-connector-c-devel libxcrypt-devel zlib-devel</div>
+              <div class="line comment gap"># Build Diamond</div>
+              <div class="line">make</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="alpine">
+          <div class="terminal-window">
+            <div class="titlebar">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <span class="filename">Alpine</span>
+              <button class="copy-btn" type="button" data-copy-target="term-alpine">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span class="copy-label">Copy</span>
+              </button>
+            </div>
+            <div class="terminal" id="term-alpine">
+              <div class="line comment"># Install system dependencies (musl -- also needs libucontext)</div>
+              <div class="line">apk add gcc musl-dev openssl-dev sqlite-dev libpq-dev \</div>
+              <div class="line">  mariadb-connector-c-dev zlib-dev libucontext libucontext-dev</div>
+              <div class="line comment gap"># Build Diamond</div>
+              <div class="line">make</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="freebsd">
+          <div class="terminal-window">
+            <div class="titlebar">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <span class="filename">FreeBSD</span>
+              <button class="copy-btn" type="button" data-copy-target="term-freebsd">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span class="copy-label">Copy</span>
+              </button>
+            </div>
+            <div class="terminal" id="term-freebsd">
+              <div class="line comment"># Install system dependencies</div>
+              <div class="line">pkg install gmake sqlite3 openssl postgresql16-client mariadb-connector-c</div>
+              <div class="line comment gap"># Build Diamond (FreeBSD's GNU Make is gmake, not make)</div>
+              <div class="line">gmake</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="terminal-window run-ship">
+        <div class="titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span class="filename">run &amp; ship -- same on every platform</span>
+          <button class="copy-btn" type="button" data-copy-target="term-run-ship">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <span class="copy-label">Copy</span>
+          </button>
+        </div>
+        <div class="terminal" id="term-run-ship">
+          <div class="line comment"># Run a one-liner</div>
+          <div class="line">./build/diamond -e '20 + 22'</div>
+          <div class="line comment"># =&gt; 42</div>
+          <div class="line comment gap"># ...or run a file, or start the REPL</div>
+          <div class="line comment"># ./build/diamond program.di</div>
+          <div class="line comment"># ./build/diamond</div>
+          <div class="line comment gap"># Ship a standalone binary -- no interpreter needed at runtime</div>
+          <div class="line">./build/diamond build app.di -o app</div>
+          <div class="line">./app</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------- Docs ---------------- -->
+  <section id="docs">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><span class="dot"></span> Learn more</span>
+        <h2>Explore the docs</h2>
+        <p>Every doc lives in the repo, next to the code it describes.</p>
+      </div>
+
+      <div class="docs-grid">
+        <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/syntax.md" target="_blank" rel="noopener">
+          <span><span class="label">Language reference</span><span class="sub">Core syntax, callables, collections</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/classes-and-modules.md" target="_blank" rel="noopener">
+          <span><span class="label">Classes &amp; modules</span><span class="sub">Mixins, structs, sealed classes</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/types-and-errors.md" target="_blank" rel="noopener">
+          <span><span class="label">Types &amp; errors</span><span class="sub">Gradual typing, narrowing, interfaces</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/threads.md" target="_blank" rel="noopener">
+          <span><span class="label">Threads</span><span class="sub">Isolated heaps, Channel, Supervisor</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/debugging.md" target="_blank" rel="noopener">
+          <span><span class="label">Debugging</span><span class="sub">DAP step debugger, live breakpoints</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/packages.md" target="_blank" rel="noopener">
+          <span><span class="label">Packages</span><span class="sub">HTTP, ORM, GraphQL, and more</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------- CTA ---------------- -->
+  <section>
+    <div class="container">
+      <div class="cta-banner">
+        <h2>Diamond is a research language, in the open</h2>
+        <p>The source, the design docs, and the roadmap all live on GitHub. Clone it, build it,
+          break it.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="https://github.com/diamond-language/diamond" target="_blank" rel="noopener">View on GitHub</a>
+          <a class="btn btn-ghost" href="https://github.com/diamond-language/diamond/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="#top">
+          <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true">
+            <defs>
+              <linearGradient id="logoGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4f46e5"/>
+                <stop offset="55%" stop-color="#2563eb"/>
+                <stop offset="100%" stop-color="#22d3ee"/>
+              </linearGradient>
+            </defs>
+            <path d="M11 5 L21 5 L28 13 L16 28 L4 13 Z" fill="url(#logoGradFooter)"/>
+            <path d="M11 5 L16 13 M21 5 L16 13 M4 13 L28 13 M16 13 L16 28" stroke="#090c14" stroke-width="1" stroke-opacity="0.32" stroke-linecap="round"/>
+            <path d="M11 5 L21 5" stroke="#fff" stroke-width="1" stroke-opacity="0.4" stroke-linecap="round"/>
+          </svg>
+          Diamond
+        </a>
+        <p>A Ruby-inspired language with gradual, checked static typing, compiled to a custom
+          register-bytecode VM written in C23.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/diamond-language/diamond" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a></li>
+          <li><a href="https://github.com/diamond-language/diamond/blob/main/docs/roadmap.md" target="_blank" rel="noopener">Roadmap</a></li>
+          <li><a href="https://github.com/diamond-language/diamond/blob/main/LICENSE" target="_blank" rel="noopener">License (MIT)</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Docs</h4>
+        <ul>
+          <li><a href="https://github.com/diamond-language/diamond/blob/main/docs/syntax.md" target="_blank" rel="noopener">Language reference</a></li>
+          <li><a href="https://github.com/diamond-language/diamond/blob/main/docs/object-model.md" target="_blank" rel="noopener">Object model</a></li>
+          <li><a href="https://github.com/diamond-language/diamond/blob/main/docs/sandbox.md" target="_blank" rel="noopener">Sandbox</a></li>
+          <li><a href="https://github.com/diamond-language/diamond/blob/main/docs/lsp.md" target="_blank" rel="noopener">Language Server</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/diamond-language/diamond/issues" target="_blank" rel="noopener">Issues</a></li>
+          <li><a href="https://github.com/diamond-language/diamond/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a></li>
+          <li><a href="https://github.com/diamond-language/diamond/tree/main/examples" target="_blank" rel="noopener">Examples</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> The Diamond project. MIT licensed.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
