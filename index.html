@@ -127,7 +127,6 @@
   <span class="tok-kw">end</span>
   <span class="tok-kw">def</span> <span class="tok-fn">value</span>() = <span class="tok-ivar">@value</span>
 <span class="tok-kw">end</span>
-
 Counter.<span class="tok-fn">new</span>(<span class="tok-num">3</span>) &gt; Counter.<span class="tok-fn">new</span>(<span class="tok-num">1</span>)
 <span class="tok-comment"># =&gt; true</span></code></pre>
 
@@ -141,6 +140,7 @@ p1 == p2
 p1.to_s()
 <span class="tok-comment"># =&gt; "Point(x: 1, y: 2)"</span>
 
+<span class="tok-comment"># a struct's class works in a union</span>
 <span class="tok-kw">def</span> <span class="tok-fn">choose</span>(v: Point | <span class="tok-const">Nil</span>) -&gt; Point | <span class="tok-const">Nil</span>
   v
 <span class="tok-kw">end</span></code></pre>
@@ -162,6 +162,7 @@ classify(<span class="tok-num">3</span>)
 
             <pre class="hero-slide" data-hero-carousel-slide data-filename="workers.di"><code><span class="tok-comment"># real OS threads, isolated heaps --</span>
 <span class="tok-comment"># values copy across the boundary</span>
+
 ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
 worker = Thread.<span class="tok-fn">new</span>(producer, ch)
 item = ch.receive()
@@ -176,6 +177,7 @@ sup.add_child(fetch_loop, url)
 
             <pre class="hero-slide" data-hero-carousel-slide data-filename="shell"><code><span class="tok-comment"># denies filesystem, network, and</span>
 <span class="tok-comment"># subprocess access outright</span>
+
 diamond --sandbox untrusted.di
 
 <span class="tok-comment"># equivalently:</span>
