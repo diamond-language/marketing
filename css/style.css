@@ -51,6 +51,7 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 code, pre, .mono {
@@ -113,6 +114,7 @@ img, svg {
   font-weight: 700;
   font-size: 17px;
   letter-spacing: -0.01em;
+  color: #fff;
 }
 
 .logo-mark {
@@ -229,20 +231,20 @@ img, svg {
 }
 
 .beta-ribbon {
-  position: absolute;
-  top: 30px;
-  right: -54px;
-  z-index: 2;
+  position: fixed;
+  top: 26px;
+  right: -58px;
+  z-index: 150;
   transform: rotate(45deg);
   background: var(--gradient);
   color: var(--text);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: center;
-  padding: 6px 58px;
+  padding: 7px 64px;
   box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.55);
   pointer-events: none;
 }
@@ -883,10 +885,10 @@ section {
     padding: 56px 0 56px;
   }
   .beta-ribbon {
-    top: 20px;
-    right: -50px;
-    font-size: 10px;
-    padding: 5px 52px;
+    top: 22px;
+    right: -54px;
+    font-size: 12px;
+    padding: 6px 56px;
   }
   .release-banner {
     flex-direction: column;
