@@ -164,7 +164,7 @@ values.<span class="tok-fn">sort_by</span>() <span class="tok-kw">do</span> |cou
           <h3>Compiled, not just interpreted</h3>
           <p>A Pratt compiler emits register bytecode for a VM with inline caches, object shapes,
             and quickening. <code>diamond build</code> produces a standalone native executable —
-            no interpreter needed at run time.</p>
+            no interpreter needed at runtime.</p>
         </div>
 
         <div class="feature-card">
@@ -328,8 +328,8 @@ diamond --sandbox untrusted.di
 <span class="tok-comment"># equivalently:</span>
 DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
         </div>
-        <p class="tab-caption">A real sandbox mode for running untrusted code, not a wrapper
-          script around the interpreter.</p>
+        <p class="tab-caption">Sandboxing for running untrusted code, not a wrapper script
+          around the interpreter.</p>
       </div>
       </div>
     </div>
