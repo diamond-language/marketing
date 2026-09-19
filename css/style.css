@@ -535,6 +535,19 @@ section {
   margin: 18px 0 0;
 }
 
+.platform-note {
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 13.5px;
+  max-width: 60ch;
+  margin: 0 auto 24px;
+}
+
+.platform-note a {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
 /* ---------- Install ---------- */
 
 .terminal-window {
