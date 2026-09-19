@@ -114,4 +114,34 @@
     try { document.execCommand('copy'); } catch (e) { /* no-op */ }
     document.body.removeChild(ta);
   }
+
+  // ---- Hero code carousel: manual-only (no auto-advance, so a reader
+  // mid-snippet never loses their place), prev/next + dots, and the
+  // titlebar filename updates to match whichever slide is showing. ----
+  var heroCarousel = document.querySelector('[data-hero-carousel]');
+  if (heroCarousel) {
+    var slides = Array.prototype.slice.call(heroCarousel.querySelectorAll('[data-hero-carousel-slide]'));
+    var dots = Array.prototype.slice.call(heroCarousel.querySelectorAll('[data-hero-carousel-dot]'));
+    var filenameEl = heroCarousel.querySelector('[data-hero-carousel-filename]');
+    var prevBtn = heroCarousel.querySelector('[data-hero-carousel-prev]');
+    var nextBtn = heroCarousel.querySelector('[data-hero-carousel-next]');
+    var index = 0;
+
+    var go = function (n) {
+      index = (n + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle('is-active', i === index);
+      });
+      dots.forEach(function (dot, i) {
+        dot.classList.toggle('is-active', i === index);
+      });
+      if (filenameEl) filenameEl.textContent = slides[index].getAttribute('data-filename');
+    };
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { go(index - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { go(index + 1); });
+    dots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () { go(i); });
+    });
+  }
 })();

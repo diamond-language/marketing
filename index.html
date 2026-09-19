@@ -106,12 +106,17 @@
           </div>
         </div>
 
-        <div class="code-window">
+        <div class="code-window hero-carousel" data-hero-carousel>
           <div class="titlebar">
             <div class="dots"><span></span><span></span><span></span></div>
-            <span class="filename">counter.di</span>
+            <span class="filename" data-hero-carousel-filename>counter.di</span>
+            <div class="hero-carousel-arrows">
+              <button type="button" class="hero-carousel-arrow" data-hero-carousel-prev aria-label="Previous example">&#8249;</button>
+              <button type="button" class="hero-carousel-arrow" data-hero-carousel-next aria-label="Next example">&#8250;</button>
+            </div>
           </div>
-          <pre><code><span class="tok-kw">class</span> Counter
+          <div class="hero-carousel-slides">
+            <pre class="hero-slide is-active" data-hero-carousel-slide data-filename="counter.di"><code><span class="tok-kw">class</span> Counter
   <span class="tok-kw">include</span> <span class="tok-const">Comparable</span>
 
   <span class="tok-kw">def</span> <span class="tok-fn">initialize</span>(value: <span class="tok-const">Int</span>)
@@ -135,6 +140,52 @@ values.<span class="tok-fn">sort_by</span>() <span class="tok-kw">do</span> |cou
   counter.value()
 <span class="tok-kw">end</span>
 <span class="tok-comment"># =&gt; [1, 2, 3]</span></code></pre>
+
+            <pre class="hero-slide" data-hero-carousel-slide data-filename="point.di"><code><span class="tok-kw">struct</span> Point(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
+<span class="tok-kw">end</span>
+
+p = Point.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>)
+p.to_s()
+<span class="tok-comment"># =&gt; "Point(x: 1, y: 2)"</span>
+
+<span class="tok-comment"># initialize/reader/==/to_s,</span>
+<span class="tok-comment"># generated -- one line</span></code></pre>
+
+            <pre class="hero-slide" data-hero-carousel-slide data-filename="classify.di"><code><span class="tok-kw">def</span> <span class="tok-fn">classify</span>(n: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span>
+  <span class="tok-kw">case</span> n
+  <span class="tok-kw">when</span> <span class="tok-num">0</span>..<span class="tok-num">9</span>
+    <span class="tok-str">"small"</span>
+  <span class="tok-kw">else</span>
+    <span class="tok-str">"large"</span>
+  <span class="tok-kw">end</span>
+<span class="tok-kw">end</span>
+
+<span class="tok-comment"># every case checked at compile</span>
+<span class="tok-comment"># time -- a gap is a compile error</span></code></pre>
+
+            <pre class="hero-slide" data-hero-carousel-slide data-filename="workers.di"><code><span class="tok-comment"># real OS threads, isolated heaps</span>
+ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
+worker = Thread.<span class="tok-fn">new</span>(producer, ch)
+item = ch.receive()
+worker.join()
+
+<span class="tok-comment"># values copy across the boundary</span>
+<span class="tok-comment"># -- no locks, no shared state</span></code></pre>
+
+            <pre class="hero-slide" data-hero-carousel-slide data-filename="shell"><code><span class="tok-comment"># denies fs, network, subprocess</span>
+<span class="tok-comment"># -- checked at every opcode</span>
+diamond --sandbox untrusted.di
+
+<span class="tok-comment"># equivalently:</span>
+DIAMOND_SANDBOX=<span class="tok-num">1</span> diamond untrusted.di</code></pre>
+          </div>
+          <div class="hero-carousel-dots" data-hero-carousel-dots>
+            <button type="button" class="hero-carousel-dot is-active" data-hero-carousel-dot aria-label="Classes &amp; mixins"></button>
+            <button type="button" class="hero-carousel-dot" data-hero-carousel-dot aria-label="Structs"></button>
+            <button type="button" class="hero-carousel-dot" data-hero-carousel-dot aria-label="Pattern matching"></button>
+            <button type="button" class="hero-carousel-dot" data-hero-carousel-dot aria-label="Concurrency"></button>
+            <button type="button" class="hero-carousel-dot" data-hero-carousel-dot aria-label="Sandbox"></button>
+          </div>
         </div>
       </div>
     </div>

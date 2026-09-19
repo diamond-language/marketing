@@ -370,6 +370,74 @@ img, svg {
   font-size: 13.5px;
 }
 
+.hero-carousel .filename {
+  flex: 1;
+}
+
+.hero-carousel-arrows {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.hero-carousel-arrow {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hero-carousel-arrow:hover {
+  color: var(--text);
+  border-color: rgba(91, 157, 255, 0.35);
+  background: rgba(91, 157, 255, 0.06);
+}
+
+.hero-slide {
+  display: none;
+}
+
+.hero-slide.is-active {
+  display: block;
+}
+
+.hero-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-soft);
+}
+
+.hero-carousel-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--border);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.hero-carousel-dot:hover {
+  background: var(--text-dim);
+}
+
+.hero-carousel-dot.is-active {
+  background: var(--cyan);
+  transform: scale(1.3);
+}
+
 .code-window pre {
   margin: 0;
   padding: 20px 22px;
