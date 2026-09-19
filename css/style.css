@@ -230,23 +230,44 @@ img, svg {
   pointer-events: none;
 }
 
-.beta-ribbon {
+/* A rotated box's own center never moves when you rotate it (default
+   transform-origin: 50% 50%) -- so putting the ribbon's own center
+   exactly on the wrap square's center guarantees it lands symmetrically
+   on that square's true diagonal, clipped equally on both ends by the
+   wrap's overflow: hidden. Fixed width (not shrink-to-fit) is what
+   makes text-align: center actually center the text within a
+   deterministic box, regardless of how long the label text is.
+   wrap: 180x180 -> half 90,90. ribbon: 240x28 -> half 120,14.
+   right = wrap-half-w - ribbon-half-w = 90 - 120 = -30.
+   top   = wrap-half-h - ribbon-half-h = 90 - 14  = 76. */
+.beta-ribbon-wrap {
   position: fixed;
-  top: 26px;
-  right: -58px;
+  top: 0;
+  right: 0;
+  width: 180px;
+  height: 180px;
+  overflow: hidden;
   z-index: 150;
+  pointer-events: none;
+}
+
+.beta-ribbon {
+  position: absolute;
+  top: 76px;
+  right: -30px;
+  width: 240px;
   transform: rotate(45deg);
   background: var(--gradient);
   color: var(--text);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
   font-size: 14px;
   font-weight: 700;
+  line-height: 1;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: center;
-  padding: 7px 64px;
+  padding: 7px 0;
   box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.55);
-  pointer-events: none;
 }
 
 .hero .container {
@@ -961,11 +982,19 @@ section {
   .hero {
     padding: 56px 0 56px;
   }
+  /* Same centered-on-the-diagonal derivation as the desktop rule, just
+     scaled down: wrap 140x140 -> half 70,70. ribbon 190x24 -> half 95,12.
+     right = 70 - 95 = -25. top = 70 - 12 = 58. */
+  .beta-ribbon-wrap {
+    width: 140px;
+    height: 140px;
+  }
   .beta-ribbon {
-    top: 22px;
-    right: -54px;
+    top: 58px;
+    right: -25px;
+    width: 190px;
     font-size: 12px;
-    padding: 6px 56px;
+    padding: 6px 0;
   }
   .release-banner {
     flex-direction: column;
