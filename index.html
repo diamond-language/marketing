@@ -103,11 +103,17 @@
     <span class="tok-ivar">@value</span> = value
   <span class="tok-kw">end</span>
 
-  <span class="tok-kw">def</span> <span class="tok-fn">&lt;=&gt;</span>(other: Counter) = <span class="tok-ivar">@value</span> &lt;=&gt; other.value()
+  <span class="tok-kw">def</span> <span class="tok-fn">&lt;=&gt;</span>(other: Counter)
+    <span class="tok-ivar">@value</span> &lt;=&gt; other.value()
+  <span class="tok-kw">end</span>
   <span class="tok-kw">def</span> <span class="tok-fn">value</span>() = <span class="tok-ivar">@value</span>
 <span class="tok-kw">end</span>
 
-values = [Counter.new(<span class="tok-num">3</span>), Counter.new(<span class="tok-num">1</span>), Counter.new(<span class="tok-num">2</span>)]
+values = [
+  Counter.new(<span class="tok-num">3</span>),
+  Counter.new(<span class="tok-num">1</span>),
+  Counter.new(<span class="tok-num">2</span>)
+]
 values.<span class="tok-fn">sort_by</span>() <span class="tok-kw">do</span> |counter|
   counter.value()
 <span class="tok-kw">end</span>.<span class="tok-fn">map</span>() <span class="tok-kw">do</span> |counter|
