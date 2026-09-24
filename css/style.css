@@ -807,6 +807,186 @@ section {
   font-size: 16px;
 }
 
+/* ---------- Internals ---------- */
+
+.pipeline {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  counter-reset: stage;
+}
+
+.stage {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+}
+
+.stage:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -12px;
+  width: 10px;
+  height: 2px;
+  background: var(--gradient);
+}
+
+.stage-step {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+
+.stage h3,
+.internals-card h3,
+.new-card h3 {
+  font-size: 16.5px;
+  margin: 0 0 8px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.stage p,
+.internals-card p,
+.new-card p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.stage code,
+.internals-card code,
+.new-card p code,
+.release-notes code {
+  font-size: 0.92em;
+  color: var(--tok-fn);
+  background: rgba(107, 198, 255, 0.08);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.internals-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.internals-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 0;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--border-soft);
+}
+
+.stats div {
+  margin: 0;
+}
+
+.stats dt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stats dd {
+  margin: 4px 0 0;
+  color: var(--text-faint);
+  font-size: 14.5px;
+}
+
+/* ---------- What's new ---------- */
+
+#release .section-head .release-badge {
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.whats-new {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.new-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.new-card:hover {
+  border-color: rgba(91, 157, 255, 0.35);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.new-card a {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.new-card pre {
+  margin: auto 0 0;
+  padding: 12px 14px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  line-height: 1.6;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.new-card pre code {
+  color: var(--text);
+}
+
+.release-notes {
+  margin: 28px auto 0;
+  max-width: 820px;
+  text-align: center;
+}
+
+.release-notes p {
+  color: var(--text-dim);
+  font-size: 15.5px;
+  margin: 0 0 12px;
+}
+
+.release-notes strong {
+  color: var(--text);
+}
+
 /* ---------- CTA banner ---------- */
 
 .cta-banner {
@@ -924,6 +1104,22 @@ section {
   .hero-inner {
     grid-template-columns: 1fr;
   }
+  .pipeline {
+    grid-template-columns: 1fr;
+  }
+  .stage:not(:last-child)::after {
+    top: auto;
+    bottom: -12px;
+    right: auto;
+    left: 28px;
+    width: 2px;
+    height: 10px;
+  }
+  .internals-grid,
+  .stats,
+  .whats-new {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .feature-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -978,6 +1174,11 @@ section {
     grid-template-columns: 1fr;
   }
   .footer-top {
+    grid-template-columns: 1fr;
+  }
+  .internals-grid,
+  .stats,
+  .whats-new {
     grid-template-columns: 1fr;
   }
   .cta-banner {

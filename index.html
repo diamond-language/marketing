@@ -47,8 +47,9 @@
       Diamond
     </a>
     <nav class="nav-links" id="nav-links">
+      <a href="#release">What's new</a>
       <a href="#features">Features</a>
-      <a href="#code">Code</a>
+      <a href="#internals">Internals</a>
       <a href="#install">Install</a>
       <a href="#docs">Docs</a>
       <div class="nav-actions">
@@ -87,11 +88,12 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> Open source, ready to install</span>
+          <span class="eyebrow"><span class="dot"></span> v0.8.0 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
-          <p class="lead">Diamond keeps the syntax, blocks, and object model that make Ruby comfortable to
-            write — then adds gradual, checked static types and compiles it all to a
-            register-bytecode VM with inline caches and a JIT, instead of walking a tree.</p>
+          <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
+            static types that the compiler actually checks. A Pratt compiler emits register
+            bytecode for a C23 VM with inline caches, object shapes, a generational GC, and an
+            x86-64 JIT. Threads get isolated heaps: values are copied, never shared.</p>
           <div class="hero-ctas">
             <a class="btn btn-primary" href="#install">Get started</a>
             <a class="btn btn-ghost" href="https://github.com/diamond-language/diamond" target="_blank" rel="noopener">
@@ -100,9 +102,10 @@
             </a>
           </div>
           <div class="hero-meta">
-            <span><strong>MIT</strong> licensed</span>
             <span><strong>C23</strong> VM core</span>
-            <span>Register bytecode <strong>+ JIT</strong></span>
+            <span><strong>~170</strong> opcodes</span>
+            <span><strong>x86-64</strong> JIT</span>
+            <span><strong>MIT</strong> licensed</span>
           </div>
         </div>
 
@@ -205,6 +208,76 @@ DIAMOND_SANDBOX_ALLOW=network \
 
   <hr class="divider">
 
+  <!-- ---------------- Release ---------------- -->
+  <section id="release">
+    <div class="container">
+      <div class="section-head">
+        <span class="release-badge">v0.8.0</span>
+        <h2>What's new in 0.8.0</h2>
+        <p>Runtime fixes that came out of building real apps, a smaller on-disk footprint, and a
+          toolchain you can install anywhere.</p>
+      </div>
+
+      <div class="whats-new">
+        <article class="new-card">
+          <h3><code>warn</code> writes to stderr</h3>
+          <p>Diagnostics no longer have to share stdout with your program's output.</p>
+          <pre><code><span class="tok-fn">warn</span>(<span class="tok-str">"no config; defaults"</span>)
+<span class="tok-comment"># goes to stderr</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Number conversions and rounding</h3>
+          <p><code>Int</code> and <code>Float</code> gain <code>to_s</code>, <code>to_i</code>,
+            <code>to_f</code>, and <code>abs</code>; <code>Float</code> gains <code>floor</code>,
+            <code>ceil</code>, and <code>round</code>.</p>
+          <pre><code><span class="tok-num">2.345</span>.round(<span class="tok-num">1</span>)   <span class="tok-comment"># =&gt; 2.3</span>
+<span class="tok-num">2.5</span>.round()     <span class="tok-comment"># =&gt; 3 (Int)</span>
+<span class="tok-num">42</span>.to_s()       <span class="tok-comment"># =&gt; "42"</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Crashes say why</h3>
+          <p>Uncaught exceptions report their message, on the command line and in
+            <code>Supervisor#last_error</code>.</p>
+          <pre><code><span class="tok-kw">raise</span> ArgumentError.<span class="tok-fn">new</span>(<span class="tok-str">"bad input"</span>)
+<span class="tok-comment"># uncaught exception:</span>
+<span class="tok-comment">#   ArgumentError: bad input</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Bytecode caches 8x smaller</h3>
+          <p>String constants are stored by length instead of as fixed 4 KB records. A web
+            app's <code>.dic</code> dropped from 29 MB to 3.5 MB.</p>
+          <pre><code>guestbook   <span class="tok-num">29.3 MB</span> -&gt; <span class="tok-num">3.5 MB</span>
+logstat     <span class="tok-num">15.7 MB</span> -&gt; <span class="tok-num">2.8 MB</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3><code>make install</code> with an AOT kit</h3>
+          <p>An installed <code>diamond build</code> links against a prebuilt runtime kit with
+            one compiler call: no source checkout, no <code>make</code>.</p>
+          <pre><code>make release facet lsp dap
+make install PREFIX=~/.local
+diamond build app.di</code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Maintained packages</h3>
+          <p>Every cut on <a href="https://cuts.dilang.tech">cuts.dilang.tech</a> names its
+            maintainers, and gremlin 0.2.2 fixes a crash when a WebSocket broadcast drops a slow
+            client.</p>
+          <pre><code>facet add gremlin \
+  --registry \
+  https://cuts.dilang.tech</code></pre>
+        </article>
+      </div>
+
+      <div class="release-notes">
+        <p><strong>Pre-1.0.</strong> Diamond is exercised mostly on Fedora and Ubuntu, with CI on
+          macOS, FreeBSD, Alpine, and arm64. It hasn't had a security audit, so don't rely on it for
+          security-sensitive work yet. facet 0.7.0 can't install current registry cuts; upgrade to
+          0.8.0.</p>
+        <a class="release-link" href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog &rarr;</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ---------------- Features ---------------- -->
   <section class="features" id="features">
     <div class="container">
@@ -275,6 +348,86 @@ DIAMOND_SANDBOX_ALLOW=network \
       </div>
     </div>
   </section>
+
+  <!-- ---------------- Internals ---------------- -->
+  <section id="internals">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><span class="dot"></span> Under the hood</span>
+        <h2>From source to native code</h2>
+        <p>One flat compile per program, checked types, then an interpreter and a JIT that
+          share one VM. The same compiled bytecode feeds the on-disk cache and
+          <code>diamond build</code>.</p>
+      </div>
+
+      <ol class="pipeline">
+        <li class="stage">
+          <span class="stage-step">01</span>
+          <h3>Load</h3>
+          <p><code>require</code> and <code>require_cut</code> splice every file into one
+            source buffer. There is no separate compilation unit.</p>
+        </li>
+        <li class="stage">
+          <span class="stage-step">02</span>
+          <h3>Compile</h3>
+          <p>A discovery pass collects declarations; a Pratt compiler then checks
+            annotations, unions, generics, and exhaustive <code>case</code>.</p>
+        </li>
+        <li class="stage">
+          <span class="stage-step">03</span>
+          <h3>Bytecode</h3>
+          <p>About 170 opcodes over 16-bit register operands, cached in a fingerprinted
+            <code>.dic</code> file next to the source.</p>
+        </li>
+        <li class="stage">
+          <span class="stage-step">04</span>
+          <h3>Interpret</h3>
+          <p>Inline caches, object shapes, and quickening on a VM with a generational,
+            nursery-based garbage collector.</p>
+        </li>
+        <li class="stage">
+          <span class="stage-step">05</span>
+          <h3>JIT</h3>
+          <p>Hot typed functions compile to x86-64. Anything the JIT can't handle stays in
+            the interpreter, with identical results.</p>
+        </li>
+      </ol>
+
+      <div class="internals-grid">
+        <div class="internals-card">
+          <h3>Ship a binary</h3>
+          <p><code>diamond build</code> embeds the compiled program in a native executable.
+            An installed toolchain links it against a prebuilt runtime kit with one compiler
+            call.</p>
+        </div>
+        <div class="internals-card">
+          <h3>Isolated threads</h3>
+          <p>Each <code>Thread</code> runs its own VM and heap. Arguments, results, and
+            <code>Channel</code> messages are deep-copied, so there are no data races by
+            construction.</p>
+        </div>
+        <div class="internals-card">
+          <h3>Capability sandbox</h3>
+          <p><code>--sandbox</code> checks filesystem, network, and subprocess access at each
+            native opcode, with resource budgets and a per-capability allow-list.</p>
+        </div>
+        <div class="internals-card">
+          <h3>Tooling in the box</h3>
+          <p>A language server, a Debug Adapter Protocol step debugger, a formatter, and a lexer
+            and parser written in Diamond itself.</p>
+        </div>
+      </div>
+
+      <dl class="stats">
+        <div><dt>1,604</dt><dd>tests on every commit</dd></div>
+        <div><dt>9</dt><dd>CI jobs: Fedora, Ubuntu, macOS, FreeBSD, Alpine, arm64</dd></div>
+        <div><dt>3</dt><dd>sanitizers in CI: ASan, UBSan, TSan</dd></div>
+        <div><dt>2</dt><dd>libFuzzer targets: compiler and VM</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <hr class="divider">
 
   <!-- ---------------- Code tabs ---------------- -->
   <section id="code">
@@ -604,29 +757,14 @@ DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
           <span><span class="label">Packages</span><span class="sub">HTTP, ORM, GraphQL, and more</span></span>
           <span class="arrow" aria-hidden="true">&rarr;</span>
         </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ---------------- Release ---------------- -->
-  <section id="release">
-    <div class="container">
-      <div class="release-banner">
-        <div class="release-badge">v0.6.0</div>
-        <div class="release-body">
-          <h2>Just shipped</h2>
-          <ul class="release-list">
-            <li>The JIT now compiles dynamic dispatch — <code>self.method()</code>, a typed
-              parameter's <code>other.method()</code>, and <code>.new().method()</code> chains —
-              up to ~38% faster in hot loops.</li>
-            <li>Generic arithmetic JIT-compiles too, not just the <code>Int</code> fast path —
-              ~2.1x faster on dynamic int arithmetic, ~1.5x on hash-heavy code.</li>
-            <li>The Language Server can format code now (<code>textDocument/formatting</code>) —
-              validated against all 309 real <code>.di</code> files in this repo, zero
-              bailouts.</li>
-          </ul>
-          <a class="release-link" href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog &rarr;</a>
-        </div>
+        <a class="doc-link" href="https://cuts.dilang.tech">
+          <span><span class="label">Package registry</span><span class="sub">Browse and install cuts with facet</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/deployment.md" target="_blank" rel="noopener">
+          <span><span class="label">Deployment</span><span class="sub">diamond build, AOT kit, make install</span></span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
   </section>
