@@ -88,7 +88,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.8.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.9.1 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
             static types that the compiler actually checks. A Pratt compiler emits register
@@ -212,67 +212,79 @@ DIAMOND_SANDBOX_ALLOW=network \
   <section id="release">
     <div class="container">
       <div class="section-head">
-        <span class="release-badge">v0.8.0</span>
-        <h2>What's new in 0.8.0</h2>
-        <p>Runtime fixes that came out of building real apps, a smaller on-disk footprint, and a
-          toolchain you can install anywhere.</p>
+        <span class="release-badge">v0.9.1</span>
+        <h2>What's new in 0.9.1</h2>
+        <p>The compiler wastes fewer registers, the standard library grew by about 120 methods,
+          and do-blocks behave like real Ruby blocks.</p>
       </div>
 
       <div class="whats-new">
         <article class="new-card">
-          <h3><code>warn</code> writes to stderr</h3>
-          <p>Diagnostics no longer have to share stdout with your program's output.</p>
-          <pre><code><span class="tok-fn">warn</span>(<span class="tok-str">"no config; defaults"</span>)
-<span class="tok-comment"># goes to stderr</span></code></pre>
+          <h3>Register recycling</h3>
+          <p>A function's registers get reused instead of piling up forever. A 1,300-statement
+            reassignment chain went from ~3,900 registers (heap-allocated every call) to under
+            20.</p>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">total_of</span>(xs: Array[<span class="tok-const">Int</span>])
+  total = <span class="tok-num">0</span>
+  <span class="tok-kw">for</span> x <span class="tok-kw">in</span> xs
+    total = total + x  <span class="tok-comment"># ~30% faster</span>
+  <span class="tok-kw">end</span>
+  total
+<span class="tok-kw">end</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Number conversions and rounding</h3>
-          <p><code>Int</code> and <code>Float</code> gain <code>to_s</code>, <code>to_i</code>,
-            <code>to_f</code>, and <code>abs</code>; <code>Float</code> gains <code>floor</code>,
-            <code>ceil</code>, and <code>round</code>.</p>
-          <pre><code><span class="tok-num">2.345</span>.round(<span class="tok-num">1</span>)   <span class="tok-comment"># =&gt; 2.3</span>
-<span class="tok-num">2.5</span>.round()     <span class="tok-comment"># =&gt; 3 (Int)</span>
-<span class="tok-num">42</span>.to_s()       <span class="tok-comment"># =&gt; "42"</span></code></pre>
+          <h3>~120 Ruby-compatible methods</h3>
+          <p>Array, Hash, String, Int, and Float all gained the methods you'd reach for first
+            &mdash; <code>transpose</code>, <code>dig</code>, <code>partition</code>,
+            <code>gcd</code>, and more.</p>
+          <pre><code>[<span class="tok-num">3</span>, <span class="tok-num">1</span>, <span class="tok-num">2</span>].sample()
+{a: <span class="tok-num">1</span>}.dig(:a)
+<span class="tok-str">"a,b,,c"</span>.split(<span class="tok-str">","</span>)
+<span class="tok-num">12</span>.gcd(<span class="tok-num">18</span>)  <span class="tok-comment"># =&gt; 6</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Crashes say why</h3>
-          <p>Uncaught exceptions report their message, on the command line and in
-            <code>Supervisor#last_error</code>.</p>
-          <pre><code><span class="tok-kw">raise</span> ArgumentError.<span class="tok-fn">new</span>(<span class="tok-str">"bad input"</span>)
-<span class="tok-comment"># uncaught exception:</span>
-<span class="tok-comment">#   ArgumentError: bad input</span></code></pre>
+          <h3><code>break</code> and <code>return</code>, for real</h3>
+          <p>A do-block's <code>break</code> and <code>return</code> now work as in Ruby &mdash;
+            previously <code>break</code> was a compile error and <code>return</code> only ended
+            the block itself.</p>
+          <pre><code>result = [<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>].each <span class="tok-kw">do</span> |n|
+  <span class="tok-kw">break</span> n <span class="tok-kw">if</span> n == <span class="tok-num">2</span>
+<span class="tok-kw">end</span>
+<span class="tok-comment"># =&gt; 2</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Bytecode caches 8x smaller</h3>
-          <p>String constants are stored by length instead of as fixed 4 KB records. A web
-            app's <code>.dic</code> dropped from 29 MB to 3.5 MB.</p>
-          <pre><code>guestbook   <span class="tok-num">29.3 MB</span> -&gt; <span class="tok-num">3.5 MB</span>
-logstat     <span class="tok-num">15.7 MB</span> -&gt; <span class="tok-num">2.8 MB</span></code></pre>
+          <h3>Method calls, cheaper</h3>
+          <p>An <code>attr_reader</code> or <code>struct</code> field read used to zero a full
+            64 KB register file on every call. Both are now about 0.17 &micro;s, down from
+            2.2 &micro;s.</p>
+          <pre><code><span class="tok-kw">struct</span> Point(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
+<span class="tok-kw">end</span>
+Point.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>).x()  <span class="tok-comment"># ~13x faster</span></code></pre>
         </article>
         <article class="new-card">
-          <h3><code>make install</code> with an AOT kit</h3>
-          <p>An installed <code>diamond build</code> links against a prebuilt runtime kit with
-            one compiler call: no source checkout, no <code>make</code>.</p>
-          <pre><code>make release facet lsp dap
-make install PREFIX=~/.local
-diamond build app.di</code></pre>
+          <h3>Real backtraces</h3>
+          <p>Uncaught exceptions now carry a proper <code>backtrace()</code> instead of
+            <code>nil</code>, and re-raising keeps the original one.</p>
+          <pre><code><span class="tok-kw">begin</span>
+  risky()
+<span class="tok-kw">rescue</span> => e
+  e.backtrace().each { |l| puts(l) }
+<span class="tok-kw">end</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Maintained packages</h3>
-          <p>Every cut on <a href="https://cuts.dilang.tech">cuts.dilang.tech</a> names its
-            maintainers, and gremlin 0.2.2 fixes a crash when a WebSocket broadcast drops a slow
-            client.</p>
-          <pre><code>facet add gremlin \
-  --registry \
-  https://cuts.dilang.tech</code></pre>
+          <h3>Sixteen new examples</h3>
+          <p>A Pratt-parser calculator, real OS-thread parallelism, an encrypted secrets vault,
+            three pathfinding algorithms, and more &mdash; every one runnable as-is.</p>
+          <pre><code>diamond examples/calc/calc.di
+diamond examples/parallel/parallel.di
+diamond examples/pathfinder/pathfinder.di</code></pre>
         </article>
       </div>
 
       <div class="release-notes">
         <p><strong>Pre-1.0.</strong> Diamond is exercised mostly on Fedora and Ubuntu, with CI on
           macOS, FreeBSD, Alpine, and arm64. It hasn't had a security audit, so don't rely on it for
-          security-sensitive work yet. facet 0.7.0 can't install current registry cuts; upgrade to
-          0.8.0.</p>
+          security-sensitive work yet.</p>
         <a class="release-link" href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog &rarr;</a>
       </div>
     </div>
