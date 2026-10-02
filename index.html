@@ -88,7 +88,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.9.2 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.10.0 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
             static types that the compiler actually checks. A Pratt compiler emits register
@@ -212,72 +212,74 @@ DIAMOND_SANDBOX_ALLOW=network \
   <section id="release">
     <div class="container">
       <div class="section-head">
-        <span class="release-badge">v0.9</span>
-        <h2>What's new in 0.9</h2>
-        <p>The compiler wastes fewer registers, the standard library grew by about 120 methods,
-          and do-blocks behave like real Ruby blocks.</p>
+        <span class="release-badge">v0.10</span>
+        <h2>What's new in 0.10</h2>
+        <p>Cooperative cancellation with deadlines, write-once constants, graceful server
+          shutdown, and a cleanup bug fixed in nested <code>rescue</code>/<code>ensure</code>.</p>
       </div>
 
       <div class="whats-new">
         <article class="new-card">
-          <h3>Register recycling</h3>
-          <p>A function's registers get reused instead of piling up forever. A 1,300-statement
-            reassignment chain went from ~3,900 registers (heap-allocated every call) to under
-            20.</p>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">total_of</span>(xs: Array[<span class="tok-const">Int</span>])
-  total = <span class="tok-num">0</span>
-  <span class="tok-kw">for</span> x <span class="tok-kw">in</span> xs
-    total = total + x  <span class="tok-comment"># ~30% faster</span>
+          <h3>Cancellation, with deadlines</h3>
+          <p>A new experimental <code>cancellation</code> cut gives you tokens, monotonic deadlines,
+            and scopes that join their tasks. Waits wake directly when a source is cancelled
+            &mdash; no polling.</p>
+          <pre><code><span class="tok-kw">require_cut</span> <span class="tok-str">"cancellation"</span>
+source = Cancellation::<span class="tok-const">Source</span>.<span class="tok-fn">new</span>(<span class="tok-kw">nil</span>, <span class="tok-num">2.0</span>)
+source.<span class="tok-fn">token</span>().<span class="tok-fn">sleep</span>(<span class="tok-num">10</span>)
+<span class="tok-comment"># raises DeadlineExceeded after 2 seconds</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Cancellable network I/O</h3>
+          <p>Nonblocking TCP reads and writes, DNS lookups, and verified TLS handshakes all take a
+            token, so one deadline covers resolving, connecting, and negotiating. Established TLS
+            reads and writes still block.</p>
+          <pre><code>token.<span class="tok-fn">resolve</span>(<span class="tok-str">"example.com"</span>)
+token.<span class="tok-fn">connect</span>(host, <span class="tok-num">443</span>)
+token.<span class="tok-fn">connect_tls</span>(host, <span class="tok-num">443</span>, options)</code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Constants</h3>
+          <p>Top-level and class constants, readable from functions and methods, and via
+            <code>Class::NAME</code>. A binding is write-once; a collection's contents stay
+            mutable.</p>
+          <pre><code>MAX_TRIES = <span class="tok-num">3</span>
+<span class="tok-kw">class</span> <span class="tok-const">Retry</span>
+  LIMIT = <span class="tok-num">5</span>
+<span class="tok-kw">end</span>
+Retry::LIMIT  <span class="tok-comment"># =&gt; 5</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Graceful shutdown</h3>
+          <p>Gremlin can drain on a cancellation token: it stops accepting connections, closes
+            stalled sockets after a grace period, and returns through your own
+            <code>ensure</code>. Multiple workers share one deadline.</p>
+          <pre><code>diamond examples/job_service/service.di 8080 jobs.db
+<span class="tok-comment"># SIGTERM drains, then exits cleanly</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Nested cleanup, fixed</h3>
+          <p>A <code>rescue</code> inside an <code>ensure</code> no longer loses the enclosing
+            return value, exception, or non-local exit &mdash; including when the garbage
+            collector runs mid-cleanup.</p>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">demo</span>()
+  <span class="tok-kw">begin</span>
+    <span class="tok-kw">return</span> :kept
+  <span class="tok-kw">ensure</span>
+    <span class="tok-kw">begin</span>
+      <span class="tok-kw">raise</span> <span class="tok-str">"cleanup failed"</span>
+    <span class="tok-kw">rescue</span> error
+      puts(<span class="tok-str">"handled"</span>)
+    <span class="tok-kw">end</span>
   <span class="tok-kw">end</span>
-  total
-<span class="tok-kw">end</span></code></pre>
+<span class="tok-kw">end</span>  <span class="tok-comment"># => :kept</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>~120 Ruby-compatible methods</h3>
-          <p>Array, Hash, String, Int, and Float all gained the methods you'd reach for first
-            &mdash; <code>transpose</code>, <code>dig</code>, <code>partition</code>,
-            <code>gcd</code>, and more.</p>
-          <pre><code>[<span class="tok-num">3</span>, <span class="tok-num">1</span>, <span class="tok-num">2</span>].sample()
-{a: <span class="tok-num">1</span>}.dig(:a)
-<span class="tok-str">"a,b,,c"</span>.split(<span class="tok-str">","</span>)
-<span class="tok-num">12</span>.gcd(<span class="tok-num">18</span>)  <span class="tok-comment"># =&gt; 6</span></code></pre>
-        </article>
-        <article class="new-card">
-          <h3><code>break</code> and <code>return</code>, for real</h3>
-          <p>A do-block's <code>break</code> and <code>return</code> now work as in Ruby &mdash;
-            previously <code>break</code> was a compile error and <code>return</code> only ended
-            the block itself.</p>
-          <pre><code>result = [<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>].each <span class="tok-kw">do</span> |n|
-  <span class="tok-kw">break</span> n <span class="tok-kw">if</span> n == <span class="tok-num">2</span>
-<span class="tok-kw">end</span>
-<span class="tok-comment"># =&gt; 2</span></code></pre>
-        </article>
-        <article class="new-card">
-          <h3>Method calls, cheaper</h3>
-          <p>An <code>attr_reader</code> or <code>struct</code> field read used to zero a full
-            64 KB register file on every call. Both are now about 0.17 &micro;s, down from
-            2.2 &micro;s.</p>
-          <pre><code><span class="tok-kw">struct</span> Point(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
-<span class="tok-kw">end</span>
-Point.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>).x()  <span class="tok-comment"># ~13x faster</span></code></pre>
-        </article>
-        <article class="new-card">
-          <h3>Real backtraces</h3>
-          <p>Uncaught exceptions now carry a proper <code>backtrace()</code> instead of
-            <code>nil</code>, and re-raising keeps the original one.</p>
-          <pre><code><span class="tok-kw">begin</span>
-  risky()
-<span class="tok-kw">rescue</span> => e
-  e.backtrace().each { |l| puts(l) }
-<span class="tok-kw">end</span></code></pre>
-        </article>
-        <article class="new-card">
-          <h3>Sixteen new examples</h3>
-          <p>A Pratt-parser calculator, real OS-thread parallelism, an encrypted secrets vault,
-            three pathfinding algorithms, and more &mdash; every one runnable as-is.</p>
-          <pre><code>diamond examples/calc/calc.di
-diamond examples/parallel/parallel.di
-diamond examples/pathfinder/pathfinder.di</code></pre>
+          <h3>Examples that explain themselves</h3>
+          <p>Every example now comments the tricky parts and splits its logic into labelled
+            chunks. <code>--dump-bytecode=user</code> shows just your program's bytecode,
+            without the bundled preamble.</p>
+          <pre><code>diamond --dump-bytecode=user examples/calc/calc.di</code></pre>
         </article>
       </div>
 
