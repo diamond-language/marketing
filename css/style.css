@@ -224,10 +224,27 @@ img, svg {
 
 .hero-facets {
   position: absolute;
-  inset: 0;
+  top: -12%;
+  right: -14%;
+  width: min(900px, 86vw);
+  height: auto;
+  aspect-ratio: 1;
   z-index: 0;
-  opacity: 0.5;
+  opacity: 0.4;
   pointer-events: none;
+  /* Bottom point swings left, under the hero copy. */
+  transform: rotate(32deg);
+  transform-origin: 50% 50%;
+  animation: facet-sway 40s ease-in-out infinite alternate;
+}
+
+@keyframes facet-sway {
+  from { transform: rotate(26deg); }
+  to { transform: rotate(38deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-facets { animation: none; }
 }
 
 .hero .container {
