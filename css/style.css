@@ -124,6 +124,26 @@ img, svg {
   filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.55));
 }
 
+/* A soft highlight band sweeps across the gem on hover, like a glint. It sits
+   off to the left at rest and is clipped to the diamond, so nothing shows
+   until the animation runs. */
+.logo-shimmer {
+  transform: translateX(-4px);
+  opacity: 0;
+}
+
+.brand:hover .logo-shimmer,
+.brand:focus-visible .logo-shimmer {
+  animation: logo-shimmer 0.9s ease-in-out;
+}
+
+@keyframes logo-shimmer {
+  0% { transform: translateX(-4px); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateX(52px); opacity: 0; }
+}
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -245,6 +265,8 @@ img, svg {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-facets { animation: none; }
+  .brand:hover .logo-shimmer,
+  .brand:focus-visible .logo-shimmer { animation: none; }
 }
 
 .hero .container {
