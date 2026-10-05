@@ -90,7 +90,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.10.3 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.11.0 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
             static types that the compiler actually checks. A Pratt compiler emits register
@@ -214,74 +214,66 @@ DIAMOND_SANDBOX_ALLOW=network \
   <section id="release">
     <div class="container">
       <div class="section-head">
-        <span class="release-badge">v0.10</span>
-        <h2>What's new in 0.10</h2>
-        <p>Cooperative cancellation with deadlines, write-once constants, graceful server
-          shutdown, and a cleanup bug fixed in nested <code>rescue</code>/<code>ensure</code>.</p>
+        <span class="release-badge">v0.11</span>
+        <h2>What's new in 0.11</h2>
+        <p>A validated bytecode cache, <code>inspect()</code> on every value, inherited
+          constants, and a much harder look at the threading and <code>ProgramBuilder</code>
+          surfaces.</p>
       </div>
-
       <div class="whats-new">
         <article class="new-card">
-          <h3>Cancellation, with deadlines</h3>
-          <p>A new experimental <code>cancellation</code> cut gives you tokens, monotonic deadlines,
-            and scopes that join their tasks. Waits wake directly when a source is cancelled
-            &mdash; no polling.</p>
-          <pre><code><span class="tok-kw">require_cut</span> <span class="tok-str">"cancellation"</span>
-source = Cancellation::<span class="tok-const">Source</span>.<span class="tok-fn">new</span>(<span class="tok-kw">nil</span>, <span class="tok-num">2.0</span>)
-source.<span class="tok-fn">token</span>().<span class="tok-fn">sleep</span>(<span class="tok-num">10</span>)
-<span class="tok-comment"># raises DeadlineExceeded after 2 seconds</span></code></pre>
+          <h3>A cache that can't crash you</h3>
+          <p>The <code>.dic</code> bytecode cache next to your script is now checked before it
+            runs: a body checksum, bounds on every count, and the bytecode verifier over every
+            function. A damaged or hand-edited file is a cache miss &mdash; the script just
+            recompiles. Before, flipping a few bytes could segfault.</p>
+          <pre><code>diamond app.di   <span class="tok-comment"># writes app.dic</span>
+<span class="tok-comment"># ...a byte of app.dic gets damaged...</span>
+diamond app.di   <span class="tok-comment"># rejected, recompiled, same result</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Cancellable network I/O</h3>
-          <p>Nonblocking TCP reads and writes, DNS lookups, and verified TLS handshakes all take a
-            token, so one deadline covers resolving, connecting, and negotiating. Established TLS
-            reads and writes still block.</p>
-          <pre><code>token.<span class="tok-fn">resolve</span>(<span class="tok-str">"example.com"</span>)
-token.<span class="tok-fn">connect</span>(host, <span class="tok-num">443</span>)
-token.<span class="tok-fn">connect_tls</span>(host, <span class="tok-num">443</span>, options)</code></pre>
+          <h3>inspect() on every value</h3>
+          <p>Strings are quoted and escaped, Symbols keep their colon, and an instance shows its
+            fields. <code>to_s</code> is unchanged, so output you already print stays the same.</p>
+          <pre><code>puts([<span class="tok-str">"a"</span>, <span class="tok-str">"b, c"</span>].<span class="tok-fn">to_s</span>())      <span class="tok-comment"># [a, b, c]</span>
+puts([<span class="tok-str">"a"</span>, <span class="tok-str">"b, c"</span>].<span class="tok-fn">inspect</span>())   <span class="tok-comment"># ["a", "b, c"]</span>
+puts(<span class="tok-const">Point</span>.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>).<span class="tok-fn">inspect</span>())   <span class="tok-comment"># #&lt;Point x=1, y=2&gt;</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Constants</h3>
-          <p>Top-level and class constants, readable from functions and methods, and via
-            <code>Class::NAME</code>. A binding is write-once; a collection's contents stay
-            mutable.</p>
-          <pre><code>MAX_TRIES = <span class="tok-num">3</span>
-<span class="tok-kw">class</span> <span class="tok-const">Retry</span>
-  LIMIT = <span class="tok-num">5</span>
+          <h3>Inherited constants</h3>
+          <p>A subclass reads its superclass's constants, and a class reads the constants of the
+            modules it includes &mdash; unqualified or through the class name. Before, a subclass
+            method naming a parent's constant failed.</p>
+          <pre><code><span class="tok-kw">class</span> <span class="tok-const">Shape</span>
+  SIDES = <span class="tok-num">0</span>
 <span class="tok-kw">end</span>
-Retry::LIMIT  <span class="tok-comment"># =&gt; 5</span></code></pre>
+<span class="tok-kw">class</span> <span class="tok-const">Triangle</span> &lt; <span class="tok-const">Shape</span>
+  <span class="tok-kw">def</span> <span class="tok-fn">sides</span>() = SIDES
+<span class="tok-kw">end</span>
+<span class="tok-const">Triangle</span>::SIDES  <span class="tok-comment"># =&gt; 0</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Graceful shutdown</h3>
-          <p>Gremlin can drain on a cancellation token: it stops accepting connections, closes
-            stalled sockets after a grace period, and returns through your own
-            <code>ensure</code>. Multiple workers share one deadline.</p>
-          <pre><code>diamond examples/job_service/service.di 8080 jobs.db
-<span class="tok-comment"># SIGTERM drains, then exits cleanly</span></code></pre>
+          <h3>Sibling singleton calls</h3>
+          <p>Inside a <code>def self.x</code>, a bare call reaches the class's other singleton
+            methods &mdash; defined above or below &mdash; and subclass overrides still win.</p>
+          <pre><code><span class="tok-kw">class</span> <span class="tok-const">Config</span>
+  <span class="tok-kw">def</span> <span class="tok-kw">self</span>.<span class="tok-fn">load</span>() = <span class="tok-fn">defaults</span>()
+  <span class="tok-kw">def</span> <span class="tok-kw">self</span>.<span class="tok-fn">defaults</span>() = {<span class="tok-str">"port"</span>: <span class="tok-num">8080</span>}
+<span class="tok-kw">end</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Nested cleanup, fixed</h3>
-          <p>A <code>rescue</code> inside an <code>ensure</code> no longer loses the enclosing
-            return value, exception, or non-local exit &mdash; including when the garbage
-            collector runs mid-cleanup.</p>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">demo</span>()
-  <span class="tok-kw">begin</span>
-    <span class="tok-kw">return</span> :kept
-  <span class="tok-kw">ensure</span>
-    <span class="tok-kw">begin</span>
-      <span class="tok-kw">raise</span> <span class="tok-str">"cleanup failed"</span>
-    <span class="tok-kw">rescue</span> error
-      puts(<span class="tok-str">"handled"</span>)
-    <span class="tok-kw">end</span>
-  <span class="tok-kw">end</span>
-<span class="tok-kw">end</span>  <span class="tok-comment"># => :kept</span></code></pre>
+          <h3>Linear collections</h3>
+          <p><code>Array#-</code> and <code>Array#&amp;</code> no longer rescan the other array for
+            every element, so a 20,000-element subtraction that took minutes now takes
+            milliseconds. <code>==</code> on nested arrays and hashes is exact at any depth.</p>
+          <pre><code>(<span class="tok-num">0</span>...<span class="tok-num">20000</span>).<span class="tok-fn">to_a</span>() - (<span class="tok-num">0</span>...<span class="tok-num">20000</span>).<span class="tok-fn">to_a</span>()</code></pre>
         </article>
         <article class="new-card">
-          <h3>Examples that explain themselves</h3>
-          <p>Every example now comments the tricky parts and splits its logic into labelled
-            chunks. <code>--dump-bytecode=user</code> shows just your program's bytecode,
-            without the bundled preamble.</p>
-          <pre><code>diamond --dump-bytecode=user examples/calc/calc.di</code></pre>
+          <h3>Threads under stress</h3>
+          <p>Every Thread, Channel, and Supervisor test now re-runs many times pinned to two CPUs,
+            under ThreadSanitizer, and on arm64 hardware. The same pass fuzzed the
+            <code>ProgramBuilder</code> bytecode surface and fixed the one real bug it found.</p>
+          <pre><code>make test-stress-threads-tsan</code></pre>
         </article>
       </div>
 
