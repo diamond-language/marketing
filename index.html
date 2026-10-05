@@ -90,7 +90,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.11.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.11.1 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
             static types that the compiler actually checks. A Pratt compiler emits register
@@ -278,6 +278,10 @@ puts(<span class="tok-const">Point</span>.<span class="tok-fn">new</span>(<span 
       </div>
 
       <div class="release-notes">
+        <p><strong>0.11.1</strong> closes a sandbox gap: <code>ProgramBuilder#expand_source</code>
+          read files from disk even under <code>--sandbox</code>, so sandboxed code could read any
+          <code>.di</code> file the process could. It is now denied with the filesystem category.
+          If you rely on <code>--sandbox</code>, update.</p>
         <p><strong>Pre-1.0.</strong> Diamond is exercised mostly on Fedora and Ubuntu, with CI on
           macOS, FreeBSD, Alpine, and arm64. It hasn't had a security audit, so don't rely on it for
           security-sensitive work yet.</p>
