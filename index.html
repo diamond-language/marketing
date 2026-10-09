@@ -90,7 +90,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.11.2 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.12.1 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
             static types that the compiler actually checks. A Pratt compiler emits register
@@ -214,70 +214,57 @@ DIAMOND_SANDBOX_ALLOW=network \
   <section id="release">
     <div class="container">
       <div class="section-head">
-        <span class="release-badge">v0.11</span>
-        <h2>What's new in 0.11</h2>
-        <p>A validated bytecode cache, <code>inspect()</code> on every value, inherited
-          constants, and a much harder look at the threading and <code>ProgramBuilder</code>
-          surfaces.</p>
+        <span class="release-badge">v0.12</span>
+        <h2>What's new in 0.12</h2>
+        <p>Method chains one call per line, <code>mjolnir</code> &mdash; a stateless data mapper on
+          Arel &mdash; sandbox budgets that actually stop a program, and hash literals and struct
+          declarations without the old size and layout limits.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>A cache that can't crash you</h3>
-          <p>The <code>.dic</code> bytecode cache next to your script is now checked before it
-            runs: a body checksum, bounds on every count, and the bytecode verifier over every
-            function. A damaged or hand-edited file is a cache miss &mdash; the script just
-            recompiles. Before, flipping a few bytes could segfault.</p>
-          <pre><code>diamond app.di   <span class="tok-comment"># writes app.dic</span>
-<span class="tok-comment"># ...a byte of app.dic gets damaged...</span>
-diamond app.di   <span class="tok-comment"># rejected, recompiled, same result</span></code></pre>
+          <h3>Method chains, one call per line</h3>
+          <p>A line that starts with <code>.</code> continues the previous expression. Comments and
+            blank lines may sit between the links, and the formatter indents the chain for you.</p>
+          <pre><code>result = [<span class="tok-num">3</span>, <span class="tok-num">1</span>, <span class="tok-num">2</span>]
+  .<span class="tok-fn">sort</span>()
+  .<span class="tok-fn">map</span>() <span class="tok-kw">do</span> |v| v * <span class="tok-num">2</span> <span class="tok-kw">end</span>
+  .<span class="tok-fn">reverse</span>()</code></pre>
         </article>
         <article class="new-card">
-          <h3>inspect() on every value</h3>
-          <p>Strings are quoted and escaped, Symbols keep their colon, and an instance shows its
-            fields. <code>to_s</code> is unchanged, so output you already print stays the same.</p>
-          <pre><code>puts([<span class="tok-str">"a"</span>, <span class="tok-str">"b, c"</span>].<span class="tok-fn">to_s</span>())      <span class="tok-comment"># [a, b, c]</span>
-puts([<span class="tok-str">"a"</span>, <span class="tok-str">"b, c"</span>].<span class="tok-fn">inspect</span>())   <span class="tok-comment"># ["a", "b, c"]</span>
-puts(<span class="tok-const">Point</span>.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>).<span class="tok-fn">inspect</span>())   <span class="tok-comment"># #&lt;Point x=1, y=2&gt;</span></code></pre>
+          <h3>mjolnir: a stateless data mapper</h3>
+          <p>Schemas declared in code, immutable queries, changesets that cast and validate, and
+            writes that return <code>Ok</code> or <code>Err</code>. Associations load only when
+            asked, in one batched query. No identity map, callbacks, or lazy loading.</p>
+          <pre><code>listed = repo.<span class="tok-fn">all</span>(users.<span class="tok-fn">query</span>().<span class="tok-fn">limit</span>(<span class="tok-num">20</span>))
+posts_by_user = repo.<span class="tok-fn">preload</span>(users, listed, <span class="tok-str">"posts"</span>)</code></pre>
         </article>
         <article class="new-card">
-          <h3>Inherited constants</h3>
-          <p>A subclass reads its superclass's constants, and a class reads the constants of the
-            modules it includes &mdash; unqualified or through the class name. Before, a subclass
-            method naming a parent's constant failed.</p>
-          <pre><code><span class="tok-kw">class</span> <span class="tok-const">Shape</span>
-  SIDES = <span class="tok-num">0</span>
-<span class="tok-kw">end</span>
-<span class="tok-kw">class</span> <span class="tok-const">Triangle</span> &lt; <span class="tok-const">Shape</span>
-  <span class="tok-kw">def</span> <span class="tok-fn">sides</span>() = SIDES
-<span class="tok-kw">end</span>
-<span class="tok-const">Triangle</span>::SIDES  <span class="tok-comment"># =&gt; 0</span></code></pre>
-        </article>
-        <article class="new-card">
-          <h3>Sibling singleton calls</h3>
-          <p>Inside a <code>def self.x</code>, a bare call reaches the class's other singleton
-            methods &mdash; defined above or below &mdash; and subclass overrides still win.</p>
-          <pre><code><span class="tok-kw">class</span> <span class="tok-const">Config</span>
-  <span class="tok-kw">def</span> <span class="tok-kw">self</span>.<span class="tok-fn">load</span>() = <span class="tok-fn">defaults</span>()
-  <span class="tok-kw">def</span> <span class="tok-kw">self</span>.<span class="tok-fn">defaults</span>() = {<span class="tok-str">"port"</span>: <span class="tok-num">8080</span>}
+          <h3>Hash literals and structs without the limits</h3>
+          <p>A hash literal takes up to 255 entries (it stopped at 16), and a
+            <code>struct</code> field list can span lines with a trailing comma.</p>
+          <pre><code><span class="tok-kw">struct</span> <span class="tok-const">Account</span>(
+  id: <span class="tok-const">Int</span>,
+  name: <span class="tok-const">String</span>,
+)
 <span class="tok-kw">end</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Linear collections</h3>
-          <p><code>Array#-</code> and <code>Array#&amp;</code> no longer rescan the other array for
-            every element, so a 20,000-element subtraction that took minutes now takes
-            milliseconds. <code>==</code> on nested arrays and hashes is exact at any depth.</p>
-          <pre><code>(<span class="tok-num">0</span>...<span class="tok-num">20000</span>).<span class="tok-fn">to_a</span>() - (<span class="tok-num">0</span>...<span class="tok-num">20000</span>).<span class="tok-fn">to_a</span>()</code></pre>
+          <h3>Sandbox budgets that hold</h3>
+          <p>Resource budgets are shared across threads and supervisor children, so spawning more of
+            them no longer multiplies the allowance. A program that outlives a tripped budget is
+            stopped, not left to run unbounded after rescuing the error.</p>
+          <pre><code>diamond --sandbox app.di</code></pre>
         </article>
         <article class="new-card">
-          <h3>Threads under stress</h3>
-          <p>Every Thread, Channel, and Supervisor test now re-runs many times pinned to two CPUs,
-            under ThreadSanitizer, and on arm64 hardware. The same pass fuzzed the
-            <code>ProgramBuilder</code> bytecode surface and fixed the one real bug it found.</p>
-          <pre><code>make test-stress-threads-tsan</code></pre>
+          <h3>A cuts index that shows the new</h3>
+          <p>The cuts index lists the most recently updated cut first, previews each cut's README,
+            and shows one card per cut at its latest release.</p>
+          <pre><code>facet add mjolnir --registry https://cuts.dilang.tech</code></pre>
         </article>
       </div>
 
       <div class="release-notes">
+        <p><strong>0.12.1</strong> is the first 0.12 tag: 0.12.0 was prepared but never released.</p>
         <p><strong>0.11.2</strong> fixes an out-of-bounds read: calling a generic function with a
           very large spread (<code>f(*huge_array)</code>) read past a fixed-size array in the VM
           before the call was rejected. It is reachable from ordinary source, so update.</p>
