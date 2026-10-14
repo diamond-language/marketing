@@ -90,7 +90,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.13.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.14.0 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
             static types that the compiler actually checks. A Pratt compiler emits register
@@ -214,55 +214,61 @@ DIAMOND_SANDBOX_ALLOW=network \
   <section id="release">
     <div class="container">
       <div class="section-head">
-        <span class="release-badge">v0.13</span>
-        <h2>What's new in 0.13</h2>
-        <p>Supervisors that give up, send-side <code>select</code>, constants that threads can
-          see, bytecode caches 200 times smaller, and <code>case</code> exhaustiveness that
-          understands class hierarchies.</p>
+        <span class="release-badge">v0.14</span>
+        <h2>What's new in 0.14</h2>
+        <p>Mutual tail calls that run in place, a supervisor that can interrupt blocked workers,
+          a JIT that compiles loops and calls, and a sandbox that guards signal handlers.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Supervisors with a restart policy</h3>
-          <p>Bound how hard a supervisor retries: give up after too many crashes in a window, and
-            back off between restarts. When it gives up, the other children are stopped and
-            <code>join</code> raises.</p>
-          <pre><code>sup = <span class="tok-const">Supervisor</span>.<span class="tok-fn">new</span>()
-sup.<span class="tok-fn">restart_policy</span>({<span class="tok-str">"max_restarts"</span>: <span class="tok-num">5</span>, <span class="tok-str">"within_ms"</span>: <span class="tok-num">10000</span>,
-                    <span class="tok-str">"backoff_ms"</span>: <span class="tok-num">50</span>, <span class="tok-str">"max_backoff_ms"</span>: <span class="tok-num">2000</span>})</code></pre>
+          <h3>Mutual tail calls</h3>
+          <p>A <code>return</code> that calls a function which tail-calls back runs in place, so
+            a cycle of functions no longer grows the stack.</p>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">even?</span>(n)
+  <span class="tok-kw">return</span> <span class="tok-const">true</span> <span class="tok-kw">if</span> n == <span class="tok-num">0</span>
+  <span class="tok-kw">return</span> <span class="tok-fn">odd?</span>(n - <span class="tok-num">1</span>)
+<span class="tok-kw">end</span>
+
+<span class="tok-kw">def</span> <span class="tok-fn">odd?</span>(n)
+  <span class="tok-kw">return</span> <span class="tok-const">false</span> <span class="tok-kw">if</span> n == <span class="tok-num">0</span>
+  <span class="tok-kw">return</span> <span class="tok-fn">even?</span>(n - <span class="tok-num">1</span>)
+<span class="tok-kw">end</span>
+
+<span class="tok-fn">puts</span>(<span class="tok-fn">even?</span>(<span class="tok-num">1000000</span>))   <span class="tok-comment"># true</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Send to whichever channel has room</h3>
-          <p><code>Channel.select_send</code> is the send-side twin of <code>Channel.select</code>:
-            it sends to the first channel with room and returns that channel's index.</p>
-          <pre><code>where = <span class="tok-const">Channel</span>.<span class="tok-fn">select_send</span>([primary, overflow], job)</code></pre>
+          <h3>Stop a supervisor, even with blocked workers</h3>
+          <p><code>Supervisor#stop(timeout_ms)</code> stops restarts, waits for the current
+            attempts, then interrupts the ones still running, including a worker parked in a
+            channel wait, <code>IO.poll</code>, <code>accept</code> or a database query.</p>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">receiver</span>()
+  <span class="tok-const">Channel</span>.<span class="tok-fn">new</span>(<span class="tok-num">1</span>).<span class="tok-fn">receive</span>()
+<span class="tok-kw">end</span>
+
+sup = <span class="tok-const">Supervisor</span>.<span class="tok-fn">new</span>()
+sup.<span class="tok-fn">add_child</span>(receiver)
+sup.<span class="tok-fn">stop</span>(<span class="tok-num">100</span>)
+<span class="tok-fn">puts</span>(sup.<span class="tok-fn">alive?</span>(<span class="tok-num">0</span>))   <span class="tok-comment"># false</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Threads see module-level constants</h3>
-          <p>A spawned thread now gets the constants that were defined when it was created, so a
-            worker no longer finds <code>PAGE_SIZE</code> unset. Supervisor children get them too.</p>
-          <pre><code>PAGE_SIZE = <span class="tok-num">30</span>
-<span class="tok-kw">def</span> <span class="tok-fn">work</span>() PAGE_SIZE * <span class="tok-num">2</span> <span class="tok-kw">end</span>
-<span class="tok-const">Thread</span>.<span class="tok-fn">new</span>(work).<span class="tok-fn">join</span>()   <span class="tok-comment"># 60</span></code></pre>
+          <h3>A JIT that compiles calls and loops</h3>
+          <p>With <code>DIAMOND_JIT=1</code>, a function with a loop compiles on its first call and
+            a plain function call no longer holds a function back. Recursive
+            <code>fib(32)</code> goes from 0.73 s to 0.28 s on the reference machine.</p>
+          <pre><code>DIAMOND_JIT=1 diamond fib.di</code></pre>
         </article>
         <article class="new-card">
-          <h3>Small bytecode caches</h3>
-          <p>A <code>.dic</code> cache no longer carries the prelude: a three-line script's cache
-            is 20 KB instead of 4 MB. Warm caches at build time, or clear them.</p>
-          <pre><code>diamond cache warm app.di
-diamond cache clear --dry-run</code></pre>
-        </article>
-        <article class="new-card">
-          <h3>Exhaustiveness through a hierarchy</h3>
-          <p>A <code>when</code> naming a base class now covers its subclasses, so a sealed or
-            union subject needs no branch per subclass.</p>
-          <pre><code><span class="tok-kw">case</span> shape
-<span class="tok-kw">when</span> <span class="tok-const">Shape</span>
-  <span class="tok-str">"a shape"</span>
-<span class="tok-kw">end</span></code></pre>
+          <h3>Signal handlers are a sandbox capability</h3>
+          <p><code>--sandbox</code> now denies <code>Signal.trap</code> unless
+            <code>DIAMOND_SANDBOX_ALLOW</code> includes <code>signals</code>.</p>
+          <pre><code>DIAMOND_SANDBOX_ALLOW=signals diamond --sandbox app.di</code></pre>
         </article>
       </div>
 
       <div class="release-notes">
+        <p><strong>0.14.0</strong> makes <code>Signal.trap</code> a sandbox capability: a
+          sandboxed program that installs a signal handler must now be granted
+          <code>signals</code>. If you run sandboxed code that traps signals, update your allow-list.</p>
         <p><strong>0.13.0</strong> bounds blocking waits by <code>DIAMOND_MAX_WALL_MILLISECONDS</code>:
           <code>IO.poll</code> and channel <code>send</code>/<code>receive</code>/<code>select</code>
           used to sleep past the budget. If you rely on it, update.</p>
