@@ -142,6 +142,98 @@
 
   <hr class="divider">
 
+  <!-- ---------------- Familiar ground ---------------- -->
+  <section class="familiar" id="familiar">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><span class="dot"></span> Familiar ground</span>
+        <h2>You have probably written something like this</h2>
+        <p>Pieces of Diamond will feel familiar depending on where you are coming from.
+          The names are different; the ideas are not new.</p>
+      </div>
+      <div class="familiar-grid">
+      <div class="familiar-col">
+        <article class="new-card">
+          <h3>Blocks, classes, and <code>end</code></h3>
+          <p>Classes, mixins, blocks and <code>end</code>-delimited bodies, with an expressive
+            object model. Types are optional annotations layered on top, checked when you
+            write them.</p>
+          <pre><code><span class="tok-kw">class</span> <span class="tok-const">Order</span>
+  <span class="tok-kw">include</span> <span class="tok-const">Comparable</span>
+
+  <span class="tok-kw">def</span> <span class="tok-fn">initialize</span>(total: <span class="tok-const">Int</span>)
+    <span class="tok-ivar">@total</span> = total
+  <span class="tok-kw">end</span>
+
+  <span class="tok-kw">def</span> &lt;=&gt;(other: <span class="tok-const">Order</span>) = <span class="tok-ivar">@total</span> &lt;=&gt; other.total()
+  <span class="tok-kw">def</span> <span class="tok-fn">total</span>() = <span class="tok-ivar">@total</span>
+<span class="tok-kw">end</span>
+
+orders = [<span class="tok-const">Order</span>.new(<span class="tok-num">30</span>), <span class="tok-const">Order</span>.new(<span class="tok-num">10</span>), <span class="tok-const">Order</span>.new(<span class="tok-num">20</span>)]
+orders.sort().map() <span class="tok-kw">do</span> |order|
+  order.total()
+<span class="tok-kw">end</span>
+<span class="tok-comment"># =&gt; [10, 20, 30]</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Real threads, light fibers</h3>
+          <p>A <code>Thread</code> is an OS thread with its own heap, so there are no data races
+            by construction. Fibers give you generators and coroutines inside one thread.</p>
+          <pre><code>left = <span class="tok-const">Thread</span>.new(square, <span class="tok-num">6</span>)
+right = <span class="tok-const">Thread</span>.new(square, <span class="tok-num">7</span>)
+left.join() + right.join()   <span class="tok-comment"># =&gt; 85</span>
+
+steps = <span class="tok-const">Fiber</span>.new(countdown)
+steps.resume()   <span class="tok-comment"># =&gt; 3</span>
+steps.resume()   <span class="tok-comment"># =&gt; 2</span></code></pre>
+        </article>
+      </div>
+      <div class="familiar-col">
+        <article class="new-card">
+          <h3>Mailboxes and supervisors</h3>
+          <p>Threads talk through bounded channels, and a supervisor restarts a worker that
+            crashes. A failure stays inside the worker that had it.</p>
+          <pre><code>jobs = <span class="tok-const">Channel</span>.new(<span class="tok-num">4</span>)
+worker = <span class="tok-const">Thread</span>.new(producer, jobs)
+
+item = jobs.receive()   <span class="tok-comment"># blocks until a value arrives</span>
+
+sup = <span class="tok-const">Supervisor</span>.new()
+sup.add_child(fetch_loop)
+<span class="tok-comment"># fetch_loop crashes? it is restarted;</span>
+<span class="tok-comment"># nothing else is touched</span></code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Packages you install, not frameworks you adopt</h3>
+          <p><strong>Mjolnir</strong> is a data mapper: entities are plain structs, queries are
+            values, and one <code>Repo</code> does the I/O. HTTP servers, routing, GraphQL, jobs,
+            Redis and WebSockets are packages too.</p>
+          <pre><code><span class="tok-kw">struct</span> <span class="tok-const">User</span>(id: <span class="tok-const">Int</span>, name: <span class="tok-const">String</span>, email: <span class="tok-const">String</span>)
+<span class="tok-kw">end</span>
+
+users = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Schema</span>.new(<span class="tok-str">&quot;users&quot;</span>,
+  {<span class="tok-str">&quot;id&quot;</span>: <span class="tok-str">:int</span>, <span class="tok-str">&quot;name&quot;</span>: <span class="tok-str">:string</span>, <span class="tok-str">&quot;email&quot;</span>: <span class="tok-str">:string</span>},
+  build_user)
+repo = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Repo</span>.new(db)
+
+changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Changeset</span>.cast(users, <span class="tok-kw">nil</span>, attrs,
+    [<span class="tok-str">&quot;name&quot;</span>, <span class="tok-str">&quot;email&quot;</span>])
+  .validate_required([<span class="tok-str">&quot;name&quot;</span>, <span class="tok-str">&quot;email&quot;</span>])
+  .validate_format(<span class="tok-str">&quot;email&quot;</span>, <span class="tok-str">&quot;@&quot;</span>)
+
+<span class="tok-kw">case</span> repo.insert(changeset)
+<span class="tok-kw">when</span> <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Ok</span>  <span class="tok-kw">then</span> <span class="tok-str">&quot;saved&quot;</span>
+<span class="tok-kw">when</span> <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Err</span> <span class="tok-kw">then</span> <span class="tok-str">&quot;rejected&quot;</span>
+<span class="tok-kw">end</span></code></pre>
+          <p class="familiar-packages"><a href="https://github.com/diamond-language/diamond/blob/main/docs/packages.md" target="_blank" rel="noopener">All packages &rarr;</a></p>
+        </article>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
   <!-- ---------------- Release ---------------- -->
   <section id="release">
     <div class="container">
@@ -331,13 +423,6 @@
             and parser written in Diamond itself.</p>
         </div>
       </div>
-
-      <dl class="stats">
-        <div><dt>1</dt><dd>file to ship: a native executable, cross-compiled or fully static</dd></div>
-        <div><dt>6</dt><dd>platforms in CI: Fedora, Ubuntu, macOS, FreeBSD, Alpine, arm64</dd></div>
-        <div><dt>3</dt><dd>sanitizers in CI: ASan, UBSan, TSan</dd></div>
-        <div><dt>3</dt><dd>fuzz targets: compiler, VM, and interpreter vs JIT</dd></div>
-      </dl>
     </div>
   </section>
 

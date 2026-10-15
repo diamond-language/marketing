@@ -1261,3 +1261,38 @@ section {
     padding: 44px 24px;
   }
 }
+
+/* ---------- Familiar ground ---------- */
+
+.familiar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.familiar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.familiar-grid .new-card pre {
+  font-size: 13px;
+}
+
+.familiar-packages {
+  margin: 14px 0 0;
+}
+
+.familiar-packages a {
+  color: var(--cyan);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  .familiar-grid {
+    grid-template-columns: 1fr;
+  }
+}
