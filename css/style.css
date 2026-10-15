@@ -470,8 +470,8 @@ img, svg {
 }
 
 .repl-examples {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   padding: 10px 16px 4px;
   border-top: 1px solid var(--border-soft);
@@ -484,7 +484,8 @@ img, svg {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 4px 12px;
+  padding: 4px 11px;
+  text-align: center;
   cursor: pointer;
 }
 
