@@ -90,7 +90,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.14.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.15.0 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
             static types that the compiler actually checks. A Pratt compiler emits register
@@ -214,58 +214,64 @@ DIAMOND_SANDBOX_ALLOW=network \
   <section id="release">
     <div class="container">
       <div class="section-head">
-        <span class="release-badge">v0.14</span>
-        <h2>What's new in 0.14</h2>
-        <p>Mutual tail calls that run in place, a supervisor that can interrupt blocked workers,
-          a JIT that compiles loops and calls, and a sandbox that guards signal handlers.</p>
+        <span class="release-badge">v0.15</span>
+        <h2>What's new in 0.15</h2>
+        <p>Build for another platform, ship a fully static binary, recurse thousands of levels
+          deep, and extend structs.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Mutual tail calls</h3>
-          <p>A <code>return</code> that calls a function which tail-calls back runs in place, so
-            a cycle of functions no longer grows the stack.</p>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">even?</span>(n)
-  <span class="tok-kw">return</span> <span class="tok-const">true</span> <span class="tok-kw">if</span> n == <span class="tok-num">0</span>
-  <span class="tok-kw">return</span> <span class="tok-fn">odd?</span>(n - <span class="tok-num">1</span>)
-<span class="tok-kw">end</span>
-
-<span class="tok-kw">def</span> <span class="tok-fn">odd?</span>(n)
-  <span class="tok-kw">return</span> <span class="tok-const">false</span> <span class="tok-kw">if</span> n == <span class="tok-num">0</span>
-  <span class="tok-kw">return</span> <span class="tok-fn">even?</span>(n - <span class="tok-num">1</span>)
-<span class="tok-kw">end</span>
-
-<span class="tok-fn">puts</span>(<span class="tok-fn">even?</span>(<span class="tok-num">1000000</span>))   <span class="tok-comment"># true</span></code></pre>
+          <h3>Cross-compile a standalone program</h3>
+          <p><code>diamond build --target</code> links your program against a per-target runtime
+            kit built once with clang and a target sysroot. Validated for aarch64 Linux.</p>
+          <pre><code>make aot-kit-cross TARGET_TRIPLE=aarch64-linux-gnu SYSROOT=/opt/sysroots/aarch64
+diamond build app.di --target=aarch64-linux-gnu</code></pre>
         </article>
         <article class="new-card">
-          <h3>Stop a supervisor, even with blocked workers</h3>
-          <p><code>Supervisor#stop(timeout_ms)</code> stops restarts, waits for the current
-            attempts, then interrupts the ones still running, including a worker parked in a
-            channel wait, <code>IO.poll</code>, <code>accept</code> or a database query.</p>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">receiver</span>()
-  <span class="tok-const">Channel</span>.<span class="tok-fn">new</span>(<span class="tok-num">1</span>).<span class="tok-fn">receive</span>()
+          <h3>Fully static musl binaries</h3>
+          <p>A musl kit built with <code>STATIC=1</code> produces an executable with no
+            dependency on the target's libc, OpenSSL or SQLite, so it runs on any Linux of that
+            architecture, including a <code>FROM scratch</code> container.</p>
+          <pre><code>make aot-kit-cross TARGET_TRIPLE=x86_64-alpine-linux-musl SYSROOT=... NO_MYSQL=1 STATIC=1
+diamond build app.di --target=x86_64-alpine-linux-musl</code></pre>
+        </article>
+        <article class="new-card">
+          <h3>Structs that extend structs</h3>
+          <p>A struct can name another struct as its superclass. The parent's fields come first
+            and the generated <code>initialize</code>, <code>==</code> and <code>to_s</code>
+            cover every field.</p>
+          <pre><code><span class="tok-kw">struct</span> <span class="tok-const">Point</span>(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
+<span class="tok-kw">end</span>
+<span class="tok-kw">struct</span> <span class="tok-const">Point3D</span>(z: <span class="tok-const">Int</span>) &lt; <span class="tok-const">Point</span>
 <span class="tok-kw">end</span>
 
-sup = <span class="tok-const">Supervisor</span>.<span class="tok-fn">new</span>()
-sup.<span class="tok-fn">add_child</span>(receiver)
-sup.<span class="tok-fn">stop</span>(<span class="tok-num">100</span>)
-<span class="tok-fn">puts</span>(sup.<span class="tok-fn">alive?</span>(<span class="tok-num">0</span>))   <span class="tok-comment"># false</span></code></pre>
+<span class="tok-fn">puts</span>(<span class="tok-const">Point3D</span>.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>))   <span class="tok-comment"># Point3D(x: 1, y: 2, z: 3)</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>A JIT that compiles calls and loops</h3>
-          <p>With <code>DIAMOND_JIT=1</code>, a function with a loop compiles on its first call and
-            a plain function call no longer holds a function back. Recursive
-            <code>fib(32)</code> goes from 0.73 s to 0.28 s on the reference machine.</p>
-          <pre><code>DIAMOND_JIT=1 diamond fib.di</code></pre>
+          <h3>Recursion thousands of levels deep</h3>
+          <p>The program now runs on a 512 MiB stack, so ordinary non-tail recursion goes about
+            5,900 levels instead of 92, and still ends in a clean
+            <code>call stack overflow</code> error past that.</p>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">depth</span>(n)
+  <span class="tok-kw">if</span> n == <span class="tok-num">0</span> <span class="tok-kw">then</span> <span class="tok-num">0</span> <span class="tok-kw">else</span> <span class="tok-fn">depth</span>(n - <span class="tok-num">1</span>) + <span class="tok-num">1</span> <span class="tok-kw">end</span>
+<span class="tok-kw">end</span>
+
+<span class="tok-fn">puts</span>(<span class="tok-fn">depth</span>(<span class="tok-num">5000</span>))   <span class="tok-comment"># 5000</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Signal handlers are a sandbox capability</h3>
-          <p><code>--sandbox</code> now denies <code>Signal.trap</code> unless
-            <code>DIAMOND_SANDBOX_ALLOW</code> includes <code>signals</code>.</p>
-          <pre><code>DIAMOND_SANDBOX_ALLOW=signals diamond --sandbox app.di</code></pre>
+          <h3>JIT tail calls and interruption</h3>
+          <p>With <code>DIAMOND_JIT=1</code>, tail calls compile to native loops, including
+            cycles of functions, and native loops check the interrupt flag so a supervisor can
+            stop a worker spinning in compiled code.</p>
+          <pre><code>DIAMOND_JIT=1 diamond app.di</code></pre>
         </article>
       </div>
 
       <div class="release-notes">
+        <p><strong>0.15.0</strong> raises the recursion limit from 92 to about 5,900 levels on the
+          main thread (fibers and threads keep the old limit) and makes a struct's generated
+          <code>==</code> require exactly the same class. The bytecode-cache format changed, so
+          existing <code>.dic</code> caches are rebuilt once.</p>
         <p><strong>0.14.0</strong> makes <code>Signal.trap</code> a sandbox capability: a
           sandboxed program that installs a signal handler must now be granted
           <code>signals</code>. If you run sandboxed code that traps signals, update your allow-list.</p>
