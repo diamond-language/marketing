@@ -114,4 +114,13 @@
     try { document.execCommand('copy'); } catch (e) { /* no-op */ }
     document.body.removeChild(ta);
   }
+
+  // ---- The REPL needs ES modules and a fetched .wasm, which browsers refuse on file:// URLs. ----
+  if (location.protocol === 'file:') {
+    var replStatus = document.querySelector('[data-repl-status]');
+    if (replStatus) {
+      replStatus.textContent = 'The REPL needs a web server: browsers block WebAssembly on file:// pages. ' +
+        'Run "python3 -m http.server" in this folder and open http://localhost:8000.';
+    }
+  }
 })();

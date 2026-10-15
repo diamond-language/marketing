@@ -134,7 +134,7 @@
             <button type="button" class="repl-chip" data-repl-example="struct Point(x: Int, y: Int)&#10;end&#10;a = Point.new(1, 2)&#10;a == Point.new(1, 2)&#10;a.to_s()">Structs</button>
             <button type="button" class="repl-chip" data-repl-example="def risky(n)&#10;  raise ArgumentError.new(&quot;negative&quot;) if n &lt; 0&#10;  n&#10;end&#10;begin&#10;  risky(-1)&#10;rescue error: ArgumentError&#10;  &quot;rescued: &quot; + error.message()&#10;end">Errors</button>
           </div>
-          <p class="repl-status" data-repl-status>The interpreter loads in the background.</p>
+          <p class="repl-status" data-repl-status>The interpreter loads in the background. <noscript>It needs JavaScript.</noscript></p>
         </div>
       </div>
     </div>
