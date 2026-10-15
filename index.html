@@ -90,7 +90,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.15.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.15.1 · open source, pre-1.0</span>
           <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
           <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
             static types that the compiler actually checks. A Pratt compiler emits register
@@ -268,6 +268,10 @@ diamond build app.di --target=x86_64-alpine-linux-musl</code></pre>
       </div>
 
       <div class="release-notes">
+        <p><strong>0.15.1</strong> fixes a JIT bug: with <code>DIAMOND_JIT=1</code>, a method call on a
+          parameter annotated with a native type (<code>t: Time</code>) failed with
+          <code>undefined method</code>. If you run the JIT, update. It also lets a supervisor stop a
+          worker stuck in <code>MySQL.open</code> or a read from a pipe it opened.</p>
         <p><strong>0.15.0</strong> raises the recursion limit from 92 to about 5,900 levels on the
           main thread (fibers and threads keep the old limit) and makes a struct's generated
           <code>==</code> require exactly the same class. The bytecode-cache format changed, so
