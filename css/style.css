@@ -390,82 +390,118 @@ img, svg {
   font-size: 13.5px;
 }
 
-.hero-carousel {
-  /* .hero-inner is align-items: start so slide-height changes don't
-     shift the card vertically -- this pushes the card's own top down
-     to line up with the H1 rather than the eyebrow pill above it
-     (eyebrow: 15px * body's 1.6 line-height + 12px padding + 22px
-     margin-bottom = 58px). */
+.repl-window {
+  /* Aligns the card's top with the H1 rather than the eyebrow pill above it
+     (eyebrow: 15px * 1.6 line-height + 12px padding + 22px margin-bottom). */
   margin-top: 58px;
 }
 
-.hero-carousel .filename {
+.repl-window .filename {
   flex: 1;
 }
 
-.hero-carousel-arrows {
-  display: flex;
-  gap: 6px;
+.repl-badge {
   flex-shrink: 0;
-}
-
-.hero-carousel-arrow {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--cyan);
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background: rgba(34, 211, 238, 0.08);
+  padding: 2px 9px;
   border-radius: 999px;
-  color: var(--text-dim);
-  font-size: 15px;
-  line-height: 1;
-  cursor: pointer;
-  transition: all 0.15s ease;
 }
 
-.hero-carousel-arrow:hover {
+.repl-body {
+  padding: 14px 18px 8px;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.repl-scrollback {
+  height: 17.5rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.repl-line {
+  white-space: pre-wrap;
+  word-break: break-word;
   color: var(--text);
-  border-color: rgba(91, 157, 255, 0.35);
-  background: rgba(91, 157, 255, 0.06);
 }
 
-.hero-slide {
-  display: none;
+.repl-hint {
+  color: var(--text-faint);
 }
 
-.hero-slide.is-active {
-  display: block;
+.repl-echo {
+  color: var(--text-dim);
 }
 
-.hero-carousel-dots {
+.repl-prompt {
+  color: var(--blue-bright);
+  white-space: pre;
+}
+
+.repl-error {
+  color: #ff8a80;
+}
+
+.repl-form {
   display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 0;
+  align-items: baseline;
+  margin-top: 4px;
+  padding-top: 6px;
   border-top: 1px solid var(--border-soft);
 }
 
-.hero-carousel-dot {
-  width: 7px;
-  height: 7px;
+.repl-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font: inherit;
   padding: 0;
-  border: none;
+}
+
+.repl-input::placeholder {
+  color: var(--text-faint);
+}
+
+.repl-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 16px 4px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.repl-chip {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-dim);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--border);
+  padding: 4px 12px;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.hero-carousel-dot:hover {
-  background: var(--text-dim);
+.repl-chip:hover,
+.repl-chip:focus-visible {
+  color: var(--text);
+  border-color: var(--blue);
+  outline: none;
 }
 
-.hero-carousel-dot.is-active {
-  background: var(--cyan);
-  transform: scale(1.3);
+.repl-status {
+  margin: 0;
+  padding: 6px 16px 12px;
+  font-size: 12.5px;
+  color: var(--text-faint);
 }
+
 
 .code-window pre {
   margin: 0;

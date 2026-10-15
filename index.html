@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Diamond — a compiled, Ruby-inspired language with real types</title>
-<meta name="description" content="Diamond is a Ruby-inspired language with gradual, checked static typing, compiled to a custom register-bytecode VM. Familiar syntax, real types, no shared mutable state.">
+<title>Diamond — real types, one binary, nothing shared</title>
+<meta name="description" content="Diamond is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dilang.tech/">
-<meta property="og:title" content="Diamond — a compiled, Ruby-inspired language with real types">
-<meta property="og:description" content="Diamond is a Ruby-inspired language with gradual, checked static typing, compiled to a custom register-bytecode VM. Familiar syntax, real types, no shared mutable state.">
+<meta property="og:title" content="Diamond — real types, one binary, nothing shared">
+<meta property="og:description" content="Diamond is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <meta property="og:image" content="https://dilang.tech/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="Diamond">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Diamond — a compiled, Ruby-inspired language with real types">
-<meta name="twitter:description" content="Diamond is a Ruby-inspired language with gradual, checked static typing, compiled to a custom register-bytecode VM. Familiar syntax, real types, no shared mutable state.">
+<meta name="twitter:title" content="Diamond — real types, one binary, nothing shared">
+<meta name="twitter:description" content="Diamond is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <meta name="twitter:image" content="https://dilang.tech/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -91,11 +91,11 @@
       <div class="hero-inner">
         <div>
           <span class="eyebrow"><span class="dot"></span> v0.15.1 · open source, pre-1.0</span>
-          <h1>Ruby's warmth.<br>Real <span class="grad">types</span>. Compiled <span class="grad">speed</span>.</h1>
-          <p class="lead">Diamond keeps Ruby's syntax, blocks, and object model, then adds gradual
-            static types that the compiler actually checks. A Pratt compiler emits register
-            bytecode for a C23 VM with inline caches, object shapes, a generational GC, and an
-            x86-64 JIT. Threads get isolated heaps: values are copied, never shared.</p>
+          <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Nothing shared.</h1>
+          <p class="lead">Diamond is a typed, object-oriented language. The compiler checks the
+            annotations you write, a register VM with an optional JIT runs the result, and
+            <code>diamond build</code> turns a program into one executable &mdash; cross-compiled,
+            or fully static if you like. Threads copy values instead of sharing a heap.</p>
           <div class="hero-ctas">
             <a class="btn btn-primary" href="#install">Get started</a>
             <a class="btn btn-ghost" href="https://github.com/diamond-language/diamond" target="_blank" rel="noopener">
@@ -105,104 +105,36 @@
           </div>
           <div class="hero-meta">
             <span><strong>C23</strong> VM core</span>
-            <span><strong>~170</strong> opcodes</span>
+            <span><strong>1 MB</strong> in the browser</span>
             <span><strong>x86-64</strong> JIT</span>
             <span><strong>MIT</strong> licensed</span>
           </div>
         </div>
 
-        <div class="code-window hero-carousel" data-hero-carousel>
+        <div class="code-window repl-window" data-repl>
           <div class="titlebar">
             <div class="dots"><span></span><span></span><span></span></div>
-            <span class="filename" data-hero-carousel-filename>counter.di</span>
-            <div class="hero-carousel-arrows">
-              <button type="button" class="hero-carousel-arrow" data-hero-carousel-prev aria-label="Previous example">&#8249;</button>
-              <button type="button" class="hero-carousel-arrow" data-hero-carousel-next aria-label="Next example">&#8250;</button>
+            <span class="filename">diamond repl</span>
+            <span class="repl-badge">runs in your browser</span>
+          </div>
+          <div class="repl-body">
+            <div class="repl-scrollback" data-repl-scrollback role="log" aria-live="polite">
+              <div class="repl-line repl-hint">Type an expression, or pick an example below.</div>
             </div>
+            <form class="repl-form" data-repl-form autocomplete="off">
+              <span class="repl-prompt" data-repl-prompt>{&gt; </span>
+              <input class="repl-input" data-repl-input aria-label="Diamond input" spellcheck="false"
+                     autocapitalize="off" autocomplete="off" placeholder="1 + 2" disabled>
+            </form>
           </div>
-          <div class="hero-carousel-slides">
-            <pre class="hero-slide is-active" data-hero-carousel-slide data-filename="counter.di"><code><span class="tok-kw">class</span> Counter
-  <span class="tok-kw">include</span> <span class="tok-const">Comparable</span>
-
-  <span class="tok-kw">def</span> <span class="tok-fn">initialize</span>(value: <span class="tok-const">Int</span>)
-    <span class="tok-ivar">@value</span> = value
-  <span class="tok-kw">end</span>
-
-  <span class="tok-kw">def</span> <span class="tok-fn">&lt;=&gt;</span>(other: Counter)
-    <span class="tok-ivar">@value</span> &lt;=&gt; other.value()
-  <span class="tok-kw">end</span>
-  <span class="tok-kw">def</span> <span class="tok-fn">value</span>() = <span class="tok-ivar">@value</span>
-<span class="tok-kw">end</span>
-Counter.<span class="tok-fn">new</span>(<span class="tok-num">3</span>) &gt; Counter.<span class="tok-fn">new</span>(<span class="tok-num">1</span>)
-<span class="tok-comment"># =&gt; true</span></code></pre>
-
-            <pre class="hero-slide" data-hero-carousel-slide data-filename="point.di"><code><span class="tok-kw">struct</span> Point(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
-<span class="tok-kw">end</span>
-
-p1 = Point.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>)
-p2 = Point.<span class="tok-fn">new</span>(x: <span class="tok-num">1</span>, y: <span class="tok-num">2</span>)
-p1 == p2
-<span class="tok-comment"># =&gt; true</span>
-p1.to_s()
-<span class="tok-comment"># =&gt; "Point(x: 1, y: 2)"</span>
-
-<span class="tok-comment"># a struct's class works in a union</span>
-<span class="tok-kw">def</span> <span class="tok-fn">choose</span>(v: Point | <span class="tok-const">Nil</span>) -&gt; Point | <span class="tok-const">Nil</span>
-  v
-<span class="tok-kw">end</span></code></pre>
-
-            <pre class="hero-slide" data-hero-carousel-slide data-filename="classify.di"><code><span class="tok-kw">def</span> <span class="tok-fn">classify</span>(n: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span>
-  <span class="tok-kw">case</span> n
-  <span class="tok-kw">when</span> <span class="tok-num">0</span>..<span class="tok-num">9</span>
-    <span class="tok-str">"small"</span>
-  <span class="tok-kw">else</span>
-    <span class="tok-str">"large"</span>
-  <span class="tok-kw">end</span>
-<span class="tok-kw">end</span>
-
-classify(<span class="tok-num">3</span>)
-<span class="tok-comment"># =&gt; "small"</span>
-
-<span class="tok-comment"># every case checked at</span>
-<span class="tok-comment"># compile time -- exhaustive</span></code></pre>
-
-            <pre class="hero-slide" data-hero-carousel-slide data-filename="workers.di"><code><span class="tok-comment"># real OS threads, isolated heaps --</span>
-<span class="tok-comment"># values copy across the boundary</span>
-
-ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
-worker = Thread.<span class="tok-fn">new</span>(producer, ch)
-item = ch.receive()
-worker.join()
-
-<span class="tok-comment"># restart-on-crash, one_for_one</span>
-sup = Supervisor.<span class="tok-fn">new</span>()
-sup.add_child(fetch_loop, url)
-
-<span class="tok-comment"># a crash there never touches</span>
-<span class="tok-comment"># this thread, or any other</span></code></pre>
-
-            <pre class="hero-slide" data-hero-carousel-slide data-filename="shell"><code><span class="tok-comment"># denies filesystem, network, and</span>
-<span class="tok-comment"># subprocess access outright</span>
-
-diamond --sandbox untrusted.di
-
-<span class="tok-comment"># equivalently:</span>
-DIAMOND_SANDBOX=<span class="tok-num">1</span> diamond app.di
-
-<span class="tok-comment"># allow just what you need back:</span>
-DIAMOND_SANDBOX_ALLOW=network \
-  diamond --sandbox proxy.di
-
-<span class="tok-comment"># checked at every native opcode,</span>
-<span class="tok-comment"># not bolted on with a wrapper</span></code></pre>
+          <div class="repl-examples" role="group" aria-label="Examples">
+            <button type="button" class="repl-chip" data-repl-example="class Dog&#10;  def initialize(name: String)&#10;    @name = name&#10;  end&#10;  def speak() = &quot;#{@name} says woof&quot;&#10;end&#10;Dog.new(&quot;Rex&quot;).speak()">Classes</button>
+            <button type="button" class="repl-chip" data-repl-example="def double(n: Int) -&gt; Int = n * 2&#10;double(21)&#10;double(&quot;twenty&quot;)">Checked types</button>
+            <button type="button" class="repl-chip" data-repl-example="squares = [1, 2, 3, 4].map() do |n|&#10;  n * n&#10;end&#10;squares.sum()">Blocks</button>
+            <button type="button" class="repl-chip" data-repl-example="struct Point(x: Int, y: Int)&#10;end&#10;a = Point.new(1, 2)&#10;a == Point.new(1, 2)&#10;a.to_s()">Structs</button>
+            <button type="button" class="repl-chip" data-repl-example="def risky(n)&#10;  raise ArgumentError.new(&quot;negative&quot;) if n &lt; 0&#10;  n&#10;end&#10;begin&#10;  risky(-1)&#10;rescue error: ArgumentError&#10;  &quot;rescued: &quot; + error.message()&#10;end">Errors</button>
           </div>
-          <div class="hero-carousel-dots" data-hero-carousel-dots>
-            <button type="button" class="hero-carousel-dot is-active" data-hero-carousel-dot aria-label="Classes &amp; mixins"></button>
-            <button type="button" class="hero-carousel-dot" data-hero-carousel-dot aria-label="Structs"></button>
-            <button type="button" class="hero-carousel-dot" data-hero-carousel-dot aria-label="Pattern matching"></button>
-            <button type="button" class="hero-carousel-dot" data-hero-carousel-dot aria-label="Concurrency"></button>
-            <button type="button" class="hero-carousel-dot" data-hero-carousel-dot aria-label="Sandbox"></button>
-          </div>
+          <p class="repl-status" data-repl-status>The interpreter loads in the background.</p>
         </div>
       </div>
     </div>
@@ -302,10 +234,11 @@ diamond build app.di --target=x86_64-alpine-linux-musl</code></pre>
   <section class="features" id="features">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow"><span class="dot"></span> Where it actually differs</span>
-        <h2>Familiar enough to skim, strict enough to trust</h2>
-        <p>Diamond borrows Ruby's object-model ideas — it isn't a compatibility project. Matching
-          Ruby's standard library or gem ecosystem is explicitly not a goal.</p>
+        <span class="eyebrow"><span class="dot"></span> What it is</span>
+        <h2>Strict where you ask, quiet where you don't</h2>
+        <p>The syntax will look familiar if you have written scripting languages. What it does
+          with it is its own: checked annotations, copy-only concurrency, a sandbox in the
+          interpreter, and deploys that are a single file.</p>
       </div>
 
       <div class="feature-grid">
@@ -832,8 +765,8 @@ DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
           </svg>
           Diamond
         </a>
-        <p>A Ruby-inspired language with gradual, checked static typing, compiled to a custom
-          register-bytecode VM written in C23.</p>
+        <p>An object-oriented language with gradual, checked typing and a register-bytecode VM
+          written in C23. Open source under the MIT license.</p>
       </div>
       <div class="footer-col">
         <h4>Project</h4>
@@ -868,6 +801,7 @@ DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
   </div>
 </footer>
 
+<script type="module" src="js/repl.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
