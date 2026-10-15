@@ -29,7 +29,7 @@ if (root) {
     loading = DiamondRepl.load(new URL('../wasm/diamond.wasm', import.meta.url))
       .then((instance) => {
         repl = instance;
-        statusEl.textContent = 'Running in your browser. Nothing is sent anywhere.';
+        statusEl.textContent = 'Nothing you type leaves this page.';
         input.disabled = false;
         return instance;
       })
