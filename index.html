@@ -53,7 +53,7 @@
       Diamond
     </a>
     <nav class="nav-links" id="nav-links">
-      <a href="#release">What's new</a>
+      <a href="#release">Recent changes</a>
       <a href="#features">Features</a>
       <a href="#internals">Internals</a>
       <a href="#install">Install</a>
@@ -146,82 +146,43 @@
   <section id="release">
     <div class="container">
       <div class="section-head">
-        <span class="release-badge">v0.15</span>
-        <h2>What's new in 0.15</h2>
-        <p>Build for another platform, ship a fully static binary, recurse thousands of levels
-          deep, and extend structs.</p>
+        <h2>Recent changes</h2>
+        <p>Cross-compiled and static builds, deeper recursion, and structs that extend structs.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Cross-compile a standalone program</h3>
-          <p><code>diamond build --target</code> links your program against a per-target runtime
-            kit built once with clang and a target sysroot. Validated for aarch64 Linux.</p>
-          <pre><code>make aot-kit-cross TARGET_TRIPLE=aarch64-linux-gnu SYSROOT=/opt/sysroots/aarch64
-diamond build app.di --target=aarch64-linux-gnu</code></pre>
-        </article>
-        <article class="new-card">
-          <h3>Fully static musl binaries</h3>
-          <p>A musl kit built with <code>STATIC=1</code> produces an executable with no
-            dependency on the target's libc, OpenSSL or SQLite, so it runs on any Linux of that
-            architecture, including a <code>FROM scratch</code> container.</p>
-          <pre><code>make aot-kit-cross TARGET_TRIPLE=x86_64-alpine-linux-musl SYSROOT=... NO_MYSQL=1 STATIC=1
-diamond build app.di --target=x86_64-alpine-linux-musl</code></pre>
+          <h3>Ship it anywhere</h3>
+          <p><code>diamond build --target</code> cross-compiles a standalone program from a
+            per-target runtime kit. With a musl kit the result is fully static: it runs on any
+            Linux of that architecture, down to a <code>FROM scratch</code> container.</p>
+          <pre><code>diamond build app.di \
+  --target=aarch64-linux-gnu</code></pre>
         </article>
         <article class="new-card">
           <h3>Structs that extend structs</h3>
-          <p>A struct can name another struct as its superclass. The parent's fields come first
-            and the generated <code>initialize</code>, <code>==</code> and <code>to_s</code>
-            cover every field.</p>
+          <p>A struct can name another struct as its superclass. The parent's fields come first,
+            and the generated <code>initialize</code>, <code>==</code> and <code>to_s</code> cover
+            every field.</p>
           <pre><code><span class="tok-kw">struct</span> <span class="tok-const">Point</span>(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
 <span class="tok-kw">end</span>
 <span class="tok-kw">struct</span> <span class="tok-const">Point3D</span>(z: <span class="tok-const">Int</span>) &lt; <span class="tok-const">Point</span>
 <span class="tok-kw">end</span>
-
-<span class="tok-fn">puts</span>(<span class="tok-const">Point3D</span>.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>))   <span class="tok-comment"># Point3D(x: 1, y: 2, z: 3)</span></code></pre>
+<span class="tok-const">Point3D</span>.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>).<span class="tok-fn">to_s</span>()</code></pre>
         </article>
         <article class="new-card">
-          <h3>Recursion thousands of levels deep</h3>
-          <p>The program now runs on a 512 MiB stack, so ordinary non-tail recursion goes about
-            5,900 levels instead of 92, and still ends in a clean
-            <code>call stack overflow</code> error past that.</p>
+          <h3>Deeper recursion</h3>
+          <p>Ordinary recursion now goes about 5,900 levels instead of 92, and still ends in a
+            clean error past that. With <code>DIAMOND_JIT=1</code>, tail calls, cycles included,
+            compile to native loops.</p>
           <pre><code><span class="tok-kw">def</span> <span class="tok-fn">depth</span>(n)
-  <span class="tok-kw">if</span> n == <span class="tok-num">0</span> <span class="tok-kw">then</span> <span class="tok-num">0</span> <span class="tok-kw">else</span> <span class="tok-fn">depth</span>(n - <span class="tok-num">1</span>) + <span class="tok-num">1</span> <span class="tok-kw">end</span>
+  <span class="tok-kw">if</span> n == <span class="tok-num">0</span> <span class="tok-kw">then</span> <span class="tok-num">0</span>
+  <span class="tok-kw">else</span> <span class="tok-fn">depth</span>(n - <span class="tok-num">1</span>) + <span class="tok-num">1</span> <span class="tok-kw">end</span>
 <span class="tok-kw">end</span>
-
-<span class="tok-fn">puts</span>(<span class="tok-fn">depth</span>(<span class="tok-num">5000</span>))   <span class="tok-comment"># 5000</span></code></pre>
-        </article>
-        <article class="new-card">
-          <h3>JIT tail calls and interruption</h3>
-          <p>With <code>DIAMOND_JIT=1</code>, tail calls compile to native loops, including
-            cycles of functions, and native loops check the interrupt flag so a supervisor can
-            stop a worker spinning in compiled code.</p>
-          <pre><code>DIAMOND_JIT=1 diamond app.di</code></pre>
+<span class="tok-fn">depth</span>(<span class="tok-num">5000</span>)   <span class="tok-comment"># 5000</span></code></pre>
         </article>
       </div>
 
       <div class="release-notes">
-        <p><strong>0.15.1</strong> fixes a JIT bug: with <code>DIAMOND_JIT=1</code>, a method call on a
-          parameter annotated with a native type (<code>t: Time</code>) failed with
-          <code>undefined method</code>. If you run the JIT, update. It also lets a supervisor stop a
-          worker stuck in <code>MySQL.open</code> or a read from a pipe it opened.</p>
-        <p><strong>0.15.0</strong> raises the recursion limit from 92 to about 5,900 levels on the
-          main thread (fibers and threads keep the old limit) and makes a struct's generated
-          <code>==</code> require exactly the same class. The bytecode-cache format changed, so
-          existing <code>.dic</code> caches are rebuilt once.</p>
-        <p><strong>0.14.0</strong> makes <code>Signal.trap</code> a sandbox capability: a
-          sandboxed program that installs a signal handler must now be granted
-          <code>signals</code>. If you run sandboxed code that traps signals, update your allow-list.</p>
-        <p><strong>0.13.0</strong> bounds blocking waits by <code>DIAMOND_MAX_WALL_MILLISECONDS</code>:
-          <code>IO.poll</code> and channel <code>send</code>/<code>receive</code>/<code>select</code>
-          used to sleep past the budget. If you rely on it, update.</p>
-        <p><strong>0.12.1</strong> is the first 0.12 tag: 0.12.0 was prepared but never released.</p>
-        <p><strong>0.11.2</strong> fixes an out-of-bounds read: calling a generic function with a
-          very large spread (<code>f(*huge_array)</code>) read past a fixed-size array in the VM
-          before the call was rejected. It is reachable from ordinary source, so update.</p>
-        <p><strong>0.11.1</strong> closes a sandbox gap: <code>ProgramBuilder#expand_source</code>
-          read files from disk even under <code>--sandbox</code>, so sandboxed code could read any
-          <code>.di</code> file the process could. It is now denied with the filesystem category.
-          If you rely on <code>--sandbox</code>, update.</p>
         <p><strong>Pre-1.0.</strong> Diamond is exercised mostly on Fedora and Ubuntu, with CI on
           macOS, FreeBSD, Alpine, and arm64. It hasn't had a security audit, so don't rely on it for
           security-sensitive work yet.</p>
@@ -372,10 +333,10 @@ diamond build app.di --target=x86_64-alpine-linux-musl</code></pre>
       </div>
 
       <dl class="stats">
-        <div><dt>1,604</dt><dd>tests on every commit</dd></div>
-        <div><dt>9</dt><dd>CI jobs: Fedora, Ubuntu, macOS, FreeBSD, Alpine, arm64</dd></div>
+        <div><dt>1,857</dt><dd>tests on every commit</dd></div>
+        <div><dt>6</dt><dd>platforms in CI: Fedora, Ubuntu, macOS, FreeBSD, Alpine, arm64</dd></div>
         <div><dt>3</dt><dd>sanitizers in CI: ASan, UBSan, TSan</dd></div>
-        <div><dt>2</dt><dd>libFuzzer targets: compiler and VM</dd></div>
+        <div><dt>2</dt><dd>fuzz targets: compiler, VM, and interpreter vs JIT</dd></div>
       </dl>
     </div>
   </section>
