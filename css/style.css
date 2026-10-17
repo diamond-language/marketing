@@ -944,6 +944,7 @@ section {
 .stage code,
 .internals-card code,
 .new-card p code,
+.featured-points code,
 .release-notes code {
   font-size: 0.92em;
   color: var(--tok-fn);
@@ -1324,3 +1325,35 @@ section {
 }
 
 .tok-sym { color: var(--tok-const); }
+
+/* ---------- Featured cut ---------- */
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.featured-points {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-dim);
+  font-size: 15px;
+}
+
+.featured-points strong {
+  color: var(--text);
+}
+
+.featured-grid .new-card pre {
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+}

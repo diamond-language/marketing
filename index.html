@@ -570,6 +570,56 @@ DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
 
   <hr class="divider">
 
+  <!-- ---------------- Featured cut ---------------- -->
+  <section id="featured-cut">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><span class="dot"></span> Featured cut</span>
+        <h2>Mjolnir</h2>
+        <p>A stateless data mapper on Arel. Entities are plain structs, queries and validation
+          are values, and one <code>Repo</code> does all the I/O.</p>
+      </div>
+      <div class="featured-grid">
+        <article class="new-card">
+          <h3>No hidden work</h3>
+          <ul class="featured-points">
+            <li><strong>Changesets</strong> whitelist, cast and validate untrusted input before
+              anything touches the database.</li>
+            <li><strong>Queries are immutable.</strong> Every method returns a new one, and a
+              misspelled field raises instead of generating bad SQL.</li>
+            <li><strong>Results are sealed.</strong> A <code>case</code> over <code>Ok</code>
+              and <code>Err</code> is checked for exhaustiveness.</li>
+            <li><strong>No lazy loading.</strong> An association is fetched only by
+              <code>preload</code>, one query for any number of entities.</li>
+          </ul>
+          <pre><code>facet add mjolnir --registry https://cuts.dilang.tech</code></pre>
+          <p class="familiar-packages"><a href="https://cuts.dilang.tech" target="_blank" rel="noopener">View on the registry &rarr;</a></p>
+        </article>
+        <article class="new-card">
+          <h3>Queries and associations</h3>
+          <p>Declare associations once, then load them explicitly. Each <code>Repo</code> call is
+            exactly one round trip.</p>
+          <pre><code>users.<span class="tok-fn">has_many</span>(<span class="tok-str">&quot;posts&quot;</span>, posts, <span class="tok-str">&quot;user_id&quot;</span>)
+
+adults = users.<span class="tok-fn">query</span>()
+  .<span class="tok-fn">where</span>(users.<span class="tok-fn">column</span>(<span class="tok-str">&quot;age&quot;</span>).<span class="tok-fn">gteq</span>(<span class="tok-num">18</span>))
+  .<span class="tok-fn">order_by</span>(<span class="tok-str">&quot;name&quot;</span>)
+  .<span class="tok-fn">limit</span>(<span class="tok-num">10</span>)
+
+listed = repo.<span class="tok-fn">all</span>(adults)
+repo.<span class="tok-fn">preload</span>(users, listed, <span class="tok-str">&quot;posts&quot;</span>)
+<span class="tok-comment"># =&gt; {1: [Post, Post], 2: []}</span>
+
+repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |tx|
+  tx.<span class="tok-fn">insert</span>(changeset)
+<span class="tok-kw">end</span></code></pre>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
   <!-- ---------------- Install ---------------- -->
   <section id="install">
     <div class="container">
