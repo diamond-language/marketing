@@ -1357,3 +1357,41 @@ section {
     grid-template-columns: 1fr;
   }
 }
+
+/* Completion: faint text after the caret, and a short list above the line. */
+.repl-ghost {
+  color: var(--text-faint);
+  opacity: 0.75;
+}
+
+.repl-completions {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  z-index: 2;
+  margin: 0;
+  padding: 4px;
+  min-width: 11ch;
+  list-style: none;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.repl-completion {
+  padding: 1px 8px;
+  border-radius: 4px;
+  color: var(--text-dim);
+  white-space: pre;
+  cursor: pointer;
+}
+
+.repl-completion b {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.repl-completion.is-selected {
+  background: rgba(91, 157, 255, 0.18);
+  color: var(--text);
+}

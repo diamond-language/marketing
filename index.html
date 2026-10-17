@@ -126,7 +126,9 @@
               <span class="repl-prompt" data-repl-prompt>{&gt; </span>
               <span class="repl-field"><span class="repl-highlight" aria-hidden="true" data-repl-highlight></span>
                 <input class="repl-input" data-repl-input aria-label="Diamond input" spellcheck="false"
-                     autocapitalize="off" autocomplete="off" placeholder="1 + 2" disabled></span>
+                     autocapitalize="off" autocomplete="off" placeholder="1 + 2" role="combobox"
+                     aria-autocomplete="list" aria-expanded="false" aria-controls="repl-completions" disabled>
+                <ul class="repl-completions" id="repl-completions" data-repl-completions role="listbox" hidden></ul></span>
             </form>
           </div>
           <div class="repl-examples" role="group" aria-label="Examples">

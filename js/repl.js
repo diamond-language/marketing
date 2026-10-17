@@ -10,6 +10,7 @@ if (root) {
   const promptEl = root.querySelector('[data-repl-prompt]');
   const statusEl = root.querySelector('[data-repl-status]');
   const highlightEl = root.querySelector('[data-repl-highlight]');
+  const listEl = root.querySelector('[data-repl-completions]');
   const history = [];
   let cursor = 0;
   let repl = null;
@@ -29,11 +30,98 @@ if (root) {
     return fragment;
   };
 
+  // Completion: candidates for the word before the caret, from the same engine as the terminal
+  // REPL's Tab key. The best match shows as faint text after the caret and a short list opens
+  // when there are several. Tab (or the right arrow at the end of the line) takes the selected
+  // one, the up and down arrows move through the list, Escape closes it.
+  const MAX_LISTED = 6;
+  let completion = null;          // { value, prefix, labels, selected } for the text it was computed from
+  let completionTimer = 0;
+
+  const ghostText = () => {
+    if (!completion || input.value !== completion.value) return '';
+    return completion.labels[completion.selected].slice(completion.prefix.length);
+  };
+
   // Repaints the layer behind the input; the input scrolls itself when a line outgrows it.
   const paint = () => {
     if (!repl || !highlightEl) return;
-    highlightEl.replaceChildren(colored(repl, input.value));
+    const content = colored(repl, input.value);
+    const ghost = ghostText();
+    if (ghost) {
+      const span = document.createElement('span');
+      span.className = 'repl-ghost';
+      span.textContent = ghost;
+      content.append(span);
+    }
+    highlightEl.replaceChildren(content);
     highlightEl.style.transform = `translateX(${-input.scrollLeft}px)`;
+  };
+
+  const renderList = () => {
+    if (!listEl) return;
+    const open = completion && input.value === completion.value && completion.labels.length > 1;
+    listEl.hidden = !open;
+    input.setAttribute('aria-expanded', String(Boolean(open)));
+    if (!open) return;
+    const { labels, selected, prefix } = completion;
+    // A window of the list that always contains the selection.
+    const from = Math.min(Math.max(0, selected - MAX_LISTED + 1), Math.max(0, labels.length - MAX_LISTED));
+    listEl.replaceChildren(...labels.slice(from, from + MAX_LISTED).map((label, offset) => {
+      const item = document.createElement('li');
+      item.className = 'repl-completion' + (from + offset === selected ? ' is-selected' : '');
+      item.setAttribute('role', 'option');
+      const typed = document.createElement('b');
+      typed.textContent = prefix;
+      item.append(typed, label.slice(prefix.length));
+      item.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        completion.selected = from + offset;
+        accept();
+      });
+      return item;
+    }));
+    // Lines the list up under the word being completed (the input is monospace).
+    listEl.style.left = `${input.value.length - prefix.length}ch`;
+  };
+
+  const clearCompletion = () => {
+    clearTimeout(completionTimer);
+    completion = null;
+    renderList();
+    paint();
+  };
+
+  const accept = () => {
+    const ghost = ghostText();
+    if (!ghost) return false;
+    input.value += ghost;
+    clearCompletion();
+    input.focus();
+    return true;
+  };
+
+  const requestCompletion = () => {
+    clearTimeout(completionTimer);
+    const value = input.value;
+    const typed = /[A-Za-z0-9_]*$/.exec(value)[0];
+    if (!repl || input.selectionStart !== value.length || input.selectionEnd !== value.length
+        || !(typed || value.endsWith('.'))) {
+      if (completion && completion.value !== value) clearCompletion();
+      return;
+    }
+    // Compiling the session takes a few tens of milliseconds, so wait for a pause in typing.
+    completionTimer = setTimeout(() => {
+      if (input.value !== value || busy) return;
+      let result;
+      try { result = repl.complete(value); } catch { return; }
+      // Shortest first, so the faint text is the least surprising; nothing to add is no candidate.
+      const labels = [...new Set(result.labels)].filter((label) => label.length > result.prefix.length)
+        .sort((a, b) => a.length - b.length || (a < b ? -1 : 1));
+      completion = labels.length ? { value, prefix: result.prefix, labels, selected: 0 } : null;
+      renderList();
+      paint();
+    }, 90);
   };
 
   const print = (text, className = '') => {
@@ -88,7 +176,7 @@ if (root) {
     if (busy) return;
     const line = input.value;
     input.value = '';
-    paint();
+    clearCompletion();
     if (line.trim()) { history.push(line); cursor = history.length; }
     busy = true;
     await submit(line);
@@ -96,13 +184,35 @@ if (root) {
     input.focus();
   });
 
-  for (const type of ['input', 'scroll', 'keyup', 'click']) input.addEventListener(type, paint);
+  for (const type of ['scroll', 'keyup', 'click']) input.addEventListener(type, paint);
+  input.addEventListener('input', () => {
+    if (completion && input.value !== completion.value) completion = null;
+    renderList();
+    paint();
+    requestCompletion();
+  });
+  input.addEventListener('blur', () => { if (completion) clearCompletion(); });
 
   input.addEventListener('keydown', (event) => {
+    if (completion && input.value === completion.value) {
+      const count = completion.labels.length;
+      if (event.key === 'Tab' || (event.key === 'ArrowRight' && input.selectionStart === input.value.length)) {
+        if (accept()) event.preventDefault();
+        return;
+      }
+      if (event.key === 'Escape') { clearCompletion(); event.preventDefault(); return; }
+      if (count > 1 && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        completion.selected = (completion.selected + (event.key === 'ArrowDown' ? 1 : count - 1)) % count;
+        renderList();
+        paint();
+        event.preventDefault();
+        return;
+      }
+    }
     if (event.key === 'ArrowUp' && cursor > 0) {
-      cursor--; input.value = history[cursor]; paint(); event.preventDefault();
+      cursor--; input.value = history[cursor]; clearCompletion(); event.preventDefault();
     } else if (event.key === 'ArrowDown' && cursor < history.length) {
-      cursor++; input.value = history[cursor] ?? ''; paint(); event.preventDefault();
+      cursor++; input.value = history[cursor] ?? ''; clearCompletion(); event.preventDefault();
     }
   });
 
