@@ -90,7 +90,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.15.1 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.16.0 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Nothing shared.</h1>
           <p class="lead">Diamond is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -244,38 +244,37 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>Cross-compiled and static builds, deeper recursion, and structs that extend structs.</p>
+        <p>Endless ranges, indented JSON, and integers that grow past 64 bits.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Ship it anywhere</h3>
-          <p><code>diamond build --target</code> cross-compiles a standalone program from a
-            per-target runtime kit. With a musl kit the result is fully static: it runs on any
-            Linux of that architecture, down to a <code>FROM scratch</code> container.</p>
-          <pre><code>diamond build app.di \
-  --target=aarch64-linux-gnu</code></pre>
+          <h3>Endless ranges</h3>
+          <p>A range with no end runs to the end of an Array or String, and matches everything
+            above its start in a <code>case</code>. Negative bounds count from the end.</p>
+          <pre><code>a = [<span class="tok-num">10</span>, <span class="tok-num">20</span>, <span class="tok-num">30</span>, <span class="tok-num">40</span>]
+a[<span class="tok-num">1</span>..]       <span class="tok-comment"># [20, 30, 40]</span>
+<span class="tok-str">&quot;hello&quot;</span>[<span class="tok-num">1</span>..]   <span class="tok-comment"># &quot;ello&quot;</span>
+
+<span class="tok-kw">case</span> score
+<span class="tok-kw">when</span> <span class="tok-num">90</span>.. <span class="tok-kw">then</span> <span class="tok-str">&quot;A&quot;</span>
+<span class="tok-kw">end</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>Structs that extend structs</h3>
-          <p>A struct can name another struct as its superclass. The parent's fields come first,
-            and the generated <code>initialize</code>, <code>==</code> and <code>to_s</code> cover
-            every field.</p>
-          <pre><code><span class="tok-kw">struct</span> <span class="tok-const">Point</span>(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
-<span class="tok-kw">end</span>
-<span class="tok-kw">struct</span> <span class="tok-const">Point3D</span>(z: <span class="tok-const">Int</span>) &lt; <span class="tok-const">Point</span>
-<span class="tok-kw">end</span>
-<span class="tok-const">Point3D</span>.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>).<span class="tok-fn">to_s</span>()</code></pre>
+          <h3>Readable JSON</h3>
+          <p><code>JSON.stringify</code> takes options: <code>indent</code> lays the document out
+            over several lines, and <code>sort_keys</code> makes the output stable.</p>
+          <pre><code><span class="tok-const">JSON</span>.<span class="tok-fn">stringify</span>(
+  {<span class="tok-str">&quot;b&quot;</span>: <span class="tok-num">1</span>, <span class="tok-str">&quot;a&quot;</span>: [<span class="tok-num">2</span>]},
+  {<span class="tok-str">&quot;indent&quot;</span>: <span class="tok-num">2</span>, <span class="tok-str">&quot;sort_keys&quot;</span>: <span class="tok-kw">true</span>})</code></pre>
         </article>
         <article class="new-card">
-          <h3>Deeper recursion</h3>
-          <p>Ordinary recursion now goes about 5,900 levels instead of 92, and still ends in a
-            clean error past that. With <code>DIAMOND_JIT=1</code>, tail calls, cycles included,
-            compile to native loops.</p>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">depth</span>(n)
-  <span class="tok-kw">if</span> n == <span class="tok-num">0</span> <span class="tok-kw">then</span> <span class="tok-num">0</span>
-  <span class="tok-kw">else</span> <span class="tok-fn">depth</span>(n - <span class="tok-num">1</span>) + <span class="tok-num">1</span> <span class="tok-kw">end</span>
-<span class="tok-kw">end</span>
-<span class="tok-fn">depth</span>(<span class="tok-num">5000</span>)   <span class="tok-comment"># 5000</span></code></pre>
+          <h3>Integers without a ceiling</h3>
+          <p>Shifts and the bitwise operators promote to arbitrary precision instead of
+            wrapping, and integer literals past 64 bits are accepted.</p>
+          <pre><code><span class="tok-num">1</span> &lt;&lt; <span class="tok-num">70</span>
+<span class="tok-comment"># 1180591620717411303424</span>
+<span class="tok-num">0xFFFF_FFFF_FFFF_FFFF_FFFF</span> &amp; <span class="tok-num">0xFF</span>
+<span class="tok-comment"># 255</span></code></pre>
         </article>
       </div>
 
