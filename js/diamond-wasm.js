@@ -64,7 +64,8 @@ function makeWasi(state) {
     fd_prestat_dir_name: () => EBADF,
     fd_readdir: () => EBADF,
     path_open: unsupported, path_filestat_get: unsupported, path_link: unsupported,
-    path_readlink: unsupported, path_remove_directory: unsupported, path_rename: unsupported,
+    path_create_directory: unsupported, path_readlink: unsupported,
+    path_remove_directory: unsupported, path_rename: unsupported,
     path_unlink_file: unsupported, poll_oneoff: unsupported, sock_accept: unsupported,
     sock_shutdown: unsupported, sock_recv: unsupported, sock_send: unsupported,
     random_get(pointer, length) {
@@ -77,6 +78,9 @@ function makeWasi(state) {
     sched_yield: () => SUCCESS,
   };
 }
+
+// Indexed by the class numbers diamond_wasm_tokens returns (wasm/repl_driver.c).
+const HIGHLIGHT_CLASSES = ['', 'tok-kw', 'tok-str', 'tok-num', 'tok-fn', 'tok-const', 'tok-ivar', 'tok-sym', 'tok-str'];
 
 export class DiamondRepl {
   #module; #instance; #state;
@@ -164,6 +168,39 @@ export class DiamondRepl {
     // the input: an unfinished entry. One on an existing line is a real error.
     const terminated = source.split('\n').length - 1;
     return Number(match[1]) > terminated;
+  }
+
+  // Splits source into [{ cls, text }] segments for colouring. The classes come from the
+  // lexer inside the module (diamond_wasm_tokens); gaps starting with '#' are comments.
+  highlight(source) {
+    const { exports } = this.#instance;
+    const bytes = new TextEncoder().encode(source + '\0');
+    const pointer = exports.diamond_wasm_alloc(bytes.length);
+    new Uint8Array(exports.memory.buffer, pointer, bytes.length).set(bytes);
+    const table = exports.diamond_wasm_tokens(pointer);
+    const count = table ? new Uint32Array(exports.memory.buffer, table, 1)[0] : 0;
+    const entries = count ? Array.from(new Uint32Array(exports.memory.buffer, table + 4, count * 3)) : [];
+    exports.diamond_wasm_free(pointer);
+    const decoder = new TextDecoder();
+    const slice = (from, to) => decoder.decode(bytes.subarray(from, to));
+    const segments = [];
+    const gap = (text) => {
+      const hash = text.indexOf('#');
+      if (hash < 0) { if (text) segments.push({ cls: '', text }); return; }
+      if (hash) segments.push({ cls: '', text: text.slice(0, hash) });
+      segments.push({ cls: 'tok-comment', text: text.slice(hash) });
+    };
+    const end = bytes.length - 1;
+    let at = 0;
+    for (let i = 0; i < entries.length; i += 3) {
+      const [kind, start, length] = entries.slice(i, i + 3);
+      if (start < at) continue;
+      gap(slice(at, start));
+      segments.push({ cls: HIGHLIGHT_CLASSES[kind] || '', text: slice(start, start + length) });
+      at = start + length;
+    }
+    gap(slice(at, end));
+    return segments;
   }
 
   get prompt() { return this.#pending ? '... ' : '{> '; }

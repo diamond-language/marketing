@@ -9,11 +9,32 @@ if (root) {
   const input = root.querySelector('[data-repl-input]');
   const promptEl = root.querySelector('[data-repl-prompt]');
   const statusEl = root.querySelector('[data-repl-status]');
+  const highlightEl = root.querySelector('[data-repl-highlight]');
   const history = [];
   let cursor = 0;
   let repl = null;
   let loading = null;
   let busy = false;
+
+  // Coloured text for a line of source, from the lexer inside the module.
+  const colored = (instance, text) => {
+    const fragment = document.createDocumentFragment();
+    for (const segment of instance.highlight(text)) {
+      if (!segment.cls) { fragment.append(segment.text); continue; }
+      const span = document.createElement('span');
+      span.className = segment.cls;
+      span.textContent = segment.text;
+      fragment.append(span);
+    }
+    return fragment;
+  };
+
+  // Repaints the layer behind the input; the input scrolls itself when a line outgrows it.
+  const paint = () => {
+    if (!repl || !highlightEl) return;
+    highlightEl.replaceChildren(colored(repl, input.value));
+    highlightEl.style.transform = `translateX(${-input.scrollLeft}px)`;
+  };
 
   const print = (text, className = '') => {
     const line = document.createElement('div');
@@ -49,7 +70,7 @@ if (root) {
     const prompt = document.createElement('span');
     prompt.className = 'repl-prompt';
     prompt.textContent = promptEl.textContent;
-    echo.append(prompt, document.createTextNode(line));
+    echo.append(prompt, colored(instance, line));
     scrollback.append(echo);
     try {
       const result = instance.submit(line);
@@ -67,6 +88,7 @@ if (root) {
     if (busy) return;
     const line = input.value;
     input.value = '';
+    paint();
     if (line.trim()) { history.push(line); cursor = history.length; }
     busy = true;
     await submit(line);
@@ -74,11 +96,13 @@ if (root) {
     input.focus();
   });
 
+  for (const type of ['input', 'scroll', 'keyup', 'click']) input.addEventListener(type, paint);
+
   input.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp' && cursor > 0) {
-      cursor--; input.value = history[cursor]; event.preventDefault();
+      cursor--; input.value = history[cursor]; paint(); event.preventDefault();
     } else if (event.key === 'ArrowDown' && cursor < history.length) {
-      cursor++; input.value = history[cursor] ?? ''; event.preventDefault();
+      cursor++; input.value = history[cursor] ?? ''; paint(); event.preventDefault();
     }
   });
 

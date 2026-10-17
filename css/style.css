@@ -1297,3 +1297,30 @@ section {
     grid-template-columns: 1fr;
   }
 }
+
+/* The REPL input is transparent text over a coloured copy of itself, so the lexer's colours
+   show while typing and the caret, selection and scrolling stay the browser's own. */
+.repl-field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.repl-field .repl-input {
+  position: relative;
+  width: 100%;
+  color: transparent;
+  caret-color: var(--text);
+}
+
+.repl-highlight {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  white-space: pre;
+  pointer-events: none;
+  color: var(--text);
+}
+
+.tok-sym { color: var(--tok-const); }
