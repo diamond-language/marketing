@@ -90,7 +90,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.17.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.18.0 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Nothing shared.</h1>
           <p class="lead">Diamond is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -244,35 +244,37 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>One-line loops, <code>Array.new</code>, <code>p</code> for quick debugging, and Ruby-style hash rockets.</p>
+        <p>Composite keys in Mjolnir, error codes in GraphQL, and the peer address of a socket.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>One-line loops</h3>
-          <p>Put the condition after the statement. It is tested first, so the statement
-            may never run.</p>
-          <pre><code>i = <span class="tok-num">0</span>
-i += <span class="tok-num">1</span> <span class="tok-kw">while</span> i &lt; <span class="tok-num">10</span>
-i             <span class="tok-comment"># 10</span>
+          <h3>Composite primary keys</h3>
+          <p>A Mjolnir schema can key a table on several columns, such as a join table. Look a row up
+            with an Array of its parts.</p>
+          <pre><code>members = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Schema</span>.<span class="tok-fn">new</span>(
+  <span class="tok-str">&quot;members&quot;</span>, fields, row,
+  primary_key: [<span class="tok-str">&quot;team&quot;</span>, <span class="tok-str">&quot;user&quot;</span>])
 
-n = <span class="tok-num">20</span>
-n -= <span class="tok-num">3</span> <span class="tok-kw">until</span> n &lt; <span class="tok-num">0</span></code></pre>
+repo.<span class="tok-fn">get</span>(members, [<span class="tok-num">1</span>, <span class="tok-num">7</span>])</code></pre>
         </article>
         <article class="new-card">
-          <h3>Array.new</h3>
-          <p>An Array of a given length, filled with <code>nil</code> or a value you pass.
-            Every slot holds the same object, as in Ruby.</p>
-          <pre><code><span class="tok-const">Array</span>.<span class="tok-fn">new</span>(<span class="tok-num">3</span>, <span class="tok-num">0</span>)   <span class="tok-comment"># [0, 0, 0]</span>
-<span class="tok-const">Array</span>.<span class="tok-fn">new</span>(<span class="tok-num">2</span>)      <span class="tok-comment"># [nil, nil]</span>
-<span class="tok-const">Array</span>.<span class="tok-fn">new</span>(<span class="tok-num">2</span>, [])  <span class="tok-comment"># one [] twice</span></code></pre>
+          <h3>GraphQL error extensions</h3>
+          <p>An <code>ExecutionError</code> can carry a Hash that comes back under the error's
+            <code>extensions</code> key, so a client can branch on a code instead of a message.</p>
+          <pre><code><span class="tok-kw">raise</span> <span class="tok-const">GraphQL</span>:<span class="tok-str">:ExecutionError</span>.<span class="tok-fn">new</span>(
+  <span class="tok-str">&quot;sign in&quot;</span>, {<span class="tok-str">&quot;code&quot;</span>: <span class="tok-str">&quot;DENIED&quot;</span>})
+
+<span class="tok-comment"># error: {&quot;message&quot;: &quot;sign in&quot;,
+#  extensions: {&quot;code&quot;: &quot;DENIED&quot;}</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>p and hash rockets</h3>
-          <p><code>p</code> prints a value's <code>inspect</code> form and hands the value back,
-            so it can wrap any expression. Hash literals accept <code style="font-variant-ligatures:none">=&gt;</code> as well as
-            <code>:</code>.</p>
-          <pre style="font-variant-ligatures:none"><code>total = <span class="tok-fn">p</span>(<span class="tok-num">12</span> * <span class="tok-num">3</span>) + <span class="tok-num">4</span>  <span class="tok-comment"># prints 36</span>
-<span class="tok-fn">p</span>({<span class="tok-str">&quot;a&quot;</span> =&gt; <span class="tok-num">1</span>})          <span class="tok-comment"># {&quot;a&quot;: 1}</span></code></pre>
+          <h3>Who is on the other end</h3>
+          <p>A connected socket reports its peer's address as text, so a server can rate-limit or log
+            by client without a proxy header.</p>
+          <pre><code>server = <span class="tok-const">TCPServer</span>.<span class="tok-fn">listen</span>(<span class="tok-num">8080</span>)
+conn = server.<span class="tok-fn">accept</span>()
+conn.<span class="tok-fn">peer_address</span>()
+<span class="tok-comment"># &quot;203.0.113.7&quot;</span></code></pre>
         </article>
       </div>
 
