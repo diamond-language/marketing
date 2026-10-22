@@ -24,7 +24,8 @@ install -m 644 nginx.conf /etc/nginx/conf.d/dilang.conf
 install -m 644 index.html /var/www/dilang.tech/index.html
 nginx -t
 systemctl reload nginx
-curl --fail --silent --show-error --resolve getdiamond.codes:443:127.0.0.1 \
+# nginx reload returns before the new workers finish taking over.
+curl --retry 5 --retry-all-errors --retry-delay 1 --fail --silent --show-error --resolve getdiamond.codes:443:127.0.0.1 \
     https://getdiamond.codes/ | grep -F 'rel="canonical" href="https://getdiamond.codes/"'
 curl --fail --silent --show-error --resolve dilang.tech:443:127.0.0.1 \
     --head 'https://dilang.tech/wasm/?domain-check=1' \

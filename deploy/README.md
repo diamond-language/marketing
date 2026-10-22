@@ -18,5 +18,9 @@ rolls back if activation fails. The timer retries every 30 minutes and disables
 itself after success. Check `journalctl -u diamond-marketing-domain.service`
 and `/root/diamond-marketing-domain/activated` for the outcome.
 
-On 2026-10-21, activation was staged while public DNS still returned NXDOMAIN.
-The existing marketing site continues serving until certificate issuance succeeds.
+Activated on 2026-10-22 at 06:31 UTC after DNS propagation. The certificate
+expires on 2027-01-20 and uses certbot's existing automatic renewal setup.
+Verified the canonical page, a redirect preserving `/wasm/?domain-check=1`, and
+the unchanged registry health endpoint. The activation timer disabled itself
+after success. The first attempt rolled back because nginx's new workers were
+not ready immediately after reload; verification now retries during that handover.
