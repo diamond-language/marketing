@@ -1,0 +1,10 @@
+[Unit]
+Description=Activate the canonical Diamond marketing domain after DNS propagates
+Wants=network-online.target
+After=network-online.target nginx.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/diamond-marketing-domain
+ExecStart=/bin/bash /root/diamond-marketing-domain/activate.sh
+TimeoutStartSec=5min

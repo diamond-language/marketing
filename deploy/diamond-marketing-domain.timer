@@ -1,0 +1,10 @@
+[Unit]
+Description=Retry Diamond marketing domain activation during DNS propagation
+
+[Timer]
+OnActiveSec=30min
+OnUnitActiveSec=30min
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target
