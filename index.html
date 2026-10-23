@@ -608,7 +608,11 @@ DIAMOND_SANDBOX=1 diamond untrusted.d6</code></pre>
             <li><strong>No lazy loading.</strong> An association is fetched only by
               <code>preload</code>, one query for any number of entities.</li>
           </ul>
-          <pre><code>facet add mjolnir --registry https://cuts.dilang.tech --version &quot;^0.2.4&quot;</code></pre>
+          <p>After building Diamond and Facet below, start a new project directory:</p>
+          <pre><code>mkdir demo &amp;&amp; cd demo
+facet init demo
+facet add mjolnir --registry https://cuts.dilang.tech --version &quot;^0.2.4&quot;
+facet install</code></pre>
           <p class="familiar-packages"><a href="https://cuts.dilang.tech" target="_blank" rel="noopener">View on the registry &rarr;</a></p>
         </article>
         <article class="new-card">
@@ -683,7 +687,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
               <div class="line">cd diamond</div>
               <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make</div>
+              <div class="line">make all facet</div>
             </div>
           </div>
         </div>
@@ -706,7 +710,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
               <div class="line">cd diamond</div>
               <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make</div>
+              <div class="line">make all facet</div>
             </div>
           </div>
         </div>
@@ -729,7 +733,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
               <div class="line">cd diamond</div>
               <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make</div>
+              <div class="line">make all facet</div>
             </div>
           </div>
         </div>
@@ -751,7 +755,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
               <div class="line">cd diamond</div>
               <div class="line comment gap"># Build Diamond (FreeBSD's GNU Make is gmake, not make)</div>
-              <div class="line">gmake CC=clang CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
+              <div class="line">gmake all facet CC=clang CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
               <div class="line">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
             </div>
           </div>
@@ -774,7 +778,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="line comment gap"># Download and build Diamond</div>
               <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
               <div class="line">cd diamond</div>
-              <div class="line">make CC=clang LDLIBS_CRYPT= \</div>
+              <div class="line">make all facet CC=clang LDLIBS_CRYPT= \</div>
               <div class="line">  CPPFLAGS_EXTRA="-I$(brew --prefix openssl@3)/include -I$(brew --prefix sqlite)/include -I$(brew --prefix postgresql@16)/include -I$(brew --prefix mariadb-connector-c)/include -I$(brew --prefix mariadb-connector-c)/include/mariadb" \</div>
               <div class="line">  LDFLAGS_EXTRA="-L$(brew --prefix openssl@3)/lib -L$(brew --prefix sqlite)/lib -L$(brew --prefix postgresql@16)/lib -L$(brew --prefix mariadb-connector-c)/lib -L$(brew --prefix mariadb-connector-c)/lib/mariadb"</div>
             </div>
@@ -792,6 +796,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
           </button>
         </div>
         <div class="terminal" id="term-run-ship">
+          <div class="line comment"># Make Diamond and Facet available in this shell</div>
+          <div class="line">export PATH="$PWD/build:$PATH"</div>
           <div class="line comment"># Run a one-liner</div>
           <div class="line">./build/diamond -e '20 + 22'</div>
           <div class="line comment"># =&gt; 42</div>
