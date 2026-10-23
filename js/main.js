@@ -17,6 +17,13 @@
         toggle.setAttribute('aria-expanded', 'false');
       });
     });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && navLinks.classList.contains('open')) {
+        navLinks.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      }
+    });
   }
 
   // ---- Tabs, scoped per .tabs[data-group] so the code-sample tabs and
@@ -27,19 +34,46 @@
       var isTarget = b.getAttribute('data-tab') === target;
       b.classList.toggle('active', isTarget);
       b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+      b.tabIndex = isTarget ? 0 : -1;
     });
     group.querySelectorAll(':scope > .tab-panel').forEach(function (panel) {
-      panel.classList.toggle('active', panel.getAttribute('data-panel') === target);
+      var active = panel.getAttribute('data-panel') === target;
+      panel.classList.toggle('active', active);
+      panel.hidden = !active;
     });
   }
 
   var tabGroups = document.querySelectorAll('.tabs[data-group]');
   tabGroups.forEach(function (group) {
-    group.querySelectorAll(':scope > .tabs-nav > .tab-btn').forEach(function (btn) {
+    var buttons = Array.from(group.querySelectorAll(':scope > .tabs-nav > .tab-btn'));
+    buttons.forEach(function (btn, index) {
+      var name = btn.getAttribute('data-tab');
+      var panel = group.querySelector(':scope > .tab-panel[data-panel="' + name + '"]');
+      if (panel) {
+        var id = group.getAttribute('data-group') + '-' + name;
+        btn.id = 'tab-' + id;
+        panel.id = 'panel-' + id;
+        btn.setAttribute('aria-controls', panel.id);
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('aria-labelledby', btn.id);
+      }
       btn.addEventListener('click', function () {
         activateTab(group, btn.getAttribute('data-tab'));
       });
+      btn.addEventListener('keydown', function (event) {
+        var next;
+        if (event.key === 'ArrowRight') next = (index + 1) % buttons.length;
+        else if (event.key === 'ArrowLeft') next = (index + buttons.length - 1) % buttons.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = buttons.length - 1;
+        else return;
+        event.preventDefault();
+        activateTab(group, buttons[next].getAttribute('data-tab'));
+        buttons[next].focus();
+      });
     });
+    var selected = buttons.find(function (btn) { return btn.classList.contains('active'); });
+    if (selected) activateTab(group, selected.getAttribute('data-tab'));
   });
 
   // ---- Auto-select the visitor's platform tab in the install section.
@@ -81,11 +115,11 @@
       );
       var text = lines.join('\n');
 
-      var done = function () {
+      var done = function (success) {
         var label = btn.querySelector('.copy-label');
         var prevText = label ? label.textContent : '';
-        if (label) label.textContent = 'Copied!';
-        btn.classList.add('copied');
+        if (label) label.textContent = success ? 'Copied!' : 'Copy failed';
+        btn.classList.toggle('copied', success);
         setTimeout(function () {
           if (label) label.textContent = prevText || 'Copy';
           btn.classList.remove('copied');
@@ -93,26 +127,30 @@
       };
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, function () {
-          fallbackCopy(text);
-          done();
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () {
+          done(fallbackCopy(text));
         });
       } else {
-        fallbackCopy(text);
-        done();
+        done(fallbackCopy(text));
       }
     });
   });
 
   function fallbackCopy(text) {
+    var previousFocus = document.activeElement;
     var ta = document.createElement('textarea');
     ta.value = text;
     ta.style.position = 'fixed';
     ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
-    try { document.execCommand('copy'); } catch (e) { /* no-op */ }
-    document.body.removeChild(ta);
+    var copied = false;
+    try { copied = document.execCommand('copy'); } catch (e) { /* report failure */ }
+    finally {
+      document.body.removeChild(ta);
+      if (previousFocus && previousFocus.focus) previousFocus.focus();
+    }
+    return copied;
   }
 
   // ---- The REPL needs ES modules and a fetched .wasm, which browsers refuse on file:// URLs. ----

@@ -91,8 +91,8 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.18.0 · open source, pre-1.0</span>
-          <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Nothing shared.</h1>
+          <span class="eyebrow"><span class="dot"></span> v0.19.0 · open source, pre-1.0</span>
+          <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">Diamond is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
             <code>diamond build</code> turns a program into one executable &mdash; cross-compiled,
@@ -106,13 +106,13 @@
           </div>
           <div class="hero-meta">
             <span><strong>C23</strong> VM core</span>
-            <span><strong>1.3 MB</strong> in the browser</span>
+            <span><strong>WebAssembly</strong> browser REPL</span>
             <span><strong>x86-64</strong> JIT</span>
             <span><strong>MIT</strong> licensed</span>
           </div>
         </div>
 
-        <div class="code-window repl-window" data-repl>
+        <div class="code-window repl-window" id="repl" data-repl>
           <div class="titlebar">
             <div class="dots"><span></span><span></span><span></span></div>
             <span class="filename">diamond repl</span>
@@ -183,8 +183,8 @@ orders.sort().map() <span class="tok-kw">do</span> |order|
         </article>
         <article class="new-card">
           <h3>Real threads, light fibers</h3>
-          <p>A <code>Thread</code> is an OS thread with its own heap, so there are no data races
-            by construction. Fibers give you generators and coroutines inside one thread.</p>
+          <p>A <code>Thread</code> is an OS thread with its own heap. Ordinary objects are
+            copied across thread boundaries; channels coordinate communication. Fibers give you generators and coroutines inside one thread.</p>
           <pre><code>left = <span class="tok-const">Thread</span>.new(square, <span class="tok-num">6</span>)
 right = <span class="tok-const">Thread</span>.new(square, <span class="tok-num">7</span>)
 left.join() + right.join()   <span class="tok-comment"># =&gt; 85</span>
@@ -198,7 +198,8 @@ steps.resume()   <span class="tok-comment"># =&gt; 2</span></code></pre>
         <article class="new-card">
           <h3>Mailboxes and supervisors</h3>
           <p>Threads talk through bounded channels, and a supervisor restarts a worker that
-            crashes. A failure stays inside the worker that had it.</p>
+            crashes. With the default one-for-one policy, the other workers keep running.
+            This excerpt uses application-defined <code>producer</code> and <code>fetch_loop</code> functions.</p>
           <pre><code>jobs = <span class="tok-const">Channel</span>.new(<span class="tok-num">4</span>)
 worker = <span class="tok-const">Thread</span>.new(producer, jobs)
 
@@ -245,37 +246,39 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>Composite keys in Mjolnir, error codes in GraphQL, and the peer address of a socket.</p>
+        <p>New source extensions, rendezvous channels, and more precise editor tooling in 0.19.0.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Composite primary keys</h3>
-          <p>A Mjolnir schema can key a table on several columns, such as a join table. Look a row up
-            with an Array of its parts.</p>
-          <pre><code>members = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Schema</span>.<span class="tok-fn">new</span>(
-  <span class="tok-str">&quot;members&quot;</span>, fields, row,
-  primary_key: [<span class="tok-str">&quot;team&quot;</span>, <span class="tok-str">&quot;user&quot;</span>])
-
-repo.<span class="tok-fn">get</span>(members, [<span class="tok-num">1</span>, <span class="tok-num">7</span>])</code></pre>
+          <h3>Source files use .d6</h3>
+          <p><code>.d6</code> is the default extension, with <code>.d6c</code> caches.
+            Existing <code>.di</code> files and published cuts still load.
+            When both files exist, an extensionless import chooses <code>.d6</code>.</p>
+          <pre><code><span class="tok-comment"># helper.d6 defines answer() = 42
+# helper.di defines answer() = 99</span>
+<span class="tok-kw">require</span> <span class="tok-str">&quot;helper&quot;</span>
+answer() <span class="tok-comment"># =&gt; 42</span></code></pre>
         </article>
         <article class="new-card">
-          <h3>GraphQL error extensions</h3>
-          <p>An <code>ExecutionError</code> can carry a Hash that comes back under the error's
-            <code>extensions</code> key, so a client can branch on a code instead of a message.</p>
-          <pre><code><span class="tok-kw">raise</span> <span class="tok-const">GraphQL</span>:<span class="tok-str">:ExecutionError</span>.<span class="tok-fn">new</span>(
-  <span class="tok-str">&quot;sign in&quot;</span>, {<span class="tok-str">&quot;code&quot;</span>: <span class="tok-str">&quot;DENIED&quot;</span>})
-
-<span class="tok-comment"># error: {&quot;message&quot;: &quot;sign in&quot;,
-#  extensions: {&quot;code&quot;: &quot;DENIED&quot;}</span></code></pre>
+          <h3>Rendezvous channels</h3>
+          <p>A zero-capacity channel transfers a value directly to a waiting receiver.
+            The sender waits until the value has been taken.</p>
+          <pre><code><span class="tok-kw">def</span> deliver(ch)
+  ch.send(<span class="tok-num">42</span>)
+<span class="tok-kw">end</span>
+ch = <span class="tok-const">Channel</span>.new(<span class="tok-num">0</span>)
+worker = <span class="tok-const">Thread</span>.new(deliver, ch)
+ch.receive() <span class="tok-comment"># =&gt; 42</span>
+worker.join()</code></pre>
         </article>
         <article class="new-card">
-          <h3>Who is on the other end</h3>
-          <p>A connected socket reports its peer's address as text, so a server can rate-limit or log
-            by client without a proxy header.</p>
-          <pre><code>server = <span class="tok-const">TCPServer</span>.<span class="tok-fn">listen</span>(<span class="tok-num">8080</span>)
-conn = server.<span class="tok-fn">accept</span>()
-conn.<span class="tok-fn">peer_address</span>()
-<span class="tok-comment"># &quot;203.0.113.7&quot;</span></code></pre>
+          <h3>Editor and runtime fixes</h3>
+          <p>The language server tracks receivers through imported collections, guards,
+            and helper return values more precisely. UTF-16 positions keep navigation
+            aligned after emoji and accented text.</p>
+          <p>REPL output now survives later submissions, and object patterns on high-numbered
+            classes count correctly toward exhaustive <code>case</code> checks.</p>
+          <p><a href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md">Read the full changelog &rarr;</a></p>
         </article>
       </div>
 
@@ -400,7 +403,7 @@ conn.<span class="tok-fn">peer_address</span>()
           <span class="stage-step">03</span>
           <h3>Bytecode</h3>
           <p>About 170 opcodes over 16-bit register operands, cached in a fingerprinted
-            <code>.dic</code> file next to the source.</p>
+            <code>.d6c</code> file next to the source.</p>
         </li>
         <li class="stage">
           <span class="stage-step">04</span>
@@ -411,8 +414,8 @@ conn.<span class="tok-fn">peer_address</span>()
         <li class="stage">
           <span class="stage-step">05</span>
           <h3>JIT</h3>
-          <p>Hot typed functions compile to x86-64. Anything the JIT can't handle stays in
-            the interpreter, with identical results.</p>
+          <p>The opt-in JIT compiles hot typed functions on glibc Linux x86-64.
+            Other platforms and unsupported operations use the interpreter.</p>
         </li>
       </ol>
 
@@ -426,8 +429,8 @@ conn.<span class="tok-fn">peer_address</span>()
         <div class="internals-card">
           <h3>Isolated threads</h3>
           <p>Each <code>Thread</code> runs its own VM and heap. Arguments, results, and
-            <code>Channel</code> messages are deep-copied, so there are no data races by
-            construction.</p>
+            <code>Channel</code> messages are deep-copied. Channel handles are shared
+            deliberately so threads can coordinate without sharing an object heap.</p>
         </div>
         <div class="internals-card">
           <h3>Capability sandbox</h3>
@@ -466,7 +469,7 @@ conn.<span class="tok-fn">peer_address</span>()
 
       <div class="tab-panel active" data-panel="structs">
         <div class="code-window">
-          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">point.di</span></div>
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">point.d6</span></div>
           <pre><code><span class="tok-kw">struct</span> Point(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
 <span class="tok-kw">end</span>
 
@@ -492,7 +495,7 @@ p1.to_s()              <span class="tok-comment"># "Point(x: 1, y: 2)"</span>
 
       <div class="tab-panel" data-panel="pattern">
         <div class="code-window">
-          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">classify.di</span></div>
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">classify.d6</span></div>
           <pre><code><span class="tok-kw">def</span> <span class="tok-fn">classify</span>(value: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span>
   <span class="tok-kw">case</span> value
   <span class="tok-kw">when</span> <span class="tok-num">0</span>
@@ -513,7 +516,7 @@ p1.to_s()              <span class="tok-comment"># "Point(x: 1, y: 2)"</span>
 
       <div class="tab-panel" data-panel="concurrency">
         <div class="code-window">
-          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">workers.di</span></div>
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">workers.d6</span></div>
           <pre><code><span class="tok-comment"># Thread: real OS threads, each with its own isolated</span>
 <span class="tok-comment"># heap -- runs in parallel across CPU cores</span>
 
@@ -525,6 +528,7 @@ left.join()   <span class="tok-comment"># =&gt; 36</span>
 right.join()  <span class="tok-comment"># =&gt; 49</span>
 
 <span class="tok-comment"># Channel: an ongoing mailbox between isolated-heap threads</span>
+<span class="tok-kw">def</span> producer(ch) = ch.send(<span class="tok-num">42</span>)
 ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
 worker = Thread.<span class="tok-fn">new</span>(producer, ch)
 item = ch.receive()
@@ -532,17 +536,18 @@ worker.join()
 
 <span class="tok-comment"># Supervisor: restart-on-crash, Erlang's one_for_one</span>
 sup = Supervisor.<span class="tok-fn">new</span>()
-sup.add_child(fetch_loop, <span class="tok-str">"https://example.com/feed"</span>)
-<span class="tok-comment"># a raise in fetch_loop restarts just that worker --</span>
-<span class="tok-comment"># siblings, and everything they hold, are untouched</span></code></pre>
+sup.add_child(producer, ch)
+ch.receive() <span class="tok-comment"># =&gt; 42</span>
+sup.join()
+<span class="tok-comment"># a child that raises is restarted; completed children stay done</span></code></pre>
         </div>
-        <p class="tab-caption">Every value crossing a thread boundary is copied, never shared —
-          no locks, no data races by construction.</p>
+        <p class="tab-caption">Ordinary values crossing a thread boundary are copied. Channel handles
+          are shared for communication between isolated heaps.</p>
       </div>
 
       <div class="tab-panel" data-panel="fibers">
         <div class="code-window">
-          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">counter_fiber.di</span></div>
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">counter_fiber.d6</span></div>
           <pre><code><span class="tok-kw">def</span> <span class="tok-fn">make_counter</span>()
   <span class="tok-kw">def</span> <span class="tok-fn">counter</span>()
     i = <span class="tok-num">0</span>
@@ -570,10 +575,10 @@ counter.resume(<span class="tok-num">5</span>)     <span class="tok-comment"># =
           <pre><code><span class="tok-comment"># denies filesystem, network, and subprocess access --</span>
 <span class="tok-comment"># checked at every native opcode, applies to anything</span>
 <span class="tok-comment"># the program spawns (Thread, Supervisor) too</span>
-diamond --sandbox untrusted.di
+diamond --sandbox untrusted.d6
 
 <span class="tok-comment"># equivalently:</span>
-DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
+DIAMOND_SANDBOX=1 diamond untrusted.d6</code></pre>
         </div>
         <p class="tab-caption">Sandboxing for running untrusted code, not a wrapper script
           around the interpreter.</p>
@@ -606,21 +611,25 @@ DIAMOND_SANDBOX=1 diamond untrusted.di</code></pre>
             <li><strong>No lazy loading.</strong> An association is fetched only by
               <code>preload</code>, one query for any number of entities.</li>
           </ul>
-          <pre><code>facet add mjolnir --registry https://cuts.dilang.tech</code></pre>
+          <p>After building Diamond and Facet below, start a new project directory:</p>
+          <pre><code>mkdir demo &amp;&amp; cd demo
+facet init demo
+facet add mjolnir --registry https://cuts.dilang.tech --version &quot;^0.2.4&quot;
+facet install</code></pre>
           <p class="familiar-packages"><a href="https://cuts.dilang.tech" target="_blank" rel="noopener">View on the registry &rarr;</a></p>
         </article>
         <article class="new-card">
           <h3>Queries and associations</h3>
-          <p>Declare associations once, then load them explicitly. Each <code>Repo</code> call is
-            exactly one round trip.</p>
+          <p>Declare associations once, then load them explicitly. Database access is
+            explicit; query counts depend on the operation and database dialect.</p>
           <pre><code>users.<span class="tok-fn">has_many</span>(<span class="tok-str">&quot;posts&quot;</span>, posts, <span class="tok-str">&quot;user_id&quot;</span>)
 
-adults = users.<span class="tok-fn">query</span>()
-  .<span class="tok-fn">where</span>(users.<span class="tok-fn">column</span>(<span class="tok-str">&quot;age&quot;</span>).<span class="tok-fn">gteq</span>(<span class="tok-num">18</span>))
+matching = users.<span class="tok-fn">query</span>()
+  .<span class="tok-fn">where</span>(users.<span class="tok-fn">column</span>(<span class="tok-str">&quot;name&quot;</span>).<span class="tok-fn">eq</span>(<span class="tok-str">&quot;Ada&quot;</span>))
   .<span class="tok-fn">order_by</span>(<span class="tok-str">&quot;name&quot;</span>)
   .<span class="tok-fn">limit</span>(<span class="tok-num">10</span>)
 
-listed = repo.<span class="tok-fn">all</span>(adults)
+listed = repo.<span class="tok-fn">all</span>(matching)
 repo.<span class="tok-fn">preload</span>(users, listed, <span class="tok-str">&quot;posts&quot;</span>)
 <span class="tok-comment"># =&gt; {1: [Post, Post], 2: []}</span>
 
@@ -642,13 +651,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
         <h2>Build it, run it, ship it</h2>
         <p>Diamond compiles from source today. Bytecode is cached automatically between runs,
           and <code>diamond build</code> produces a self-contained native binary when you're
-          ready to ship. Pick your platform to get started.</p>
+          ready to ship. A C23 compiler with <code>#embed</code> support is required
+          (GCC 15+ or Clang 19+). On x86-64, the supported baseline is x86-64-v3
+          (AVX2, BMI2, FMA). Pick your platform to get started.</p>
       </div>
 
       <div class="tabs" data-group="install">
         <div class="tabs-nav" role="tablist" aria-label="Supported platforms">
           <button class="tab-btn active" data-tab="fedora" role="tab" aria-selected="true">Fedora</button>
-          <button class="tab-btn" data-tab="ubuntu" role="tab" aria-selected="false">Ubuntu / Debian</button>
+          <button class="tab-btn" data-tab="ubuntu" role="tab" aria-selected="false">Ubuntu 26.04</button>
           <button class="tab-btn" data-tab="alpine" role="tab" aria-selected="false">Alpine</button>
           <button class="tab-btn" data-tab="freebsd" role="tab" aria-selected="false">FreeBSD</button>
           <button class="tab-btn" data-tab="macos" role="tab" aria-selected="false">macOS</button>
@@ -673,10 +684,13 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
             </div>
             <div class="terminal" id="term-fedora">
               <div class="line comment"># Install system dependencies</div>
-              <div class="line">sudo dnf install gcc openssl-devel sqlite-devel libpq-devel \</div>
+              <div class="line">sudo dnf install git make gcc openssl-devel sqlite-devel libpq-devel \</div>
               <div class="line">  mariadb-connector-c-devel libxcrypt-devel zlib-devel</div>
+              <div class="line comment gap"># Download the source</div>
+              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
+              <div class="line">cd diamond</div>
               <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make</div>
+              <div class="line">make all facet</div>
             </div>
           </div>
         </div>
@@ -685,7 +699,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
           <div class="terminal-window">
             <div class="titlebar">
               <div class="dots"><span></span><span></span><span></span></div>
-              <span class="filename">Ubuntu / Debian</span>
+              <span class="filename">Ubuntu 26.04</span>
               <button class="copy-btn" type="button" data-copy-target="term-ubuntu">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
                 <span class="copy-label">Copy</span>
@@ -693,10 +707,13 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
             </div>
             <div class="terminal" id="term-ubuntu">
               <div class="line comment"># Install system dependencies</div>
-              <div class="line">sudo apt install gcc libssl-dev libsqlite3-dev libpq-dev \</div>
+              <div class="line">sudo apt install git make gcc libssl-dev libsqlite3-dev libpq-dev \</div>
               <div class="line">  libmariadb-dev libcrypt-dev zlib1g-dev</div>
+              <div class="line comment gap"># Download the source</div>
+              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
+              <div class="line">cd diamond</div>
               <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make</div>
+              <div class="line">make all facet</div>
             </div>
           </div>
         </div>
@@ -713,10 +730,13 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
             </div>
             <div class="terminal" id="term-alpine">
               <div class="line comment"># Install system dependencies (musl -- also needs libucontext)</div>
-              <div class="line">apk add gcc musl-dev openssl-dev sqlite-dev libpq-dev \</div>
+              <div class="line">apk add git make gcc musl-dev openssl-dev sqlite-dev libpq-dev \</div>
               <div class="line">  mariadb-connector-c-dev zlib-dev libucontext libucontext-dev</div>
+              <div class="line comment gap"># Download the source</div>
+              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
+              <div class="line">cd diamond</div>
               <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make</div>
+              <div class="line">make all facet</div>
             </div>
           </div>
         </div>
@@ -733,9 +753,13 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
             </div>
             <div class="terminal" id="term-freebsd">
               <div class="line comment"># Install system dependencies</div>
-              <div class="line">pkg install gmake sqlite3 openssl postgresql16-client mariadb-connector-c</div>
+              <div class="line">pkg install git gmake sqlite3 openssl postgresql16-client mariadb-connector-c</div>
+              <div class="line comment gap"># Download the source</div>
+              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
+              <div class="line">cd diamond</div>
               <div class="line comment gap"># Build Diamond (FreeBSD's GNU Make is gmake, not make)</div>
-              <div class="line">gmake</div>
+              <div class="line">gmake all facet CC=clang CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
+              <div class="line">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
             </div>
           </div>
         </div>
@@ -751,10 +775,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               </button>
             </div>
             <div class="terminal" id="term-macos">
-              <div class="line comment"># Install system dependencies (Clang only -- no system GCC)</div>
-              <div class="line">brew install openssl@3 sqlite postgresql@16 mariadb-connector-c</div>
-              <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make</div>
+              <div class="line comment"># Install Xcode command-line tools and Homebrew first; Clang 19+ required</div>
+              <div class="line">brew install coreutils gnu-sed bash openssl@3 sqlite postgresql@16 mariadb-connector-c</div>
+              <div class="line">export PATH="$(brew --prefix coreutils)/libexec/gnubin:$(brew --prefix gnu-sed)/libexec/gnubin:$(brew --prefix bash)/bin:$PATH"</div>
+              <div class="line comment gap"># Download and build Diamond</div>
+              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
+              <div class="line">cd diamond</div>
+              <div class="line">make all facet CC=clang LDLIBS_CRYPT= \</div>
+              <div class="line">  CPPFLAGS_EXTRA="-I$(brew --prefix openssl@3)/include -I$(brew --prefix sqlite)/include -I$(brew --prefix postgresql@16)/include -I$(brew --prefix mariadb-connector-c)/include -I$(brew --prefix mariadb-connector-c)/include/mariadb" \</div>
+              <div class="line">  LDFLAGS_EXTRA="-L$(brew --prefix openssl@3)/lib -L$(brew --prefix sqlite)/lib -L$(brew --prefix postgresql@16)/lib -L$(brew --prefix mariadb-connector-c)/lib -L$(brew --prefix mariadb-connector-c)/lib/mariadb"</div>
             </div>
           </div>
         </div>
@@ -770,15 +799,18 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
           </button>
         </div>
         <div class="terminal" id="term-run-ship">
+          <div class="line comment"># Make Diamond and Facet available in this shell</div>
+          <div class="line">export PATH="$PWD/build:$PATH"</div>
           <div class="line comment"># Run a one-liner</div>
           <div class="line">./build/diamond -e '20 + 22'</div>
           <div class="line comment"># =&gt; 42</div>
           <div class="line comment gap"># ...or run a file</div>
-          <div class="line">./build/diamond program.di</div>
+          <div class="line">printf 'puts("Hello, Diamond")\n' &gt; program.d6</div>
+          <div class="line">./build/diamond program.d6</div>
           <div class="line comment gap"># ...or start the REPL</div>
           <div class="line">./build/diamond</div>
           <div class="line comment gap"># Ship a standalone binary -- no interpreter needed at runtime</div>
-          <div class="line">./build/diamond build app.di -o app</div>
+          <div class="line">./build/diamond build program.d6 -o app</div>
           <div class="line">./app</div>
         </div>
       </div>

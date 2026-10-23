@@ -63,14 +63,17 @@ if (root) {
     const open = completion && input.value === completion.value && completion.labels.length > 1;
     listEl.hidden = !open;
     input.setAttribute('aria-expanded', String(Boolean(open)));
-    if (!open) return;
+    if (!open) { input.removeAttribute('aria-activedescendant'); return; }
     const { labels, selected, prefix } = completion;
+    input.setAttribute('aria-activedescendant', `repl-option-${selected}`);
     // A window of the list that always contains the selection.
     const from = Math.min(Math.max(0, selected - MAX_LISTED + 1), Math.max(0, labels.length - MAX_LISTED));
     listEl.replaceChildren(...labels.slice(from, from + MAX_LISTED).map((label, offset) => {
       const item = document.createElement('li');
       item.className = 'repl-completion' + (from + offset === selected ? ' is-selected' : '');
       item.setAttribute('role', 'option');
+      item.id = `repl-option-${from + offset}`;
+      item.setAttribute('aria-selected', String(from + offset === selected));
       const typed = document.createElement('b');
       typed.textContent = prefix;
       item.append(typed, label.slice(prefix.length));
@@ -134,7 +137,7 @@ if (root) {
 
   const load = () => {
     if (loading) return loading;
-    statusEl.textContent = 'Loading the interpreter (about 1 MB)…';
+    statusEl.textContent = 'Loading the interpreter…';
     loading = DiamondRepl.load(new URL('../wasm/diamond.wasm', import.meta.url))
       .then((instance) => {
         repl = instance;
