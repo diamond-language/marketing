@@ -1,0 +1,19 @@
+name: Check website
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  repl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Check JavaScript syntax
+        run: |
+          node --check js/main.js
+          node --check js/repl.js
+          node --check js/diamond-wasm.js
+      - name: Test the shipped WebAssembly REPL and homepage chips
+        run: node --test tests/repl.test.mjs

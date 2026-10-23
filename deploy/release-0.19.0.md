@@ -23,6 +23,8 @@ transaction examples passed against published Mjolnir 0.2.4 and Arel 0.34.6.
 The query now uses a field declared by the schema shown on the page.
 The staged module was built from Diamond candidate `232f2ea4`; its SHA-256 is
 `d7fa1e3f8c2f94522be70cab40fb1353c74bef08e2bac24ca32ddaa227fc0bc5`.
+`node --test tests/repl.test.mjs` repeats the homepage-chip, output, and completion
+checks against the shipped artifact; the website CI runs it for every PR.
 
 Live HTTP checks found the canonical homepage and WASM asset available, with
 legacy-domain path/query redirects working. `/wasm/` itself returned 403;
