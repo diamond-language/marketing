@@ -198,7 +198,8 @@ steps.resume()   <span class="tok-comment"># =&gt; 2</span></code></pre>
         <article class="new-card">
           <h3>Mailboxes and supervisors</h3>
           <p>Threads talk through bounded channels, and a supervisor restarts a worker that
-            crashes. A failure stays inside the worker that had it.</p>
+            crashes. With the default one-for-one policy, the other workers keep running.
+            This excerpt uses application-defined <code>producer</code> and <code>fetch_loop</code> functions.</p>
           <pre><code>jobs = <span class="tok-const">Channel</span>.new(<span class="tok-num">4</span>)
 worker = <span class="tok-const">Thread</span>.new(producer, jobs)
 
@@ -527,6 +528,7 @@ left.join()   <span class="tok-comment"># =&gt; 36</span>
 right.join()  <span class="tok-comment"># =&gt; 49</span>
 
 <span class="tok-comment"># Channel: an ongoing mailbox between isolated-heap threads</span>
+<span class="tok-kw">def</span> producer(ch) = ch.send(<span class="tok-num">42</span>)
 ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
 worker = Thread.<span class="tok-fn">new</span>(producer, ch)
 item = ch.receive()
@@ -534,9 +536,10 @@ worker.join()
 
 <span class="tok-comment"># Supervisor: restart-on-crash, Erlang's one_for_one</span>
 sup = Supervisor.<span class="tok-fn">new</span>()
-sup.add_child(fetch_loop, <span class="tok-str">"https://example.com/feed"</span>)
-<span class="tok-comment"># a raise in fetch_loop restarts just that worker --</span>
-<span class="tok-comment"># siblings, and everything they hold, are untouched</span></code></pre>
+sup.add_child(producer, ch)
+ch.receive() <span class="tok-comment"># =&gt; 42</span>
+sup.join()
+<span class="tok-comment"># a child that raises is restarted; completed children stay done</span></code></pre>
         </div>
         <p class="tab-caption">Ordinary values crossing a thread boundary are copied. Channel handles
           are shared for communication between isolated heaps.</p>
