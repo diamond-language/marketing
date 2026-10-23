@@ -1,14 +1,16 @@
-# Marketing candidate for Diamond 0.19.0
+# Marketing release for Diamond 0.19.0
 
-Prepared on 2026-10-23; not deployed. Ship this revision only alongside the
-Diamond 0.19.0 release. The homepage version and highlights describe that release.
+Prepared on 2026-10-23. Ship this revision alongside Diamond 0.19.0 and its
+cut publication. The homepage version and highlights describe that release.
+Production outcomes are recorded in the
+[0.19 release record](https://github.com/diamond-language/diamond/blob/main/docs/release-0.19.0.md).
 
 The review corrected `.d6`/`.d6c` examples, legacy `.di` compatibility and import
 precedence, missing source checkout steps, C23/compiler prerequisites, Ubuntu's
 validated version, FreeBSD/macOS build flags, the versioned Mjolnir install
 command, query-count claims, and overly broad thread-safety claims. The pinned
-Mjolnir 0.2.4 remains the published legacy cut; this does not announce the
-unpublished `.d6` source cohort.
+Mjolnir example now selects the release's `.d6` cohort at `^0.3.1`; publish and
+verify that artifact before deploying this page. Legacy 0.2.4 remains supported.
 
 Tabs now expose panels and support arrow, Home, and End keys. Escape closes the
 mobile menu, failed clipboard copies report failure, and REPL completions expose
