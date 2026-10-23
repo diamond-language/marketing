@@ -624,12 +624,12 @@ facet install</code></pre>
             explicit; query counts depend on the operation and database dialect.</p>
           <pre><code>users.<span class="tok-fn">has_many</span>(<span class="tok-str">&quot;posts&quot;</span>, posts, <span class="tok-str">&quot;user_id&quot;</span>)
 
-adults = users.<span class="tok-fn">query</span>()
-  .<span class="tok-fn">where</span>(users.<span class="tok-fn">column</span>(<span class="tok-str">&quot;age&quot;</span>).<span class="tok-fn">gteq</span>(<span class="tok-num">18</span>))
+matching = users.<span class="tok-fn">query</span>()
+  .<span class="tok-fn">where</span>(users.<span class="tok-fn">column</span>(<span class="tok-str">&quot;name&quot;</span>).<span class="tok-fn">eq</span>(<span class="tok-str">&quot;Ada&quot;</span>))
   .<span class="tok-fn">order_by</span>(<span class="tok-str">&quot;name&quot;</span>)
   .<span class="tok-fn">limit</span>(<span class="tok-num">10</span>)
 
-listed = repo.<span class="tok-fn">all</span>(adults)
+listed = repo.<span class="tok-fn">all</span>(matching)
 repo.<span class="tok-fn">preload</span>(users, listed, <span class="tok-str">&quot;posts&quot;</span>)
 <span class="tok-comment"># =&gt; {1: [Post, Post], 2: []}</span>
 
