@@ -17,6 +17,13 @@ using wasi-sdk 34 and passed the upstream REPL suite. All six homepage example
 chips and repeated printed output were checked through this repository's exact
 wrapper and staged module. Types intentionally reports a type error.
 
+The native examples were also executed, using supporting application fixtures
+where the page presents excerpts. The changeset, query, association, and
+transaction examples passed against published Mjolnir 0.2.4 and Arel 0.34.6.
+The query now uses a field declared by the schema shown on the page.
+The staged module was built from Diamond candidate `232f2ea4`; its SHA-256 is
+`d7fa1e3f8c2f94522be70cab40fb1353c74bef08e2bac24ca32ddaa227fc0bc5`.
+
 Live HTTP checks found the canonical homepage and WASM asset available, with
 legacy-domain path/query redirects working. `/wasm/` itself returned 403;
 `nginx.conf` now redirects that legacy directory URL to `/#repl`. Deploy the
