@@ -679,23 +679,14 @@ section {
 
 .package-download {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
-  gap: 12px 18px;
-  margin: 0 0 20px;
+  padding: 12px 0 8px;
 }
 
-.package-meta {
-  color: var(--text-dim);
-  font-size: 14px;
-  text-align: center;
-  overflow-wrap: anywhere;
-}
-
-.package-meta a {
-  color: var(--cyan);
-  font-weight: 600;
+.btn-download {
+  gap: 12px;
+  padding: 22px 48px;
+  font-size: 22px;
 }
 
 .tab-caption {
@@ -729,7 +720,9 @@ section {
 }
 
 .terminal-window.run-ship {
-  margin-top: 24px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 40px auto 0;
 }
 
 .terminal-window .titlebar {
