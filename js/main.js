@@ -77,10 +77,24 @@
   });
 
   // ---- Auto-select the visitor's platform tab in the install section.
-  // Best-effort only: a generic "Linux" user agent can't reveal the
-  // distro, so that case falls back to Ubuntu/Debian rather than
-  // guessing further. Windows/unknown platforms keep whatever tab is
-  // marked active in the markup. ----
+  // Browsers report Linux without the distribution (Fedora's Firefox
+  // sends "X11; Linux x86_64"), so a Linux visitor is told apart by a
+  // distro token when the user agent has one, and otherwise by fonts:
+  // Ubuntu installs its "Ubuntu" / "Ubuntu Sans" families by default and
+  // Fedora does not. Without either signal, Linux gets Fedora. ----
+  function fontInstalled(family) {
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext && canvas.getContext('2d');
+    if (!ctx) return false;
+    var sample = 'mmmmmmmmmmlli1WQ@#';
+    return ['monospace', 'serif', 'sans-serif'].some(function (fallback) {
+      ctx.font = '72px ' + fallback;
+      var base = ctx.measureText(sample).width;
+      ctx.font = '72px "' + family + '", ' + fallback;
+      return ctx.measureText(sample).width !== base;
+    });
+  }
+
   function detectPlatformTab() {
     var ua = (navigator.userAgent || '').toLowerCase();
     var plat = (navigator.platform || '').toLowerCase();
@@ -88,8 +102,12 @@
     if (ua.indexOf('freebsd') !== -1 || plat.indexOf('freebsd') !== -1) return 'freebsd';
     if (ua.indexOf('mac') !== -1 || plat.indexOf('mac') !== -1) return 'macos';
     if (ua.indexOf('android') !== -1) return null;
-    if (ua.indexOf('linux') !== -1 || plat.indexOf('linux') !== -1) return 'ubuntu';
-    return null;
+    if (ua.indexOf('linux') === -1 && plat.indexOf('linux') === -1) return null;
+    if (ua.indexOf('fedora') !== -1) return 'fedora';
+    if (ua.indexOf('ubuntu') !== -1) return 'ubuntu';
+    if (ua.indexOf('alpine') !== -1) return 'alpine';
+    if (fontInstalled('Ubuntu') || fontInstalled('Ubuntu Sans')) return 'ubuntu';
+    return 'fedora';
   }
 
   var installGroup = document.querySelector('.tabs[data-group="install"]');
