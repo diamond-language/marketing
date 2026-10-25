@@ -91,7 +91,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.19.1 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.20.0 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">Diamond is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -246,38 +246,35 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>New source extensions and rendezvous channels in 0.19, and a faster interpreter in 0.19.1.</p>
+        <p>0.20 goes from installation to a first app: packages, project generators and a getting-started guide.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Source files use .d6</h3>
-          <p><code>.d6</code> is the default extension, with <code>.d6c</code> caches.
-            Existing <code>.di</code> files and published cuts still load.
-            When both files exist, an extensionless import chooses <code>.d6</code>.</p>
-          <pre><code><span class="tok-comment"># helper.d6 defines answer() = 42
-# helper.di defines answer() = 99</span>
-<span class="tok-kw">require</span> <span class="tok-str">&quot;helper&quot;</span>
-answer() <span class="tok-comment"># =&gt; 42</span></code></pre>
+          <h3>Install from a package</h3>
+          <p>Each release has a <code>.deb</code> for Ubuntu 26.04 and an <code>.rpm</code> for
+            Fedora 44 with <code>diamond</code>, <code>facet</code> and the editor tools.</p>
+          <pre><code><span class="tok-comment"># Ubuntu 26.04</span>
+sudo apt install ./diamond*.deb
+<span class="tok-comment"># Fedora 44</span>
+sudo dnf install diamond*.rpm</code></pre>
         </article>
         <article class="new-card">
-          <h3>Rendezvous channels</h3>
-          <p>A zero-capacity channel transfers a value directly to a waiting receiver.
-            The sender waits until the value has been taken.</p>
-          <pre><code><span class="tok-kw">def</span> deliver(ch)
-  ch.send(<span class="tok-num">42</span>)
-<span class="tok-kw">end</span>
-ch = <span class="tok-const">Channel</span>.new(<span class="tok-num">0</span>)
-worker = <span class="tok-const">Thread</span>.new(deliver, ch)
-ch.receive() <span class="tok-comment"># =&gt; 42</span>
-worker.join()</code></pre>
+          <h3>facet new</h3>
+          <p>A CLI, a web app, a TCP or UDP server, or a library cut, with passing tests.
+            minitest comes in as a development dependency.</p>
+          <pre><code>facet new cli greeter
+<span class="tok-kw">cd</span> greeter
+facet install
+bash test.sh</code></pre>
         </article>
         <article class="new-card">
-          <h3>A faster interpreter</h3>
-          <p>Release builds take 11&ndash;33% fewer cycles than 0.19.0 across the benchmark
-            suite: method dispatch about 30%, integer arithmetic 31%, and closures 26%.</p>
-          <p>Recursion inside a <code>Fiber</code> or <code>Thread</code> now goes 150 levels
-            deep instead of 92, and JSON accepts 149 levels of nesting.</p>
-          <p><a href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md">Read the full changelog &rarr;</a></p>
+          <h3>Scripts print what they write</h3>
+          <p>A script no longer prints its last value. The REPL and <code>diamond -e</code>
+            still do.</p>
+          <pre><code>total = [<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>].sum()
+total        <span class="tok-comment"># prints nothing</span>
+puts(total)  <span class="tok-comment"># 6</span></code></pre>
+          <p><a href="https://github.com/diamond-language/diamond/blob/main/docs/getting-started.md">Read the getting-started guide &rarr;</a></p>
         </article>
       </div>
 
@@ -610,10 +607,11 @@ DIAMOND_SANDBOX=1 diamond untrusted.d6</code></pre>
             <li><strong>No lazy loading.</strong> An association is fetched only by
               <code>preload</code>, one query for any number of entities.</li>
           </ul>
-          <p>After building Diamond and Facet below, start a new project directory:</p>
+          <p>After installing Diamond below, start a new project directory:</p>
           <pre><code>mkdir demo &amp;&amp; cd demo
 facet init demo
-facet add mjolnir --registry https://cuts.dilang.tech --version &quot;^0.3.1&quot;
+facet add mjolnir --version &quot;^0.3.1&quot; \
+  --registry https://cuts.dilang.tech
 facet install</code></pre>
           <p class="familiar-packages"><a href="https://cuts.dilang.tech" target="_blank" rel="noopener">View on the registry &rarr;</a></p>
         </article>
@@ -648,10 +646,11 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
       <div class="section-head">
         <span class="eyebrow"><span class="dot"></span> Install</span>
         <h2>Build it, run it, ship it</h2>
-        <p>Diamond compiles from source today. Bytecode is cached automatically between runs,
+        <p>Fedora 44 and Ubuntu 26.04 install from a package; other platforms build from
+          source. Bytecode is cached automatically between runs,
           and <code>diamond build</code> produces a self-contained native binary when you're
           ready to ship. A C23 compiler with <code>#embed</code> support is required
-          (GCC 15+ or Clang 19+). On x86-64, the supported baseline is x86-64-v3
+          (GCC 15+ or Clang 19+) to build from source. On x86-64, the supported baseline is x86-64-v3
           (AVX2, BMI2, FMA). Pick your platform to get started.</p>
       </div>
 
@@ -682,14 +681,11 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               </button>
             </div>
             <div class="terminal" id="term-fedora">
-              <div class="line comment"># Install system dependencies</div>
-              <div class="line">sudo dnf install git make gcc openssl-devel sqlite-devel libpq-devel \</div>
-              <div class="line">  mariadb-connector-c-devel libxcrypt-devel zlib-devel</div>
-              <div class="line comment gap"># Download the source</div>
-              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
-              <div class="line">cd diamond</div>
-              <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make all facet</div>
+              <div class="line comment"># Install the Fedora 44 package from the latest release</div>
+              <div class="line">base=https://github.com/diamond-language/diamond/releases/download/v0.20.0</div>
+              <div class="line">sudo dnf install $base/diamond-lang-0.20.0-1.fc44.x86_64.rpm</div>
+              <div class="line comment gap"># Check it</div>
+              <div class="line">diamond --version</div>
             </div>
           </div>
         </div>
@@ -705,14 +701,12 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               </button>
             </div>
             <div class="terminal" id="term-ubuntu">
-              <div class="line comment"># Install system dependencies</div>
-              <div class="line">sudo apt install git make gcc libssl-dev libsqlite3-dev libpq-dev \</div>
-              <div class="line">  libmariadb-dev libcrypt-dev zlib1g-dev</div>
-              <div class="line comment gap"># Download the source</div>
-              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
-              <div class="line">cd diamond</div>
-              <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make all facet</div>
+              <div class="line comment"># Download and install the Ubuntu 26.04 package from the latest release</div>
+              <div class="line">base=https://github.com/diamond-language/diamond/releases/download/v0.20.0</div>
+              <div class="line">curl -LO $base/diamond-lang_0.20.0-1_amd64.deb</div>
+              <div class="line">sudo apt install ./diamond-lang_0.20.0-1_amd64.deb</div>
+              <div class="line comment gap"># Check it</div>
+              <div class="line">diamond --version</div>
             </div>
           </div>
         </div>
@@ -798,18 +792,17 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
           </button>
         </div>
         <div class="terminal" id="term-run-ship">
-          <div class="line comment"># Make Diamond and Facet available in this shell</div>
-          <div class="line">export PATH="$PWD/build:$PATH"</div>
-          <div class="line comment"># Run a one-liner</div>
-          <div class="line">./build/diamond -e '20 + 22'</div>
+          <div class="line comment"># From a source build, put build/ on PATH first: export PATH="$PWD/build:$PATH"</div>
+          <div class="line comment gap"># Run a one-liner</div>
+          <div class="line">diamond -e '20 + 22'</div>
           <div class="line comment"># =&gt; 42</div>
           <div class="line comment gap"># ...or run a file</div>
           <div class="line">printf 'puts("Hello, Diamond")\n' &gt; program.d6</div>
-          <div class="line">./build/diamond program.d6</div>
+          <div class="line">diamond program.d6</div>
           <div class="line comment gap"># ...or start the REPL</div>
-          <div class="line">./build/diamond</div>
+          <div class="line">diamond</div>
           <div class="line comment gap"># Ship a standalone binary -- no interpreter needed at runtime</div>
-          <div class="line">./build/diamond build program.d6 -o app</div>
+          <div class="line">diamond build program.d6 -o app</div>
           <div class="line">./app</div>
         </div>
       </div>
