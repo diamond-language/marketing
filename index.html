@@ -674,114 +674,221 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
           <div class="package-download">
             <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.20.0/diamond-lang-0.20.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
           </div>
+          <div class="terminal-window usage">
+            <div class="titlebar">
+              <div class="dots"><span></span><span></span><span></span></div>
+              <span class="filename">usage</span>
+              <button class="copy-btn" type="button" data-copy-target="term-usage-fedora">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                <span class="copy-label">Copy</span>
+              </button>
+            </div>
+            <div class="terminal" id="term-usage-fedora">
+              <div class="line comment"># Run a one-liner</div>
+              <div class="line">diamond -e '20 + 22'</div>
+              <div class="line comment"># =&gt; 42</div>
+              <div class="line comment gap"># ...or run a file</div>
+              <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
+              <div class="line">diamond hi.d6</div>
+              <div class="line comment gap"># ...or start the REPL</div>
+              <div class="line">diamond</div>
+              <div class="line comment gap"># Ship a standalone binary</div>
+              <div class="line">diamond build hi.d6 -o hi</div>
+              <div class="line">./hi</div>
+            </div>
+          </div>
         </div>
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
             <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.20.0/diamond-lang_0.20.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
           </div>
-        </div>
-
-        <div class="tab-panel" data-panel="alpine">
-          <div class="terminal-window">
+          <div class="terminal-window usage">
             <div class="titlebar">
               <div class="dots"><span></span><span></span><span></span></div>
-              <span class="filename">Alpine</span>
-              <button class="copy-btn" type="button" data-copy-target="term-alpine">
+              <span class="filename">usage</span>
+              <button class="copy-btn" type="button" data-copy-target="term-usage-ubuntu">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
                 <span class="copy-label">Copy</span>
               </button>
             </div>
-            <div class="terminal" id="term-alpine">
-              <div class="line comment"># Install system dependencies (musl -- also needs libucontext)</div>
-              <div class="line">apk add git make gcc musl-dev openssl-dev sqlite-dev libpq-dev \</div>
-              <div class="line">  mariadb-connector-c-dev zlib-dev libucontext libucontext-dev</div>
-              <div class="line comment gap"># Download the source</div>
-              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
-              <div class="line">cd diamond</div>
-              <div class="line comment gap"># Build Diamond</div>
-              <div class="line">make all facet</div>
-              <div class="line comment gap"># Put diamond and facet on PATH</div>
-              <div class="line">export PATH="$PWD/build:$PATH"</div>
+            <div class="terminal" id="term-usage-ubuntu">
+              <div class="line comment"># Run a one-liner</div>
+              <div class="line">diamond -e '20 + 22'</div>
+              <div class="line comment"># =&gt; 42</div>
+              <div class="line comment gap"># ...or run a file</div>
+              <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
+              <div class="line">diamond hi.d6</div>
+              <div class="line comment gap"># ...or start the REPL</div>
+              <div class="line">diamond</div>
+              <div class="line comment gap"># Ship a standalone binary</div>
+              <div class="line">diamond build hi.d6 -o hi</div>
+              <div class="line">./hi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="alpine">
+          <div class="install-row">
+            <div class="terminal-window">
+              <div class="titlebar">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <span class="filename">Alpine</span>
+                <button class="copy-btn" type="button" data-copy-target="term-alpine">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+              <div class="terminal" id="term-alpine">
+                <div class="line comment"># Install system dependencies (musl -- also needs libucontext)</div>
+                <div class="line">apk add git make gcc musl-dev openssl-dev sqlite-dev libpq-dev \</div>
+                <div class="line">  mariadb-connector-c-dev zlib-dev libucontext libucontext-dev</div>
+                <div class="line comment gap"># Download the source</div>
+                <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
+                <div class="line">cd diamond</div>
+                <div class="line comment gap"># Build Diamond</div>
+                <div class="line">make all facet</div>
+                <div class="line comment gap"># Put diamond and facet on PATH</div>
+                <div class="line">export PATH="$PWD/build:$PATH"</div>
+              </div>
+            </div>
+            <div class="terminal-window usage">
+              <div class="titlebar">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <span class="filename">usage</span>
+                <button class="copy-btn" type="button" data-copy-target="term-usage-alpine">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+              <div class="terminal" id="term-usage-alpine">
+                <div class="line comment"># Run a one-liner</div>
+                <div class="line">diamond -e '20 + 22'</div>
+                <div class="line comment"># =&gt; 42</div>
+                <div class="line comment gap"># ...or run a file</div>
+                <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
+                <div class="line">diamond hi.d6</div>
+                <div class="line comment gap"># ...or start the REPL</div>
+                <div class="line">diamond</div>
+                <div class="line comment gap"># Ship a standalone binary</div>
+                <div class="line">diamond build hi.d6 -o hi</div>
+                <div class="line">./hi</div>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="tab-panel" data-panel="freebsd">
-          <div class="terminal-window">
-            <div class="titlebar">
-              <div class="dots"><span></span><span></span><span></span></div>
-              <span class="filename">FreeBSD</span>
-              <button class="copy-btn" type="button" data-copy-target="term-freebsd">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                <span class="copy-label">Copy</span>
-              </button>
+          <div class="install-row">
+            <div class="terminal-window">
+              <div class="titlebar">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <span class="filename">FreeBSD</span>
+                <button class="copy-btn" type="button" data-copy-target="term-freebsd">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+              <div class="terminal" id="term-freebsd">
+                <div class="line comment"># Install system dependencies</div>
+                <div class="line">pkg install git gmake sqlite3 openssl postgresql16-client \</div>
+                <div class="line">  mariadb-connector-c</div>
+                <div class="line comment gap"># Download the source</div>
+                <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
+                <div class="line">cd diamond</div>
+                <div class="line comment gap"># Build Diamond (FreeBSD's GNU Make is gmake, not make)</div>
+                <div class="line">gmake all facet CC=clang \</div>
+                <div class="line">  CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
+                <div class="line">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
+                <div class="line comment gap"># Put diamond and facet on PATH</div>
+                <div class="line">export PATH="$PWD/build:$PATH"</div>
+              </div>
             </div>
-            <div class="terminal" id="term-freebsd">
-              <div class="line comment"># Install system dependencies</div>
-              <div class="line">pkg install git gmake sqlite3 openssl postgresql16-client mariadb-connector-c</div>
-              <div class="line comment gap"># Download the source</div>
-              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
-              <div class="line">cd diamond</div>
-              <div class="line comment gap"># Build Diamond (FreeBSD's GNU Make is gmake, not make)</div>
-              <div class="line">gmake all facet CC=clang CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
-              <div class="line">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
-              <div class="line comment gap"># Put diamond and facet on PATH</div>
-              <div class="line">export PATH="$PWD/build:$PATH"</div>
+            <div class="terminal-window usage">
+              <div class="titlebar">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <span class="filename">usage</span>
+                <button class="copy-btn" type="button" data-copy-target="term-usage-freebsd">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+              <div class="terminal" id="term-usage-freebsd">
+                <div class="line comment"># Run a one-liner</div>
+                <div class="line">diamond -e '20 + 22'</div>
+                <div class="line comment"># =&gt; 42</div>
+                <div class="line comment gap"># ...or run a file</div>
+                <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
+                <div class="line">diamond hi.d6</div>
+                <div class="line comment gap"># ...or start the REPL</div>
+                <div class="line">diamond</div>
+                <div class="line comment gap"># Ship a standalone binary</div>
+                <div class="line">diamond build hi.d6 -o hi</div>
+                <div class="line">./hi</div>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="tab-panel" data-panel="macos">
-          <div class="terminal-window">
-            <div class="titlebar">
-              <div class="dots"><span></span><span></span><span></span></div>
-              <span class="filename">macOS</span>
-              <button class="copy-btn" type="button" data-copy-target="term-macos">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                <span class="copy-label">Copy</span>
-              </button>
+          <div class="install-row">
+            <div class="terminal-window">
+              <div class="titlebar">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <span class="filename">macOS</span>
+                <button class="copy-btn" type="button" data-copy-target="term-macos">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+              <div class="terminal" id="term-macos">
+                <div class="line comment"># Install Xcode command-line tools and Homebrew first; Clang 19+</div>
+                <div class="line">brew install coreutils gnu-sed bash openssl@3 sqlite \</div>
+                <div class="line">  postgresql@16 mariadb-connector-c</div>
+                <div class="line">o=$(brew --prefix)/opt</div>
+                <div class="line">export PATH="$o/coreutils/libexec/gnubin:$PATH"</div>
+                <div class="line">export PATH="$o/gnu-sed/libexec/gnubin:$o/bash/bin:$PATH"</div>
+                <div class="line comment gap"># Download and build Diamond</div>
+                <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
+                <div class="line">cd diamond</div>
+                <div class="line">make all facet CC=clang LDLIBS_CRYPT= \</div>
+                <div class="line">  CPPFLAGS_EXTRA="-I$o/openssl@3/include -I$o/sqlite/include \</div>
+                <div class="line">    -I$o/postgresql@16/include -I$o/mariadb-connector-c/include \</div>
+                <div class="line">    -I$o/mariadb-connector-c/include/mariadb" \</div>
+                <div class="line">  LDFLAGS_EXTRA="-L$o/openssl@3/lib -L$o/sqlite/lib \</div>
+                <div class="line">    -L$o/postgresql@16/lib -L$o/mariadb-connector-c/lib \</div>
+                <div class="line">    -L$o/mariadb-connector-c/lib/mariadb"</div>
+                <div class="line comment gap"># Put diamond and facet on PATH</div>
+                <div class="line">export PATH="$PWD/build:$PATH"</div>
+              </div>
             </div>
-            <div class="terminal" id="term-macos">
-              <div class="line comment"># Install Xcode command-line tools and Homebrew first; Clang 19+ required</div>
-              <div class="line">brew install coreutils gnu-sed bash openssl@3 sqlite postgresql@16 mariadb-connector-c</div>
-              <div class="line">export PATH="$(brew --prefix coreutils)/libexec/gnubin:$(brew --prefix gnu-sed)/libexec/gnubin:$(brew --prefix bash)/bin:$PATH"</div>
-              <div class="line comment gap"># Download and build Diamond</div>
-              <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
-              <div class="line">cd diamond</div>
-              <div class="line">make all facet CC=clang LDLIBS_CRYPT= \</div>
-              <div class="line">  CPPFLAGS_EXTRA="-I$(brew --prefix openssl@3)/include -I$(brew --prefix sqlite)/include -I$(brew --prefix postgresql@16)/include -I$(brew --prefix mariadb-connector-c)/include -I$(brew --prefix mariadb-connector-c)/include/mariadb" \</div>
-              <div class="line">  LDFLAGS_EXTRA="-L$(brew --prefix openssl@3)/lib -L$(brew --prefix sqlite)/lib -L$(brew --prefix postgresql@16)/lib -L$(brew --prefix mariadb-connector-c)/lib -L$(brew --prefix mariadb-connector-c)/lib/mariadb"</div>
-              <div class="line comment gap"># Put diamond and facet on PATH</div>
-              <div class="line">export PATH="$PWD/build:$PATH"</div>
+            <div class="terminal-window usage">
+              <div class="titlebar">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <span class="filename">usage</span>
+                <button class="copy-btn" type="button" data-copy-target="term-usage-macos">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+              <div class="terminal" id="term-usage-macos">
+                <div class="line comment"># Run a one-liner</div>
+                <div class="line">diamond -e '20 + 22'</div>
+                <div class="line comment"># =&gt; 42</div>
+                <div class="line comment gap"># ...or run a file</div>
+                <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
+                <div class="line">diamond hi.d6</div>
+                <div class="line comment gap"># ...or start the REPL</div>
+                <div class="line">diamond</div>
+                <div class="line comment gap"># Ship a standalone binary</div>
+                <div class="line">diamond build hi.d6 -o hi</div>
+                <div class="line">./hi</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="terminal-window run-ship">
-        <div class="titlebar">
-          <div class="dots"><span></span><span></span><span></span></div>
-          <span class="filename">run &amp; ship</span>
-          <button class="copy-btn" type="button" data-copy-target="term-run-ship">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-            <span class="copy-label">Copy</span>
-          </button>
-        </div>
-        <div class="terminal" id="term-run-ship">
-          <div class="line comment"># Run a one-liner</div>
-          <div class="line">diamond -e '20 + 22'</div>
-          <div class="line comment"># =&gt; 42</div>
-          <div class="line comment gap"># ...or run a file</div>
-          <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-          <div class="line">diamond hi.d6</div>
-          <div class="line comment gap"># ...or start the REPL</div>
-          <div class="line">diamond</div>
-          <div class="line comment gap"># Ship a standalone binary</div>
-          <div class="line">diamond build hi.d6 -o hi</div>
-          <div class="line">./hi</div>
-        </div>
-      </div>
     </div>
   </section>
 

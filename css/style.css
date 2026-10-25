@@ -719,10 +719,32 @@ section {
   box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
 }
 
-.terminal-window.run-ship {
+.terminal-window.usage {
   width: fit-content;
   max-width: 100%;
-  margin: 40px auto 0;
+  margin: 32px auto 0;
+}
+
+/* Source builds: install steps on the left, usage on the right. */
+.install-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+}
+
+.install-row .terminal-window.usage {
+  margin: 0;
+}
+
+@media (max-width: 920px) {
+  .install-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .install-row .terminal-window.usage {
+    margin: 0 auto;
+  }
 }
 
 .terminal-window .titlebar {
