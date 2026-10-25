@@ -671,6 +671,10 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
           or a PR.</p>
 
         <div class="tab-panel active" data-panel="fedora">
+          <div class="package-download">
+            <a class="btn btn-primary" href="https://github.com/diamond-language/diamond/releases/download/v0.20.0/diamond-lang-0.20.0-1.fc44.x86_64.rpm"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download .rpm</a>
+            <span class="package-meta"><code>diamond-lang-0.20.0-1.fc44.x86_64.rpm</code> &middot; x86-64-v3 &middot; 2.2 MB &middot; <a href="https://github.com/diamond-language/diamond/releases">all releases</a></span>
+          </div>
           <div class="terminal-window">
             <div class="titlebar">
               <div class="dots"><span></span><span></span><span></span></div>
@@ -681,9 +685,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               </button>
             </div>
             <div class="terminal" id="term-fedora">
-              <div class="line comment"># Install the Fedora 44 package from the latest release</div>
-              <div class="line">base=https://github.com/diamond-language/diamond/releases/download/v0.20.0</div>
-              <div class="line">sudo dnf install $base/diamond-lang-0.20.0-1.fc44.x86_64.rpm</div>
+              <div class="line comment"># Install the downloaded package</div>
+              <div class="line">sudo dnf install ~/Downloads/diamond-lang-0.20.0-1.fc44.x86_64.rpm</div>
               <div class="line comment gap"># Check it</div>
               <div class="line">diamond --version</div>
             </div>
@@ -691,6 +694,10 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
         </div>
 
         <div class="tab-panel" data-panel="ubuntu">
+          <div class="package-download">
+            <a class="btn btn-primary" href="https://github.com/diamond-language/diamond/releases/download/v0.20.0/diamond-lang_0.20.0-1_amd64.deb"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download .deb</a>
+            <span class="package-meta"><code>diamond-lang_0.20.0-1_amd64.deb</code> &middot; x86-64-v3 &middot; 2.0 MB &middot; <a href="https://github.com/diamond-language/diamond/releases">all releases</a></span>
+          </div>
           <div class="terminal-window">
             <div class="titlebar">
               <div class="dots"><span></span><span></span><span></span></div>
@@ -701,10 +708,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               </button>
             </div>
             <div class="terminal" id="term-ubuntu">
-              <div class="line comment"># Download and install the Ubuntu 26.04 package from the latest release</div>
-              <div class="line">base=https://github.com/diamond-language/diamond/releases/download/v0.20.0</div>
-              <div class="line">curl -LO $base/diamond-lang_0.20.0-1_amd64.deb</div>
-              <div class="line">sudo apt install ./diamond-lang_0.20.0-1_amd64.deb</div>
+              <div class="line comment"># Install the downloaded package</div>
+              <div class="line">sudo apt install ~/Downloads/diamond-lang_0.20.0-1_amd64.deb</div>
               <div class="line comment gap"># Check it</div>
               <div class="line">diamond --version</div>
             </div>

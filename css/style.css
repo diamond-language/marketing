@@ -677,6 +677,27 @@ section {
   display: block;
 }
 
+.package-download {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 18px;
+  margin: 0 0 20px;
+}
+
+.package-meta {
+  color: var(--text-dim);
+  font-size: 14px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.package-meta a {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
 .tab-caption {
   text-align: center;
   color: var(--text-dim);
