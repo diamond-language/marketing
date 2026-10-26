@@ -91,7 +91,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.20.1 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.20.2 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">Diamond is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -246,7 +246,7 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>0.20 goes from installation to a first app: packages, project generators and a getting-started guide.</p>
+        <p>0.20 goes from installation to a first app: packages, project generators and a getting-started guide. 0.20.2 adds what building command-line and TCP apps asked for.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
@@ -268,12 +268,14 @@ facet install
 bash test.sh</code></pre>
         </article>
         <article class="new-card">
-          <h3>Scripts print what they write</h3>
-          <p>A script no longer prints its last value. The REPL and <code>diamond -e</code>
-            still do.</p>
-          <pre><code>total = [<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>].sum()
-total        <span class="tok-comment"># prints nothing</span>
-puts(total)  <span class="tok-comment"># 6</span></code></pre>
+          <h3>rescue without begin</h3>
+          <p>A method or <code>do</code> block body can end in <code>rescue</code>,
+            <code>else</code> and <code>ensure</code>, as in Ruby.</p>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">load</span>(path)
+  <span class="tok-const">JSON</span>.parse(<span class="tok-const">File</span>.read(path))
+<span class="tok-kw">rescue</span> error: <span class="tok-const">IOError</span>
+  {}
+<span class="tok-kw">end</span></code></pre>
           <p><a href="https://github.com/diamond-language/diamond/blob/main/docs/getting-started.md">Read the getting-started guide &rarr;</a></p>
         </article>
       </div>
@@ -671,7 +673,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.20.1/diamond-lang-0.20.1-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.20.2/diamond-lang-0.20.2-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -700,7 +702,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.20.1/diamond-lang_0.20.1-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.20.2/diamond-lang_0.20.2-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
