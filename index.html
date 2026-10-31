@@ -91,7 +91,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.20.2 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.21.0 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">Diamond is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -246,36 +246,36 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>0.20 goes from installation to a first app: packages, project generators and a getting-started guide. 0.20.2 adds what building command-line and TCP apps asked for.</p>
+        <p>0.21 brings generics to most of the language, makes Mjolnir queries about a quarter cheaper, and lifts the limits on how large a program can be.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Install from a package</h3>
-          <p>Each release has a <code>.deb</code> for Ubuntu 26.04 and an <code>.rpm</code> for
-            Fedora 44 with <code>diamond</code>, <code>facet</code> and the editor tools.</p>
-          <pre><code><span class="tok-comment"># Ubuntu 26.04</span>
-sudo apt install ./diamond*.deb
-<span class="tok-comment"># Fedora 44</span>
-sudo dnf install diamond*.rpm</code></pre>
+          <h3>Generics, nearly everywhere</h3>
+          <p>Generic classes and structs, with inheritance, methods with their own type
+            parameters, and specialized references like <code>identity[Int]</code>.</p>
+          <pre><code><span class="tok-kw">struct</span> <span class="tok-const">Cell</span>[<span class="tok-const">T</span>](value: <span class="tok-const">T</span>)
+<span class="tok-kw">end</span>
+<span class="tok-kw">struct</span> <span class="tok-const">Tag</span>[<span class="tok-const">T</span>, <span class="tok-const">U</span>](tag: <span class="tok-const">U</span>) &lt; <span class="tok-const">Cell</span>[<span class="tok-const">T</span>]
+<span class="tok-kw">end</span>
+<span class="tok-const">Tag</span>.new(42, "answer").value()</code></pre>
         </article>
         <article class="new-card">
-          <h3>facet new</h3>
-          <p>A CLI, a web app, a TCP or UDP server, or a library cut, with passing tests.
-            minitest comes in as a development dependency.</p>
-          <pre><code>facet new cli greeter
-<span class="tok-kw">cd</span> greeter
-facet install
-bash test.sh</code></pre>
+          <h3>Cheaper queries</h3>
+          <p><code>Array#map</code>, <code>select</code> and friends run direct loops, and
+            Arel quotes names without splitting them into characters.</p>
+          <pre><code><span class="tok-comment"># instructions, against 0.20.2</span>
+query build + render  -24%
+Repo#get              -16%
+Repo#all, 1,000 rows  -12%</code></pre>
         </article>
         <article class="new-card">
-          <h3>rescue without begin</h3>
-          <p>A method or <code>do</code> block body can end in <code>rescue</code>,
-            <code>else</code> and <code>ensure</code>, as in Ruby.</p>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">load</span>(path)
-  <span class="tok-const">JSON</span>.parse(<span class="tok-const">File</span>.read(path))
-<span class="tok-kw">rescue</span> error: <span class="tok-const">IOError</span>
-  {}
-<span class="tok-kw">end</span></code></pre>
+          <h3>Higher limits</h3>
+          <p>Tables grow on demand, so a class takes about 5 KB instead of 64 KB. A program
+            may also define 65,535 namespace constants, up from 128.</p>
+          <pre><code><span class="tok-comment"># the most you can declare</span>
+modules        1,024 (was 255)
+interfaces     1,024 (was 32)
+class methods  4,096 (was 256)</code></pre>
           <p><a href="https://github.com/diamond-language/diamond/blob/main/docs/getting-started.md">Read the getting-started guide &rarr;</a></p>
         </article>
       </div>
@@ -673,7 +673,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.20.2/diamond-lang-0.20.2-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.21.0/diamond-lang-0.21.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -702,7 +702,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.20.2/diamond-lang_0.20.2-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.21.0/diamond-lang_0.21.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
