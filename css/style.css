@@ -448,7 +448,10 @@ img, svg {
 
 .repl-form {
   display: flex;
-  align-items: baseline;
+  /* Top-aligned, not baseline: an empty field has no text line to give a baseline, which dropped
+     the prompt below the placeholder. Prompt and field share one font and line height, so their
+     first rows line up. */
+  align-items: flex-start;
   margin-top: 4px;
   padding-top: 6px;
   border-top: 1px solid var(--border-soft);
