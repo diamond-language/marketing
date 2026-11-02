@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Diamond — real types, one binary, nothing shared</title>
-<meta name="description" content="Diamond is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
+<title>d6 — real types, one binary, nothing shared</title>
+<meta name="description" content="d6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://getdiamond.codes/">
 <meta property="og:url" content="https://getdiamond.codes/">
-<meta property="og:title" content="Diamond — real types, one binary, nothing shared">
-<meta property="og:description" content="Diamond is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
+<meta property="og:title" content="d6 — real types, one binary, nothing shared">
+<meta property="og:description" content="d6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <meta property="og:image" content="https://getdiamond.codes/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:site_name" content="Diamond">
+<meta property="og:site_name" content="d6">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Diamond — real types, one binary, nothing shared">
-<meta name="twitter:description" content="Diamond is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
+<meta name="twitter:title" content="d6 — real types, one binary, nothing shared">
+<meta name="twitter:description" content="d6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <meta name="twitter:image" content="https://getdiamond.codes/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,7 +51,7 @@
         <path d="M11 5 L21 5 L28 13 L16 28 L4 13 Z" fill="none" stroke="#02040a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
         <path d="M11 5 L16 13 M21 5 L16 13 M4 13 L28 13 M16 13 L16 28" stroke="#090c14" stroke-width="1" stroke-opacity="0.32" stroke-linecap="round"/>
       </svg>
-      Diamond
+      d6
     </a>
     <nav class="nav-links" id="nav-links">
       <a href="#release">Recent changes</a>
@@ -91,11 +91,11 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.22.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.23.0 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
-          <p class="lead">Diamond is a typed, object-oriented language. The compiler checks the
+          <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
-            <code>diamond build</code> turns a program into one executable &mdash; cross-compiled,
+            <code>d6 build</code> turns a program into one executable &mdash; cross-compiled,
             or fully static if you like. Threads copy values instead of sharing a heap.</p>
           <div class="hero-ctas">
             <a class="btn btn-primary" href="#install">Get started</a>
@@ -115,18 +115,18 @@
         <div class="code-window repl-window" id="repl" data-repl>
           <div class="titlebar">
             <div class="dots"><span></span><span></span><span></span></div>
-            <span class="filename">diamond repl</span>
+            <span class="filename">d6 repl</span>
             <span class="repl-badge">WebAssembly</span>
           </div>
           <div class="repl-body">
             <div class="repl-scrollback" data-repl-scrollback role="log" aria-live="polite">
-              <div class="repl-line repl-hint">Diamond runs in your browser.</div>
+              <div class="repl-line repl-hint">d6 runs in your browser.</div>
               <div class="repl-line repl-hint">Type an expression, or pick an example below.</div>
             </div>
             <form class="repl-form" data-repl-form autocomplete="off">
               <span class="repl-prompt" data-repl-prompt>{&gt; </span>
               <span class="repl-field"><span class="repl-highlight" aria-hidden="true" data-repl-highlight></span>
-                <input class="repl-input" data-repl-input aria-label="Diamond input" spellcheck="false"
+                <input class="repl-input" data-repl-input aria-label="d6 input" spellcheck="false"
                      autocapitalize="off" autocomplete="off" placeholder="1 + 2" role="combobox"
                      aria-autocomplete="list" aria-expanded="false" aria-controls="repl-completions" disabled>
                 <ul class="repl-completions" id="repl-completions" data-repl-completions role="listbox" hidden></ul></span>
@@ -154,7 +154,7 @@
       <div class="section-head">
         <span class="eyebrow"><span class="dot"></span> Familiar ground</span>
         <h2>You have probably written something like this</h2>
-        <p>Pieces of Diamond will feel familiar depending on where you are coming from.
+        <p>Pieces of d6 will feel familiar depending on where you are coming from.
           The names are different; the ideas are not new.</p>
       </div>
       <div class="familiar-grid">
@@ -246,41 +246,39 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>0.22 carries generics through the database packages, and adds <code>-&gt; Self</code>, sort blocks and a <code>SemVer</code> builtin.</p>
+        <p>0.23 renames Diamond to d6: new command names, new package names and a <code>Cutfile</code>. Old names keep working.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Queries know their rows</h3>
-          <p>Mjolnir's <code>Schema</code>, <code>Query</code> and <code>Repo</code> are generic,
-            so a builder's return type carries through to what a query gives back.</p>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">build</span>(row) -&gt; <span class="tok-const">Item</span> = ...
-items = <span class="tok-const">Schema</span>.new(..., build)
-repo.all(items.query())
-<span class="tok-comment"># Array[Item]</span></code></pre>
+          <h3>Diamond is now d6</h3>
+          <p>The commands are <code>d6</code>, <code>d6-lsp</code> and <code>d6-dap</code>.
+            <code>diamond</code> stays as a link, so existing scripts keep running.</p>
+          <pre><code>$ d6 --version
+d6 0.23.0
+$ diamond --version
+d6 0.23.0</code></pre>
         </article>
         <article class="new-card">
-          <h3>-&gt; Self</h3>
-          <p>A method can return the class it was called on, so
-            <code>Model.find</code> in ActiveRecord is typed for each model.</p>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-kw">self</span>.<span class="tok-fn">make</span>() -&gt; <span class="tok-const">Self</span>
-  <span class="tok-kw">self</span>.new()
-<span class="tok-kw">end</span>
-<span class="tok-const">Author</span>.make() <span class="tok-comment"># an Author</span></code></pre>
+          <h3>Cutfile</h3>
+          <p>A project's manifest is <code>Cutfile</code>, with <code>Cutfile.dev</code> and
+            <code>Cutfile.lock</code> beside it. Rename the old files to move over.</p>
+          <pre><code>$ git mv diamond.cut Cutfile
+$ git mv facet.lock Cutfile.lock
+$ facet install</code></pre>
         </article>
         <article class="new-card">
-          <h3>Sort blocks and SemVer</h3>
-          <p><code>sort</code> takes a comparison block, and <code>SemVer</code> orders
-            versions with the same code <code>facet</code> resolves with.</p>
-          <pre><code>versions.sort() <span class="tok-kw">do</span> |a, b|
-  <span class="tok-const">SemVer</span>.compare(a, b)
-<span class="tok-kw">end</span>
-<span class="tok-comment"># ["1.2.0", "1.10.0"]</span></code></pre>
+          <h3>d6-lang packages</h3>
+          <p>The <code>.deb</code> and <code>.rpm</code> are now <code>d6-lang</code>, and
+            installing one replaces <code>diamond-lang</code>.</p>
+          <pre><code>$ sudo dnf install \
+    d6-lang-0.23.0-1*.rpm
+<span class="tok-comment"># diamond-lang is removed</span></code></pre>
           <p><a href="https://github.com/diamond-language/diamond/blob/main/docs/getting-started.md">Read the getting-started guide &rarr;</a></p>
         </article>
       </div>
 
       <div class="release-notes">
-        <p><strong>Pre-1.0.</strong> Diamond is exercised mostly on Fedora and Ubuntu, with CI on
+        <p><strong>Pre-1.0.</strong> d6 is exercised mostly on Fedora and Ubuntu, with CI on
           macOS, FreeBSD, Alpine, and arm64. It hasn't had a security audit, so don't rely on it for
           security-sensitive work yet.</p>
         <a class="release-link" href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog &rarr;</a>
@@ -331,7 +329,7 @@ repo.all(items.query())
           <h3>Compiled, not just interpreted</h3>
         </div>
           <p>A Pratt compiler emits register bytecode for a VM with inline caches, object shapes,
-            and quickening. <code>diamond build</code> produces a standalone native executable —
+            and quickening. <code>d6 build</code> produces a standalone native executable —
             no interpreter needed at runtime.</p>
         </a>
 
@@ -354,7 +352,7 @@ repo.all(items.query())
           </div>
           <h3>Sandboxing built into the language</h3>
         </div>
-          <p><code>diamond --sandbox</code> denies filesystem, network, and subprocess access
+          <p><code>d6 --sandbox</code> denies filesystem, network, and subprocess access
             for running untrusted code — checked at each opcode, not bolted on with a wrapper.</p>
         </a>
 
@@ -380,7 +378,7 @@ repo.all(items.query())
         <h2>From source to native code</h2>
         <p>One flat compile per program, checked types, then an interpreter and a JIT that
           share one VM. The same compiled bytecode feeds the on-disk cache and
-          <code>diamond build</code>.</p>
+          <code>d6 build</code>.</p>
       </div>
 
       <ol class="pipeline">
@@ -419,7 +417,7 @@ repo.all(items.query())
       <div class="internals-grid">
         <div class="internals-card">
           <h3>Ship a binary</h3>
-          <p><code>diamond build</code> embeds the compiled program in a native executable.
+          <p><code>d6 build</code> embeds the compiled program in a native executable.
             An installed toolchain links it against a prebuilt runtime kit with one compiler
             call.</p>
         </div>
@@ -437,7 +435,7 @@ repo.all(items.query())
         <div class="internals-card">
           <h3>Tooling in the box</h3>
           <p>A language server, a Debug Adapter Protocol step debugger, a formatter, and a lexer
-            and parser written in Diamond itself.</p>
+            and parser written in d6 itself.</p>
         </div>
       </div>
     </div>
@@ -572,10 +570,10 @@ counter.resume(<span class="tok-num">5</span>)     <span class="tok-comment"># =
           <pre><code><span class="tok-comment"># denies filesystem, network, and subprocess access --</span>
 <span class="tok-comment"># checked at every native opcode, applies to anything</span>
 <span class="tok-comment"># the program spawns (Thread, Supervisor) too</span>
-diamond --sandbox untrusted.d6
+d6 --sandbox untrusted.d6
 
 <span class="tok-comment"># equivalently:</span>
-DIAMOND_SANDBOX=1 diamond untrusted.d6</code></pre>
+DIAMOND_SANDBOX=1 d6 untrusted.d6</code></pre>
         </div>
         <p class="tab-caption">Sandboxing for running untrusted code, not a wrapper script
           around the interpreter.</p>
@@ -608,7 +606,7 @@ DIAMOND_SANDBOX=1 diamond untrusted.d6</code></pre>
             <li><strong>No lazy loading.</strong> An association is fetched only by
               <code>preload</code>, one query for any number of entities.</li>
           </ul>
-          <p>After installing Diamond below, start a new project directory:</p>
+          <p>After installing d6 below, start a new project directory:</p>
           <pre><code>mkdir demo &amp;&amp; cd demo
 facet init demo
 facet add mjolnir
@@ -648,7 +646,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
         <h2>Build it, run it, ship it</h2>
         <p>Fedora 44 and Ubuntu 26.04 install from a package; other platforms build from
           source. Bytecode is cached automatically between runs,
-          and <code>diamond build</code> produces a self-contained native binary when you're
+          and <code>d6 build</code> produces a self-contained native binary when you're
           ready to ship. A C23 compiler with <code>#embed</code> support is required
           (GCC 15+ or Clang 19+) to build from source. On x86-64, the supported baseline is x86-64-v3
           (AVX2, BMI2, FMA). Pick your platform to get started.</p>
@@ -672,7 +670,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.22.0/diamond-lang-0.22.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.23.0/d6-lang-0.23.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -685,15 +683,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
             </div>
             <div class="terminal" id="term-usage-fedora">
               <div class="line comment"># Run a one-liner</div>
-              <div class="line">diamond -e '20 + 22'</div>
+              <div class="line">d6 -e '20 + 22'</div>
               <div class="line comment"># =&gt; 42</div>
               <div class="line comment gap"># ...or run a file</div>
               <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-              <div class="line">diamond hi.d6</div>
+              <div class="line">d6 hi.d6</div>
               <div class="line comment gap"># ...or start the REPL</div>
-              <div class="line">diamond</div>
+              <div class="line">d6</div>
               <div class="line comment gap"># Ship a standalone binary</div>
-              <div class="line">diamond build hi.d6 -o hi</div>
+              <div class="line">d6 build hi.d6 -o hi</div>
               <div class="line">./hi</div>
             </div>
           </div>
@@ -701,7 +699,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.22.0/diamond-lang_0.22.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.23.0/d6-lang_0.23.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -714,15 +712,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
             </div>
             <div class="terminal" id="term-usage-ubuntu">
               <div class="line comment"># Run a one-liner</div>
-              <div class="line">diamond -e '20 + 22'</div>
+              <div class="line">d6 -e '20 + 22'</div>
               <div class="line comment"># =&gt; 42</div>
               <div class="line comment gap"># ...or run a file</div>
               <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-              <div class="line">diamond hi.d6</div>
+              <div class="line">d6 hi.d6</div>
               <div class="line comment gap"># ...or start the REPL</div>
-              <div class="line">diamond</div>
+              <div class="line">d6</div>
               <div class="line comment gap"># Ship a standalone binary</div>
-              <div class="line">diamond build hi.d6 -o hi</div>
+              <div class="line">d6 build hi.d6 -o hi</div>
               <div class="line">./hi</div>
             </div>
           </div>
@@ -746,9 +744,9 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line comment gap"># Download the source</div>
                 <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
                 <div class="line">cd diamond</div>
-                <div class="line comment gap"># Build Diamond</div>
+                <div class="line comment gap"># Build d6</div>
                 <div class="line">make all facet</div>
-                <div class="line comment gap"># Put diamond and facet on PATH</div>
+                <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
               </div>
             </div>
@@ -763,15 +761,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               </div>
               <div class="terminal" id="term-usage-alpine">
                 <div class="line comment"># Run a one-liner</div>
-                <div class="line">diamond -e '20 + 22'</div>
+                <div class="line">d6 -e '20 + 22'</div>
                 <div class="line comment"># =&gt; 42</div>
                 <div class="line comment gap"># ...or run a file</div>
                 <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-                <div class="line">diamond hi.d6</div>
+                <div class="line">d6 hi.d6</div>
                 <div class="line comment gap"># ...or start the REPL</div>
-                <div class="line">diamond</div>
+                <div class="line">d6</div>
                 <div class="line comment gap"># Ship a standalone binary</div>
-                <div class="line">diamond build hi.d6 -o hi</div>
+                <div class="line">d6 build hi.d6 -o hi</div>
                 <div class="line">./hi</div>
               </div>
             </div>
@@ -796,11 +794,11 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line comment gap"># Download the source</div>
                 <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
                 <div class="line">cd diamond</div>
-                <div class="line comment gap"># Build Diamond (FreeBSD's GNU Make is gmake, not make)</div>
+                <div class="line comment gap"># Build d6 (FreeBSD's GNU Make is gmake, not make)</div>
                 <div class="line">gmake all facet CC=clang \</div>
                 <div class="line">  CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
                 <div class="line">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
-                <div class="line comment gap"># Put diamond and facet on PATH</div>
+                <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
               </div>
             </div>
@@ -815,15 +813,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               </div>
               <div class="terminal" id="term-usage-freebsd">
                 <div class="line comment"># Run a one-liner</div>
-                <div class="line">diamond -e '20 + 22'</div>
+                <div class="line">d6 -e '20 + 22'</div>
                 <div class="line comment"># =&gt; 42</div>
                 <div class="line comment gap"># ...or run a file</div>
                 <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-                <div class="line">diamond hi.d6</div>
+                <div class="line">d6 hi.d6</div>
                 <div class="line comment gap"># ...or start the REPL</div>
-                <div class="line">diamond</div>
+                <div class="line">d6</div>
                 <div class="line comment gap"># Ship a standalone binary</div>
-                <div class="line">diamond build hi.d6 -o hi</div>
+                <div class="line">d6 build hi.d6 -o hi</div>
                 <div class="line">./hi</div>
               </div>
             </div>
@@ -848,7 +846,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">o=$(brew --prefix)/opt</div>
                 <div class="line">export PATH="$o/coreutils/libexec/gnubin:$PATH"</div>
                 <div class="line">export PATH="$o/gnu-sed/libexec/gnubin:$o/bash/bin:$PATH"</div>
-                <div class="line comment gap"># Download and build Diamond</div>
+                <div class="line comment gap"># Download and build d6</div>
                 <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
                 <div class="line">cd diamond</div>
                 <div class="line">make all facet CC=clang LDLIBS_CRYPT= \</div>
@@ -858,7 +856,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">  LDFLAGS_EXTRA="-L$o/openssl@3/lib -L$o/sqlite/lib \</div>
                 <div class="line">    -L$o/postgresql@16/lib -L$o/mariadb-connector-c/lib \</div>
                 <div class="line">    -L$o/mariadb-connector-c/lib/mariadb"</div>
-                <div class="line comment gap"># Put diamond and facet on PATH</div>
+                <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
               </div>
             </div>
@@ -873,15 +871,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               </div>
               <div class="terminal" id="term-usage-macos">
                 <div class="line comment"># Run a one-liner</div>
-                <div class="line">diamond -e '20 + 22'</div>
+                <div class="line">d6 -e '20 + 22'</div>
                 <div class="line comment"># =&gt; 42</div>
                 <div class="line comment gap"># ...or run a file</div>
                 <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-                <div class="line">diamond hi.d6</div>
+                <div class="line">d6 hi.d6</div>
                 <div class="line comment gap"># ...or start the REPL</div>
-                <div class="line">diamond</div>
+                <div class="line">d6</div>
                 <div class="line comment gap"># Ship a standalone binary</div>
-                <div class="line">diamond build hi.d6 -o hi</div>
+                <div class="line">d6 build hi.d6 -o hi</div>
                 <div class="line">./hi</div>
               </div>
             </div>
@@ -935,7 +933,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
           <span class="arrow" aria-hidden="true">&rarr;</span>
         </a>
         <a class="doc-link" href="https://github.com/diamond-language/diamond/blob/main/docs/deployment.md" target="_blank" rel="noopener">
-          <span><span class="label">Deployment</span><span class="sub">diamond build, AOT kit, make install</span></span>
+          <span><span class="label">Deployment</span><span class="sub">d6 build, AOT kit, make install</span></span>
           <span class="arrow" aria-hidden="true">&rarr;</span>
         </a>
       </div>
@@ -983,7 +981,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
             <path d="M11 5 L21 5 L28 13 L16 28 L4 13 Z" fill="none" stroke="#02040a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
             <path d="M11 5 L16 13 M21 5 L16 13 M4 13 L28 13 M16 13 L16 28" stroke="#090c14" stroke-width="1" stroke-opacity="0.32" stroke-linecap="round"/>
           </svg>
-          Diamond
+          d6
         </a>
         <p>An object-oriented language with gradual, checked typing and a register-bytecode VM
           written in C23. Open source under the MIT license.</p>
@@ -1016,7 +1014,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; <span id="year"></span> The Diamond project. MIT licensed.</span>
+      <span>&copy; <span id="year"></span> The d6 project. MIT licensed.</span>
     </div>
   </div>
 </footer>
