@@ -176,7 +176,7 @@
     var replStatus = document.querySelector('[data-repl-status]');
     if (replStatus) {
       replStatus.textContent = 'The REPL needs a web server: browsers block WebAssembly on file:// pages. ' +
-        'Run "python3 -m http.server" in this folder and open http://localhost:8000.';
+        'Serve this folder with any static web server, then open the address it prints.';
     }
   }
 })();
