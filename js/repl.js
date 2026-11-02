@@ -43,7 +43,8 @@ if (root) {
     return completion.labels[completion.selected].slice(completion.prefix.length);
   };
 
-  // Repaints the layer behind the input; the input scrolls itself when a line outgrows it.
+  // Repaints the layer behind the input. It wraps exactly as the textarea does and sets the
+  // field's height, so a long line grows onto more rows instead of running off the edge.
   const paint = () => {
     if (!repl || !highlightEl) return;
     const content = colored(repl, input.value);
@@ -55,7 +56,6 @@ if (root) {
       content.append(span);
     }
     highlightEl.replaceChildren(content);
-    highlightEl.style.transform = `translateX(${-input.scrollLeft}px)`;
   };
 
   const renderList = () => {
@@ -84,8 +84,23 @@ if (root) {
       });
       return item;
     }));
-    // Lines the list up under the word being completed (the input is monospace).
-    listEl.style.left = `${input.value.length - prefix.length}ch`;
+    // Lines the list up with the word being completed, on whichever row it wrapped onto (the input
+    // is monospace and breaks at any character, so a row holds a fixed number of characters).
+    const columns = Math.max(1, Math.floor(input.clientWidth / charWidth()));
+    listEl.style.left = `${(input.value.length - prefix.length) % columns}ch`;
+  };
+
+  let measuredCharWidth = 0;
+  const charWidth = () => {
+    if (!measuredCharWidth) {
+      const probe = document.createElement('span');
+      probe.textContent = '0'.repeat(100);
+      probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre';
+      highlightEl.parentNode.append(probe);
+      measuredCharWidth = probe.getBoundingClientRect().width / 100 || 8;
+      probe.remove();
+    }
+    return measuredCharWidth;
   };
 
   const clearCompletion = () => {
@@ -188,7 +203,25 @@ if (root) {
   });
 
   for (const type of ['scroll', 'keyup', 'click']) input.addEventListener(type, paint);
+  // The field is a textarea so long lines can wrap, but it holds one line. A newline that still
+  // gets in (a paste, or a phone keyboard's Enter) submits every line before it, as typing would.
+  const takeNewlines = async () => {
+    if (busy || !input.value.includes('\n')) return;
+    const lines = input.value.split(/\r?\n/);
+    input.value = lines.pop();
+    clearCompletion();
+    busy = true;
+    for (const line of lines) {
+      if (line.trim()) { history.push(line); cursor = history.length; }
+      await submit(line);
+    }
+    busy = false;
+    paint();
+    input.focus();
+  };
+
   input.addEventListener('input', () => {
+    if (input.value.includes('\n')) { takeNewlines(); return; }
     if (completion && input.value !== completion.value) completion = null;
     renderList();
     paint();
@@ -197,6 +230,11 @@ if (root) {
   input.addEventListener('blur', () => { if (completion) clearCompletion(); });
 
   input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.isComposing) {
+      event.preventDefault();
+      form.requestSubmit();
+      return;
+    }
     if (completion && input.value === completion.value) {
       const count = completion.labels.length;
       if (event.key === 'Tab' || (event.key === 'ArrowRight' && input.selectionStart === input.value.length)) {
