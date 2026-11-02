@@ -1348,26 +1348,38 @@ section {
 }
 
 /* The REPL input is transparent text over a coloured copy of itself, so the lexer's colours
-   show while typing and the caret, selection and scrolling stay the browser's own. */
+   show while typing and the caret and selection stay the browser's own. A long line wraps onto
+   more rows, as in the terminal: the coloured copy sits in the flow and sets the field's height,
+   and the textarea covers it exactly. Both break at any character, so their rows always match. */
 .repl-field {
   position: relative;
   flex: 1;
   min-width: 0;
-  display: flex;
+}
+
+.repl-highlight,
+.repl-field .repl-input {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }
 
 .repl-field .repl-input {
-  position: relative;
+  position: absolute;
+  display: block;
+  margin: 0;
+  inset: 0;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
+  resize: none;
   color: transparent;
   caret-color: var(--text);
 }
 
 .repl-highlight {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  white-space: pre;
+  display: block;
+  min-height: 1.6em;
   pointer-events: none;
   color: var(--text);
 }
