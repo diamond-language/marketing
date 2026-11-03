@@ -519,6 +519,43 @@ img, svg {
   color: var(--text);
 }
 
+/* What running the file above printed: a terminal strip joined to the bottom of its window. */
+.code-output {
+  border-top: 1px solid var(--border-soft);
+  background: var(--bg);
+  padding: 14px 22px 16px;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: auto;
+  color: var(--text);
+}
+
+.code-output .out {
+  white-space: pre;
+}
+
+.code-output .cmd {
+  color: var(--text-dim);
+}
+
+.code-output .cmd:not(:first-child) {
+  margin-top: 10px;
+}
+
+.code-output .cmd::before {
+  content: "$ ";
+  color: var(--cyan);
+}
+
+.code-output .err {
+  color: #ff8a80;
+}
+
+.code-output .dim {
+  color: var(--text-faint);
+}
+
 .tok-kw { color: var(--tok-kw); }
 .tok-str { color: var(--tok-str); }
 .tok-num { color: var(--tok-num); }
@@ -635,6 +672,7 @@ section {
   background: rgba(107, 198, 255, 0.08);
   padding: 1px 5px;
   border-radius: 4px;
+  white-space: nowrap;
 }
 
 /* ---------- Tabs / "see it in action" ---------- */
@@ -697,6 +735,10 @@ section {
   color: var(--text-dim);
   font-size: 16px;
   margin: 18px 0 0;
+}
+
+.tab-caption code {
+  white-space: nowrap;
 }
 
 .platform-note {
@@ -1319,7 +1361,7 @@ section {
 
 .familiar-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   align-items: start;
 }
@@ -1346,7 +1388,7 @@ section {
 
 @media (max-width: 760px) {
   .familiar-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

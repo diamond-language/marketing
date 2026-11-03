@@ -56,6 +56,7 @@
     <nav class="nav-links" id="nav-links">
       <a href="#release">Recent changes</a>
       <a href="#features">Features</a>
+      <a href="#types">Types</a>
       <a href="#internals">Internals</a>
       <a href="#install">Install</a>
       <a href="#docs">Docs</a>
@@ -134,7 +135,7 @@
           </div>
           <div class="repl-examples" role="group" aria-label="Examples">
             <button type="button" class="repl-chip" data-repl-example="class Dog&#10;  def initialize(name: String)&#10;    @name = name&#10;  end&#10;  def speak() = &quot;#{@name} says woof&quot;&#10;end&#10;Dog.new(&quot;Rex&quot;).speak()">Classes</button>
-            <button type="button" class="repl-chip" data-repl-example="def double(n: Int) -&gt; Int = n * 2&#10;double(21)&#10;double(&quot;twenty&quot;)">Types</button>
+            <button type="button" class="repl-chip" data-repl-example="def find(id: Int) -&gt; String | Nil = id &gt; 0 ? &quot;Ada&quot; : nil&#10;def greet(name: String) -&gt; String = &quot;hello, &quot; + name&#10;greet(find(1))&#10;name = find(1)&#10;name != nil ? greet(name) : &quot;nobody&quot;">Types</button>
             <button type="button" class="repl-chip" data-repl-example="squares = [1, 2, 3, 4].map() do |n|&#10;  n * n&#10;end&#10;squares.sum()">Blocks</button>
             <button type="button" class="repl-chip" data-repl-example="struct Point(x: Int, y: Int)&#10;end&#10;a = Point.new(1, 2)&#10;a == Point.new(1, 2)&#10;a.to_s()">Structs</button>
             <button type="button" class="repl-chip" data-repl-example="db = SQLite3.open(&quot;:memory:&quot;)&#10;db.execute(&quot;CREATE TABLE people (name TEXT, age INTEGER)&quot;)&#10;db.execute(&quot;INSERT INTO people VALUES (?, ?)&quot;, [&quot;Ada&quot;, 36])&#10;db.execute(&quot;INSERT INTO people VALUES (?, ?)&quot;, [&quot;Grace&quot;, 45])&#10;db.query(&quot;SELECT name, age FROM people ORDER BY age DESC&quot;)">Database</button>
@@ -309,16 +310,16 @@ $ facet install</code></pre>
             <code>Foo.new</code>. No bare-call form, no ambiguity about what's being invoked.</p>
         </a>
 
-        <a class="feature-card" href="https://github.com/diamond-language/diamond/blob/main/docs/types-and-errors.md#gradual-typing" target="_blank" rel="noopener">
+        <a class="feature-card" href="#types">
           <div class="feature-head">
           <div class="feature-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 14V4M3 4L7 8M3 4L-1 8" transform="translate(1)" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 3h6M9 9h6M9 15h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <h3>Types are optional, but real</h3>
         </div>
-          <p>Annotations, union types with nil narrowing, generics, and structural interfaces
-            (no <code>implements</code> — any matching class satisfies one) are checked at
-            compile time, not just documented.</p>
+          <p>Generics that infer their arguments, structural interfaces, nil narrowing,
+            <code>-&gt; Self</code>, and exhaustive <code>case</code> over unions and sealed
+            classes, checked before the program runs. See them below.</p>
         </a>
 
         <a class="feature-card" href="https://github.com/diamond-language/diamond/blob/main/docs/runtime-reference.md#no-ast" target="_blank" rel="noopener">
@@ -352,8 +353,9 @@ $ facet install</code></pre>
           </div>
           <h3>Sandboxing built into the language</h3>
         </div>
-          <p><code>d6 --sandbox</code> denies filesystem, network, and subprocess access
-            for running untrusted code — checked at each opcode, not bolted on with a wrapper.</p>
+          <p><code>d6 --sandbox</code> denies files, network, databases, subprocesses and signal
+            handlers, each allowable by name, with budgets on instructions, time and memory —
+            checked at each opcode, not bolted on with a wrapper.</p>
         </a>
 
         <a class="feature-card" href="https://github.com/diamond-language/diamond/blob/main/docs/classes-and-modules.md#compile_method" target="_blank" rel="noopener">
@@ -369,6 +371,196 @@ $ facet install</code></pre>
       </div>
     </div>
   </section>
+
+  <!-- ---------------- Types ---------------- -->
+  <section id="types">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow"><span class="dot"></span> Types</span>
+        <h2>A type checker that catches real mistakes</h2>
+        <p>Annotate as much or as little as you like. What you annotate is checked before the
+          program starts wherever the compiler can prove a mistake, and when the call runs
+          wherever it can't. Each output is what d6 printed for the file shown.</p>
+      </div>
+
+      <div class="tabs" data-group="types">
+      <div class="tabs-nav" role="tablist" aria-label="Type system examples">
+        <button class="tab-btn active" data-tab="nil" role="tab" aria-selected="true">Nil safety</button>
+        <button class="tab-btn" data-tab="generics" role="tab" aria-selected="false">Generics</button>
+        <button class="tab-btn" data-tab="interfaces" role="tab" aria-selected="false">Interfaces</button>
+        <button class="tab-btn" data-tab="exhaustive" role="tab" aria-selected="false">Exhaustive case</button>
+        <button class="tab-btn" data-tab="self" role="tab" aria-selected="false">-> Self</button>
+        <button class="tab-btn" data-tab="gradual" role="tab" aria-selected="false">Gradual</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="nil">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">greet.d6</span></div>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">find</span>(id: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span> | <span class="tok-const">Nil</span> = id &gt; <span class="tok-num">0</span> ? <span class="tok-str">"Ada"</span> : <span class="tok-kw">nil</span>
+<span class="tok-kw">def</span> <span class="tok-fn">greet</span>(name: <span class="tok-const">String</span>) -&gt; <span class="tok-const">String</span> = <span class="tok-str">"hello, #{name}"</span>
+
+<span class="tok-kw">def</span> <span class="tok-fn">greet_user</span>(id: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span>
+  name = find(id)
+  <span class="tok-kw">return</span> <span class="tok-str">"hello, stranger"</span> <span class="tok-kw">if</span> name == <span class="tok-kw">nil</span>
+  greet(name)              <span class="tok-comment"># the guard above narrowed name to String
+</span><span class="tok-kw">end</span>
+
+puts(greet_user(<span class="tok-num">1</span>))
+greet(find(<span class="tok-num">2</span>))             <span class="tok-comment"># find can return nil</span></code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 greet.d6</div>
+<div class="out err">greet.d6:11:1: error: argument 'name' of greet: expected String, got String | Nil</div>
+<div class="out dim">greet(find(2))             # find can return nil</div>
+<div class="out dim">^</div>
+          </div>
+        </div>
+        <p class="tab-caption">A value that might be <code>nil</code> can't go where a <code>String</code> is required, and the program doesn't start until that's fixed. Returning early when it's <code>nil</code>, or testing it with <code>!= nil</code> or <code>is String</code>, narrows the type for the code that follows.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="generics">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">box.d6</span></div>
+          <pre><code><span class="tok-kw">class</span> <span class="tok-const">Box</span>[<span class="tok-const">T</span>]
+  <span class="tok-kw">def</span> <span class="tok-fn">initialize</span>(value: <span class="tok-const">T</span>)
+    <span class="tok-ivar">@value</span> = value
+  <span class="tok-kw">end</span>
+
+  <span class="tok-kw">def</span> <span class="tok-fn">value</span>() -&gt; <span class="tok-const">T</span> = <span class="tok-ivar">@value</span>
+  <span class="tok-kw">def</span> <span class="tok-fn">map</span>[<span class="tok-const">U</span>](transform: <span class="tok-const">Callable</span>[[<span class="tok-const">T</span>], <span class="tok-const">U</span>]) -&gt; <span class="tok-const">Box</span>[<span class="tok-const">U</span>] = <span class="tok-const">Box</span>[<span class="tok-const">U</span>].new(transform(<span class="tok-ivar">@value</span>))
+<span class="tok-kw">end</span>
+
+<span class="tok-kw">def</span> <span class="tok-fn">label</span>(n: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span> = <span class="tok-str">"item #{n}"</span>
+<span class="tok-kw">def</span> <span class="tok-fn">double</span>(n: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">Int</span> = n * <span class="tok-num">2</span>
+
+box = <span class="tok-const">Box</span>.new(<span class="tok-num">21</span>)          <span class="tok-comment"># Box[Int]: T inferred from the argument
+</span>names = box.map(label)     <span class="tok-comment"># Box[String]: U inferred from label's signature
+</span>puts(double(box.value()))
+double(names.value())      <span class="tok-comment"># a String where an Int is required</span></code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 box.d6</div>
+<div class="out err">box.d6:16:1: error: argument 'n' of double: expected Int, got String</div>
+<div class="out dim">double(names.value())      # a String where an Int is required</div>
+<div class="out dim">^</div>
+          </div>
+        </div>
+        <p class="tab-caption">Generic classes, structs and methods infer their type arguments from what you pass, through callbacks and chained calls. <code>Box[Int].new(...)</code> states them when you'd rather.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="interfaces">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">named.d6</span></div>
+          <pre><code><span class="tok-kw">interface</span> <span class="tok-const">Named</span>
+  <span class="tok-kw">def</span> <span class="tok-fn">name</span>() -&gt; <span class="tok-const">String</span>
+<span class="tok-kw">end</span>
+
+<span class="tok-kw">struct</span> <span class="tok-const">City</span>(name: <span class="tok-const">String</span>, population: <span class="tok-const">Int</span>)
+<span class="tok-kw">end</span>
+<span class="tok-kw">struct</span> <span class="tok-const">Tag</span>[<span class="tok-const">T</span>](name: <span class="tok-const">T</span>)
+<span class="tok-kw">end</span>
+
+<span class="tok-comment"># No "implements": anything with a matching name() -&gt; String is Named.
+</span><span class="tok-kw">def</span> <span class="tok-fn">introduce</span>(thing: <span class="tok-const">Named</span>) -&gt; <span class="tok-const">String</span> = <span class="tok-str">"This is #{thing.name()}."</span>
+
+puts(introduce(<span class="tok-const">City</span>.new(<span class="tok-str">"Oslo"</span>, <span class="tok-num">717_710</span>)))
+puts(introduce(<span class="tok-const">Tag</span>.new(<span class="tok-str">"urgent"</span>)))     <span class="tok-comment"># Tag[String] has name() -&gt; String
+</span>introduce(<span class="tok-const">Tag</span>.new(<span class="tok-num">42</span>))                 <span class="tok-comment"># Tag[Int] does not</span></code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 named.d6</div>
+<div class="out err">named.d6:15:1: error: argument 'thing' of introduce: expected Named, got Tag[Int]</div>
+<div class="out dim">introduce(Tag.new(42))                 # Tag[Int] does not</div>
+<div class="out dim">^</div>
+          </div>
+        </div>
+        <p class="tab-caption">Interfaces are structural: a class, a struct or a native String, Array or Hash satisfies one by having the methods, with no <code>implements</code>. A generic instance satisfies it for the type arguments it has.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="exhaustive">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">shapes.d6</span></div>
+          <pre><code><span class="tok-kw">struct</span> <span class="tok-const">Circle</span>(radius: <span class="tok-const">Float</span>)
+<span class="tok-kw">end</span>
+<span class="tok-kw">struct</span> <span class="tok-const">Rect</span>(width: <span class="tok-const">Float</span>, height: <span class="tok-const">Float</span>)
+<span class="tok-kw">end</span>
+<span class="tok-kw">struct</span> <span class="tok-const">Triangle</span>(base: <span class="tok-const">Float</span>, height: <span class="tok-const">Float</span>)
+<span class="tok-kw">end</span>
+
+<span class="tok-kw">def</span> <span class="tok-fn">area</span>(shape: <span class="tok-const">Circle</span> | <span class="tok-const">Rect</span> | <span class="tok-const">Triangle</span>) -&gt; <span class="tok-const">Float</span>
+  <span class="tok-kw">case</span> shape
+  <span class="tok-kw">when</span> <span class="tok-const">Circle</span>{radius: r} <span class="tok-kw">then</span> <span class="tok-num">3.14159</span> * r * r
+  <span class="tok-kw">when</span> <span class="tok-const">Rect</span>{width: w, height: h} <span class="tok-kw">then</span> w * h
+  <span class="tok-kw">end</span>
+<span class="tok-kw">end</span></code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 shapes.d6</div>
+<div class="out err">shapes.d6:9:3: error: case is not exhaustive over its subject's known closed type; missing: Triangle; add the missing branch or an 'else'</div>
+<div class="out dim">  case shape</div>
+<div class="out dim">  ^</div>
+          </div>
+        </div>
+        <p class="tab-caption">A <code>case</code> over a union or a <code>sealed class</code> hierarchy must cover every member, or say <code>else</code>. Object patterns bind fields as they match.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="self">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">models.d6</span></div>
+          <pre><code><span class="tok-kw">class</span> <span class="tok-const">Model</span>
+  <span class="tok-kw">def</span> <span class="tok-kw">self</span>.find(id: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">Self</span> | <span class="tok-const">Nil</span> = id &gt; <span class="tok-num">0</span> ? <span class="tok-kw">self</span>.new() : <span class="tok-kw">nil</span>
+  <span class="tok-kw">def</span> <span class="tok-fn">touch</span>() -&gt; <span class="tok-const">Self</span>
+    <span class="tok-ivar">@touched_at</span> = <span class="tok-const">Time</span>.now()
+    <span class="tok-kw">self</span>
+  <span class="tok-kw">end</span>
+<span class="tok-kw">end</span>
+
+<span class="tok-kw">class</span> <span class="tok-const">Author</span> &lt; <span class="tok-const">Model</span>
+  <span class="tok-kw">def</span> <span class="tok-fn">greet</span>() -&gt; <span class="tok-const">String</span> = <span class="tok-str">"hello from an Author"</span>
+<span class="tok-kw">end</span>
+<span class="tok-kw">class</span> <span class="tok-const">Book</span> &lt; <span class="tok-const">Model</span>
+<span class="tok-kw">end</span>
+
+<span class="tok-kw">def</span> <span class="tok-fn">welcome</span>(author: <span class="tok-const">Author</span>) -&gt; <span class="tok-const">String</span> = author.touch().greet()
+
+author = <span class="tok-const">Author</span>.find(<span class="tok-num">1</span>)        <span class="tok-comment"># Author | Nil, not Model | Nil
+</span><span class="tok-kw">if</span> author != <span class="tok-kw">nil</span>
+  puts(welcome(author))        <span class="tok-comment"># narrowed to Author
+</span><span class="tok-kw">end</span>
+book = <span class="tok-const">Book</span>.find(<span class="tok-num">1</span>)
+<span class="tok-kw">if</span> book != <span class="tok-kw">nil</span>
+  welcome(book)                <span class="tok-comment"># a Book is not an Author
+</span><span class="tok-kw">end</span></code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 models.d6</div>
+<div class="out err">models.d6:23:3: error: argument 'author' of welcome: expected Author, got Book</div>
+<div class="out dim">  welcome(book)                # a Book is not an Author</div>
+<div class="out dim">  ^</div>
+          </div>
+        </div>
+        <p class="tab-caption">A method shared through inheritance can return <code>Self</code>: <code>Author.find</code> gives an <code>Author | Nil</code> and <code>Book.find</code> a <code>Book | Nil</code>, from one definition.</p>
+      </div>
+
+      <div class="tab-panel" data-panel="gradual">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">gradual.d6</span></div>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">parse</span>(text) = text.to_i()          <span class="tok-comment"># no annotations: as dynamic as a script
+</span><span class="tok-kw">def</span> <span class="tok-fn">half</span>(n: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">Int</span> = n / <span class="tok-num">2</span>
+
+puts(half(parse(<span class="tok-str">"84"</span>)))
+settings = {<span class="tok-str">"port"</span>: <span class="tok-str">"8080"</span>}
+half(settings[<span class="tok-str">"port"</span>])                 <span class="tok-comment"># unknown until it runs, so checked then</span></code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 gradual.d6</div>
+<div class="out">42</div>
+<div class="out err">gradual.d6: runtime error: expected Int, got String</div>
+<div class="out dim">  at half:2:13</div>
+<div class="out dim">  at gradual.d6:6:22</div>
+          </div>
+        </div>
+        <p class="tab-caption">Annotations are optional, and code without them runs as it would in a script. Where the compiler can't prove a value's type, the annotation is checked when the call runs, as a <code>TypeError</code> you can rescue.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
 
   <!-- ---------------- Internals ---------------- -->
   <section id="internals">
@@ -448,136 +640,202 @@ $ facet install</code></pre>
     <div class="container">
       <div class="section-head">
         <span class="eyebrow"><span class="dot"></span> See it in action</span>
-        <h2>The same language, five angles</h2>
-        <p>Classes and mixins, generated structs, exhaustive pattern matching, real OS
-          threads and cooperative fibers, and a sandboxed runtime.</p>
+        <h2>The same language, six angles</h2>
+        <p>Structs that extend each other and take type parameters, nested pattern matching,
+          supervised threads, fibers, a sandbox with budgets, and tail calls in constant stack.
+          Every output is from running the file shown.</p>
       </div>
 
       <div class="tabs" data-group="code">
       <div class="tabs-nav" role="tablist" aria-label="Code examples">
-        <button class="tab-btn active" data-tab="structs" role="tab" aria-selected="true">Structs &amp; types</button>
+        <button class="tab-btn active" data-tab="structs" role="tab" aria-selected="true">Structs</button>
         <button class="tab-btn" data-tab="pattern" role="tab" aria-selected="false">Pattern matching</button>
         <button class="tab-btn" data-tab="concurrency" role="tab" aria-selected="false">Threads &amp; channels</button>
         <button class="tab-btn" data-tab="fibers" role="tab" aria-selected="false">Fibers</button>
         <button class="tab-btn" data-tab="sandbox" role="tab" aria-selected="false">Sandbox</button>
+        <button class="tab-btn" data-tab="tail" role="tab" aria-selected="false">Tail calls</button>
       </div>
 
       <div class="tab-panel active" data-panel="structs">
         <div class="code-window">
-          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">point.d6</span></div>
-          <pre><code><span class="tok-kw">struct</span> Point(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">structs.d6</span></div>
+          <pre><code><span class="tok-kw">struct</span> <span class="tok-const">Point</span>(x: <span class="tok-const">Int</span>, y: <span class="tok-const">Int</span>)
 <span class="tok-kw">end</span>
 
-p1 = Point.<span class="tok-fn">new</span>(<span class="tok-num">1</span>, <span class="tok-num">2</span>)
-p2 = Point.<span class="tok-fn">new</span>(x: <span class="tok-num">1</span>, y: <span class="tok-num">2</span>)
-p1 == p2               <span class="tok-comment"># true</span>
-p1.to_s()              <span class="tok-comment"># "Point(x: 1, y: 2)"</span>
+<span class="tok-comment"># A struct can extend another: the parent's fields come first.
+</span><span class="tok-kw">struct</span> <span class="tok-const">Point3D</span>(z: <span class="tok-const">Int</span>) &lt; <span class="tok-const">Point</span>
+  <span class="tok-kw">def</span> <span class="tok-fn">length</span>() -&gt; <span class="tok-const">Float</span> = <span class="tok-const">Math</span>.sqrt(x() * x() + y() * y() + z() * z())
+<span class="tok-kw">end</span>
 
-<span class="tok-comment"># initialize/readers/==/to_s are generated -- gradual</span>
-<span class="tok-comment"># types and nil narrowing work the same as anywhere else</span>
-<span class="tok-kw">def</span> <span class="tok-fn">choose</span>(flag: <span class="tok-const">Bool</span>, value: Point | <span class="tok-const">Nil</span>) -&gt; Point | <span class="tok-const">Nil</span>
-  <span class="tok-kw">if</span> flag
-    value
-  <span class="tok-kw">else</span>
-    <span class="tok-const">nil</span>
-  <span class="tok-kw">end</span>
-<span class="tok-kw">end</span></code></pre>
+<span class="tok-comment"># Generic structs bind their type parameters from the arguments.
+</span><span class="tok-kw">struct</span> <span class="tok-const">Pair</span>[<span class="tok-const">A</span>, <span class="tok-const">B</span>](left: <span class="tok-const">A</span>, right: <span class="tok-const">B</span>)
+<span class="tok-kw">end</span>
+
+p = <span class="tok-const">Point3D</span>.new(<span class="tok-num">2</span>, <span class="tok-num">3</span>, <span class="tok-num">6</span>)
+puts(p.to_s())
+puts(p.length())
+puts(p == <span class="tok-const">Point3D</span>.new(x: <span class="tok-num">2</span>, y: <span class="tok-num">3</span>, z: <span class="tok-num">6</span>))
+pair = <span class="tok-const">Pair</span>.new(<span class="tok-str">"answer"</span>, <span class="tok-num">42</span>)    <span class="tok-comment"># Pair[String, Int]
+</span>puts(pair.right() + <span class="tok-num">1</span>)</code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 structs.d6</div>
+<div class="out">Point3D(x: 2, y: 3, z: 6)</div>
+<div class="out">7.0</div>
+<div class="out">true</div>
+<div class="out">43</div>
+          </div>
         </div>
-        <p class="tab-caption"><code>struct Name(field: Type, ...) ... end</code> generates
-          <code>initialize</code>, readers, <code>==</code>, and <code>to_s</code> — and still
-          composes with <code>include</code>, hand-written methods, and union types.</p>
+        <p class="tab-caption"><code>struct</code> generates <code>initialize</code>, readers, <code>==</code> and <code>to_s</code>. Structs extend other structs, take type parameters and still hold hand-written methods.</p>
       </div>
 
       <div class="tab-panel" data-panel="pattern">
         <div class="code-window">
-          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">classify.d6</span></div>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">classify</span>(value: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span>
-  <span class="tok-kw">case</span> value
-  <span class="tok-kw">when</span> <span class="tok-num">0</span>
-    <span class="tok-str">"zero"</span>
-  <span class="tok-kw">when</span> <span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>
-    <span class="tok-str">"small"</span>
-  <span class="tok-kw">when</span> <span class="tok-num">4</span>..<span class="tok-num">10</span>
-    <span class="tok-str">"medium"</span>
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">events.d6</span></div>
+          <pre><code><span class="tok-kw">struct</span> <span class="tok-const">Player</span>(name: <span class="tok-const">String</span>, level: <span class="tok-const">Int</span>)
+<span class="tok-kw">end</span>
+
+<span class="tok-kw">def</span> <span class="tok-fn">describe</span>(event) -&gt; <span class="tok-const">String</span>
+  <span class="tok-kw">case</span> event
+  <span class="tok-kw">when</span> [<span class="tok-str">"join"</span>, <span class="tok-const">Player</span>{name: name, level: <span class="tok-num">1</span>}]
+    <span class="tok-str">"#{name} joined for the first time"</span>
+  <span class="tok-kw">when</span> [<span class="tok-str">"join"</span>, <span class="tok-const">Player</span>{name: name}]
+    <span class="tok-str">"#{name} is back"</span>
+  <span class="tok-kw">when</span> {<span class="tok-str">"score"</span>: points, <span class="tok-str">"player"</span>: <span class="tok-const">Player</span>{name: name}} <span class="tok-kw">if</span> points &gt;= <span class="tok-num">100</span>
+    <span class="tok-str">"#{name} hit #{points}!"</span>
+  <span class="tok-kw">when</span> {<span class="tok-str">"score"</span>: points, **rest}
+    <span class="tok-str">"#{points} points (#{rest.length()} more fields)"</span>
   <span class="tok-kw">else</span>
-    <span class="tok-str">"large"</span>
+    <span class="tok-str">"unknown event"</span>
   <span class="tok-kw">end</span>
-<span class="tok-kw">end</span></code></pre>
+<span class="tok-kw">end</span>
+
+puts(describe([<span class="tok-str">"join"</span>, <span class="tok-const">Player</span>.new(<span class="tok-str">"Ada"</span>, <span class="tok-num">1</span>)]))
+puts(describe([<span class="tok-str">"join"</span>, <span class="tok-const">Player</span>.new(<span class="tok-str">"Grace"</span>, <span class="tok-num">7</span>)]))
+puts(describe({<span class="tok-str">"score"</span>: <span class="tok-num">120</span>, <span class="tok-str">"player"</span>: <span class="tok-const">Player</span>.new(<span class="tok-str">"Ada"</span>, <span class="tok-num">1</span>)}))
+puts(describe({<span class="tok-str">"score"</span>: <span class="tok-num">40</span>, <span class="tok-str">"team"</span>: <span class="tok-str">"red"</span>, <span class="tok-str">"round"</span>: <span class="tok-num">3</span>}))</code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 events.d6</div>
+<div class="out">Ada joined for the first time</div>
+<div class="out">Grace is back</div>
+<div class="out">Ada hit 120!</div>
+<div class="out">40 points (2 more fields)</div>
+          </div>
         </div>
-        <p class="tab-caption">Matching over a union or a sealed class hierarchy is checked for
-          exhaustiveness at compile time — an uncovered case is a compile error, not a
-          runtime surprise.</p>
+        <p class="tab-caption">Array, Hash and object patterns nest, bind as they match and take <code>if</code> guards. <code>**rest</code> collects the remaining keys, and <code>^name</code> compares with an existing local.</p>
       </div>
 
       <div class="tab-panel" data-panel="concurrency">
         <div class="code-window">
           <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">workers.d6</span></div>
-          <pre><code><span class="tok-comment"># Thread: real OS threads, each with its own isolated</span>
-<span class="tok-comment"># heap -- runs in parallel across CPU cores</span>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">worker</span>(jobs, results)
+  <span class="tok-kw">loop</span> <span class="tok-kw">do</span>
+    job = jobs.receive()
+    <span class="tok-kw">break</span> <span class="tok-kw">if</span> job == <span class="tok-kw">nil</span>
+    <span class="tok-kw">raise</span> <span class="tok-str">"bad job"</span> <span class="tok-kw">if</span> job == <span class="tok-num">3</span>      <span class="tok-comment"># crashes; the supervisor restarts it
+    </span>results.send(job * job)
+  <span class="tok-kw">end</span>
+<span class="tok-kw">end</span>
 
-<span class="tok-kw">def</span> <span class="tok-fn">square</span>(n) = n * n
+jobs = <span class="tok-const">Channel</span>.new(<span class="tok-num">16</span>)
+results = <span class="tok-const">Channel</span>.new(<span class="tok-num">16</span>)
+stop = <span class="tok-const">Channel</span>.new(<span class="tok-num">1</span>)
 
-left = Thread.<span class="tok-fn">new</span>(square, <span class="tok-num">6</span>)
-right = Thread.<span class="tok-fn">new</span>(square, <span class="tok-num">7</span>)
-left.join()   <span class="tok-comment"># =&gt; 36</span>
-right.join()  <span class="tok-comment"># =&gt; 49</span>
+sup = <span class="tok-const">Supervisor</span>.new()
+sup.restart_policy({<span class="tok-str">"max_restarts"</span>: <span class="tok-num">3</span>, <span class="tok-str">"within_ms"</span>: <span class="tok-num">1000</span>, <span class="tok-str">"backoff_ms"</span>: <span class="tok-num">10</span>})
+child = sup.add_child(worker, jobs, results)
+[<span class="tok-num">1</span>, <span class="tok-num">2</span>, <span class="tok-num">3</span>, <span class="tok-num">4</span>].each() <span class="tok-kw">do</span> |n| jobs.send(n) <span class="tok-kw">end</span>
 
-<span class="tok-comment"># Channel: an ongoing mailbox between isolated-heap threads</span>
-<span class="tok-kw">def</span> producer(ch) = ch.send(<span class="tok-num">42</span>)
-ch = Channel.<span class="tok-fn">new</span>(<span class="tok-num">64</span>)
-worker = Thread.<span class="tok-fn">new</span>(producer, ch)
-item = ch.receive()
-worker.join()
-
-<span class="tok-comment"># Supervisor: restart-on-crash, Erlang's one_for_one</span>
-sup = Supervisor.<span class="tok-fn">new</span>()
-sup.add_child(producer, ch)
-ch.receive() <span class="tok-comment"># =&gt; 42</span>
+<span class="tok-kw">loop</span> <span class="tok-kw">do</span>
+  picked = <span class="tok-const">Channel</span>.select([stop, results], <span class="tok-const">Time</span>.monotonic() + <span class="tok-num">0.5</span>)
+  <span class="tok-kw">break</span> <span class="tok-kw">if</span> picked == <span class="tok-kw">nil</span> || picked[<span class="tok-num">0</span>] == <span class="tok-num">0</span>
+  puts(<span class="tok-str">"result: #{picked[1]}"</span>)
+<span class="tok-kw">end</span>
+jobs.close()
 sup.join()
-<span class="tok-comment"># a child that raises is restarted; completed children stay done</span></code></pre>
+puts(<span class="tok-str">"restarts: #{sup.restart_count(child)}, last: #{sup.last_error(child)}"</span>)</code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 workers.d6</div>
+<div class="out">result: 1</div>
+<div class="out">result: 4</div>
+<div class="out">result: 16</div>
+<div class="out">restarts: 1, last: uncaught exception: bad job</div>
+          </div>
         </div>
-        <p class="tab-caption">Ordinary values crossing a thread boundary are copied. Channel handles
-          are shared for communication between isolated heaps.</p>
+        <p class="tab-caption">Each worker is an OS thread with its own heap. A supervisor restarts a crashed worker within its restart policy, and <code>Channel.select</code> takes from whichever channel is ready, up to a deadline.</p>
       </div>
 
       <div class="tab-panel" data-panel="fibers">
         <div class="code-window">
           <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">counter_fiber.d6</span></div>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">make_counter</span>()
-  <span class="tok-kw">def</span> <span class="tok-fn">counter</span>()
-    i = <span class="tok-num">0</span>
-    loop <span class="tok-kw">do</span>
-      increment = Fiber.<span class="tok-fn">yield</span>(i)
-      i = i + increment
-    <span class="tok-kw">end</span>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">counter</span>()
+  total = <span class="tok-num">0</span>
+  <span class="tok-kw">loop</span> <span class="tok-kw">do</span>
+    step = <span class="tok-const">Fiber</span>.<span class="tok-kw">yield</span>(total)      <span class="tok-comment"># hand back the total, wait for the next step
+    </span>total += step
   <span class="tok-kw">end</span>
-  counter
 <span class="tok-kw">end</span>
 
-counter = Fiber.<span class="tok-fn">new</span>(make_counter())
-counter.resume(<span class="tok-num">0</span>)     <span class="tok-comment"># =&gt; 0</span>
-counter.resume(<span class="tok-num">10</span>)    <span class="tok-comment"># =&gt; 10</span>
-counter.resume(<span class="tok-num">5</span>)     <span class="tok-comment"># =&gt; 15</span></code></pre>
+running = <span class="tok-const">Fiber</span>.new(counter)
+puts(running.resume(<span class="tok-num">0</span>))
+puts(running.resume(<span class="tok-num">10</span>))
+puts(running.resume(<span class="tok-num">5</span>))</code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 counter_fiber.d6</div>
+<div class="out">0</div>
+<div class="out">10</div>
+<div class="out">15</div>
+          </div>
         </div>
-        <p class="tab-caption">Cooperative concurrency within a single OS thread — a fiber runs
-          until it finishes or yields, never preempted in between. Reach for <code>Thread</code>
-          instead when work should actually run in parallel across cores.</p>
+        <p class="tab-caption">Cooperative concurrency inside one OS thread: a fiber runs until it finishes or yields, and each <code>resume</code> passes a value in. Reach for <code>Thread</code> when work should run in parallel.</p>
       </div>
 
       <div class="tab-panel" data-panel="sandbox">
         <div class="code-window">
-          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">shell</span></div>
-          <pre><code><span class="tok-comment"># denies filesystem, network, and subprocess access --</span>
-<span class="tok-comment"># checked at every native opcode, applies to anything</span>
-<span class="tok-comment"># the program spawns (Thread, Supervisor) too</span>
-d6 --sandbox untrusted.d6
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">untrusted.d6</span></div>
+          <pre><code>puts(<span class="tok-str">"sum: #{(1..10).sum()}"</span>)      <span class="tok-comment"># plain computation always runs
 
-<span class="tok-comment"># equivalently:</span>
-DIAMOND_SANDBOX=1 d6 untrusted.d6</code></pre>
+</span><span class="tok-kw">begin</span>
+  text = <span class="tok-const">File</span>.read(<span class="tok-str">"/etc/os-release"</span>)
+  puts(<span class="tok-str">"read #{text.length()} bytes"</span>)
+<span class="tok-kw">rescue</span> error: <span class="tok-const">SandboxError</span>
+  puts(<span class="tok-str">"denied: #{error.message()}"</span>)
+<span class="tok-kw">end</span>
+
+i = <span class="tok-num">0</span>
+<span class="tok-kw">loop</span> <span class="tok-kw">do</span>                            <span class="tok-comment"># a runaway loop
+  </span>i += <span class="tok-num">1</span>
+<span class="tok-kw">end</span></code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">DIAMOND_MAX_INSTRUCTIONS=1000000 d6 --sandbox untrusted.d6</div>
+<div class="out">sum: 55</div>
+<div class="out">denied: sandbox denies File.read</div>
+<div class="out err">untrusted.d6: runtime error: resource limit exceeded</div>
+<div class="out dim">  at untrusted.d6:12:9</div>
+<div class="out cmd">DIAMOND_SANDBOX_ALLOW=filesystem DIAMOND_MAX_WALL_MILLISECONDS=200 d6 --sandbox untrusted.d6</div>
+<div class="out">sum: 55</div>
+<div class="out">read 700 bytes</div>
+<div class="out err">untrusted.d6: runtime error: resource limit exceeded</div>
+<div class="out dim">  at untrusted.d6:12:9</div>
+          </div>
         </div>
-        <p class="tab-caption">Sandboxing for running untrusted code, not a wrapper script
-          around the interpreter.</p>
+        <p class="tab-caption"><code>--sandbox</code> denies files, network, databases, subprocesses and signal handlers, each of which can be allowed by name. Budgets on instructions, wall time and memory stop a program that won't.</p>
       </div>
+
+      <div class="tab-panel" data-panel="tail">
+        <div class="code-window">
+          <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">parity.d6</span></div>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">even?</span>(n: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">Bool</span> = n == <span class="tok-num">0</span> ? <span class="tok-kw">true</span> : odd?(n - <span class="tok-num">1</span>)
+<span class="tok-kw">def</span> <span class="tok-fn">odd?</span>(n: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">Bool</span> = n == <span class="tok-num">0</span> ? <span class="tok-kw">false</span> : even?(n - <span class="tok-num">1</span>)
+
+puts(even?(<span class="tok-num">1_000_000</span>))</code></pre>
+          <div class="code-output" aria-label="Output">
+<div class="out cmd">d6 parity.d6</div>
+<div class="out">true</div>
+          </div>
+        </div>
+        <p class="tab-caption">A call in tail position reuses the caller's frame, including between mutually recursive functions, so recursion a million deep runs in constant stack.</p>
+      </div>
+
       </div>
     </div>
   </section>
