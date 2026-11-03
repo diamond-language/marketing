@@ -19,6 +19,9 @@ const examples = [...html.matchAll(/data-repl-example="([^"]*)"/g)]
 let repl;
 before(async () => {
   repl = await DiamondRepl.load(await readFile(new URL('../wasm/diamond.wasm', import.meta.url)));
+  // The cuts the page mounts for require_cut (js/repl.js).
+  const cuts = JSON.parse(await readFile(new URL('../wasm/cuts.json', import.meta.url), 'utf8'));
+  for (const [path, text] of Object.entries(cuts)) repl.addFile(path, text);
 });
 beforeEach(() => repl.reset());
 
@@ -28,7 +31,7 @@ const outcomes = [
   ['Types', null],
   ['Blocks', '30'],
   ['Structs', 'Point(x: 1, y: 2)'],
-  ['Database', '[{name: Grace, age: 45}, {name: Ada, age: 36}]'],
+  ['Mjolnir', '[Ada]'],
   ['Errors', 'rescued: negative'],
 ];
 for (const [index, [name, expected]] of outcomes.entries()) {
