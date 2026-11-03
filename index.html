@@ -135,7 +135,7 @@
           </div>
           <div class="repl-examples" role="group" aria-label="Examples">
             <button type="button" class="repl-chip" data-repl-example="class Dog&#10;  def initialize(name: String)&#10;    @name = name&#10;  end&#10;  def speak() = &quot;#{@name} says woof&quot;&#10;end&#10;Dog.new(&quot;Rex&quot;).speak()">Classes</button>
-            <button type="button" class="repl-chip" data-repl-example="def find(id: Int) -&gt; String | Nil = id &gt; 0 ? &quot;Ada&quot; : nil&#10;def greet(name: String) -&gt; String = &quot;hello, &quot; + name&#10;greet(find(1))&#10;name = find(1)&#10;name != nil ? greet(name) : &quot;nobody&quot;">Types</button>
+            <button type="button" class="repl-chip" data-repl-example="def find(id: Int) -&gt; String | Nil&#10;  id &gt; 0 ? &quot;Ada&quot; : nil&#10;end&#10;def greet(name: String) -&gt; String = &quot;hello, &quot; + name&#10;greet(find(1))&#10;name = find(1)&#10;name != nil ? greet(name) : &quot;nobody&quot;">Types</button>
             <button type="button" class="repl-chip" data-repl-example="squares = [1, 2, 3, 4].map() do |n|&#10;  n * n&#10;end&#10;squares.sum()">Blocks</button>
             <button type="button" class="repl-chip" data-repl-example="struct Point(x: Int, y: Int)&#10;end&#10;a = Point.new(1, 2)&#10;a == Point.new(1, 2)&#10;a.to_s()">Structs</button>
             <button type="button" class="repl-chip" data-repl-example="db = SQLite3.open(&quot;:memory:&quot;)&#10;db.execute(&quot;CREATE TABLE people (name TEXT, age INTEGER)&quot;)&#10;db.execute(&quot;INSERT INTO people VALUES (?, ?)&quot;, [&quot;Ada&quot;, 36])&#10;db.execute(&quot;INSERT INTO people VALUES (?, ?)&quot;, [&quot;Grace&quot;, 45])&#10;db.query(&quot;SELECT name, age FROM people ORDER BY age DESC&quot;)">Database</button>
@@ -396,7 +396,10 @@ $ facet install</code></pre>
       <div class="tab-panel active" data-panel="nil">
         <div class="code-window">
           <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">greet.d6</span></div>
-          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">find</span>(id: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span> | <span class="tok-const">Nil</span> = id &gt; <span class="tok-num">0</span> ? <span class="tok-str">"Ada"</span> : <span class="tok-kw">nil</span>
+          <pre><code><span class="tok-kw">def</span> <span class="tok-fn">find</span>(id: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span> | <span class="tok-const">Nil</span>
+  id &gt; <span class="tok-num">0</span> ? <span class="tok-str">"Ada"</span> : <span class="tok-kw">nil</span>
+<span class="tok-kw">end</span>
+
 <span class="tok-kw">def</span> <span class="tok-fn">greet</span>(name: <span class="tok-const">String</span>) -&gt; <span class="tok-const">String</span> = <span class="tok-str">"hello, #{name}"</span>
 
 <span class="tok-kw">def</span> <span class="tok-fn">greet_user</span>(id: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">String</span>
@@ -504,7 +507,10 @@ puts(introduce(<span class="tok-const">Tag</span>.new(<span class="tok-str">"urg
         <div class="code-window">
           <div class="titlebar"><div class="dots"><span></span><span></span><span></span></div><span class="filename">models.d6</span></div>
           <pre><code><span class="tok-kw">class</span> <span class="tok-const">Model</span>
-  <span class="tok-kw">def</span> <span class="tok-kw">self</span>.find(id: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">Self</span> | <span class="tok-const">Nil</span> = id &gt; <span class="tok-num">0</span> ? <span class="tok-kw">self</span>.new() : <span class="tok-kw">nil</span>
+  <span class="tok-kw">def</span> <span class="tok-kw">self</span>.find(id: <span class="tok-const">Int</span>) -&gt; <span class="tok-const">Self</span> | <span class="tok-const">Nil</span>
+    id &gt; <span class="tok-num">0</span> ? <span class="tok-kw">self</span>.new() : <span class="tok-kw">nil</span>
+  <span class="tok-kw">end</span>
+
   <span class="tok-kw">def</span> <span class="tok-fn">touch</span>() -&gt; <span class="tok-const">Self</span>
     <span class="tok-ivar">@touched_at</span> = <span class="tok-const">Time</span>.now()
     <span class="tok-kw">self</span>
