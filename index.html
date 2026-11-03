@@ -92,7 +92,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.24.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.25.0 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -247,32 +247,32 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>0.24 narrows types on plain truthiness, loads cuts in the browser REPL, and adds packages for 64-bit ARM.</p>
+        <p>0.25 is a speed release: a faster interpreter loop, cheaper calls and blocks, native sorting, and more of the JIT.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Truthiness narrows</h3>
-          <p>For a <code>String | Nil</code>, <code>if name</code>, <code>name &amp;&amp; ...</code>
-            and a trailing <code>if name</code> see a <code>String</code>, as
-            <code>name != nil</code> already did.</p>
-          <pre><code>name = find(id)
-<span class="tok-comment"># name is a String here</span>
-greet(name) if name</code></pre>
+          <h3>A faster interpreter</h3>
+          <p>Handlers jump straight to the next instruction, Int literals fold into the
+            operation, and method calls skip work they repeated. Times against 0.24, without the JIT:</p>
+          <pre><code>loop      1177 → 726 ms
+fib        474 → 349 ms
+objects    464 → 295 ms</code></pre>
         </article>
         <article class="new-card">
-          <h3>Cuts in the browser</h3>
-          <p>The REPL above can <code>require_cut</code> Mjolnir and Arel, and runs them on an
-            in-memory SQLite database. Try the Mjolnir example.</p>
-          <pre><code>{&gt; require_cut "mjolnir"
-{&gt; Mjolnir::Repo.new(db)</code></pre>
+          <h3>Blocks, 3x faster</h3>
+          <p><code>map</code>, <code>select</code>, <code>sum</code> and <code>Range#to_a</code> run
+            in C, and a block loads only the variables it uses. A block-heavy benchmark went
+            from 352 ms to 105 ms.</p>
+          <pre><code>xs.map() do |x| x * x end
+xs.select() do |x| x &gt; 0 end
+xs.sum()</code></pre>
         </article>
         <article class="new-card">
-          <h3>ARM packages</h3>
-          <p>Each release now has an <code>arm64</code> <code>.deb</code> and an
-            <code>aarch64</code> <code>.rpm</code> beside the x86-64 ones.</p>
-          <pre><code>$ sudo apt install \
-    d6-lang_0.24.0-1_arm64.deb</code></pre>
-          <p><a href="#install">Download a package &rarr;</a></p>
+          <h3>Native sort, more JIT</h3>
+          <p>Sorting all-Int or all-String arrays runs in C, and the JIT now compiles
+            <code>%</code> and Float arithmetic.</p>
+          <pre><code>sort                 1370 → 74 ms
+mandelbrot (JIT)      318 → 77 ms</code></pre>
         </article>
       </div>
 
@@ -932,8 +932,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.24.0/d6-lang-0.24.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.24.0/d6-lang-0.24.0-1.fc44.aarch64.rpm">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.25.0/d6-lang-0.25.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.25.0/d6-lang-0.25.0-1.fc44.aarch64.rpm">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -962,8 +962,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.24.0/d6-lang_0.24.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.24.0/d6-lang_0.24.0-1_arm64.deb">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.25.0/d6-lang_0.25.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.25.0/d6-lang_0.25.0-1_arm64.deb">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
