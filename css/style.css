@@ -720,8 +720,15 @@ section {
 
 .package-download {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   padding: 12px 0 8px;
+}
+
+.package-alt {
+  color: var(--text-dim);
+  font-size: 15px;
 }
 
 .btn-download {
@@ -1499,4 +1506,9 @@ section {
 .repl-completion.is-selected {
   background: rgba(91, 157, 255, 0.18);
   color: var(--text);
+}
+
+/* Short inline code in a card reads as one token: never break it across lines. */
+.new-card p code {
+  white-space: nowrap;
 }

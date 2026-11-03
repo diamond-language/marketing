@@ -153,8 +153,13 @@ if (root) {
   const load = () => {
     if (loading) return loading;
     statusEl.textContent = 'Loading the interpreter…';
-    loading = DiamondRepl.load(new URL('../wasm/diamond.wasm', import.meta.url))
-      .then((instance) => {
+    // The cuts the REPL can `require_cut` (Mjolnir and Arel), fetched beside the module.
+    const cuts = fetch(new URL('../wasm/cuts.json', import.meta.url))
+      .then((response) => (response.ok ? response.json() : {}))
+      .catch(() => ({}));
+    loading = Promise.all([DiamondRepl.load(new URL('../wasm/diamond.wasm', import.meta.url)), cuts])
+      .then(([instance, files]) => {
+        for (const [path, text] of Object.entries(files)) instance.addFile(path, text);
         repl = instance;
         statusEl.textContent = 'Nothing you type leaves this page.';
         input.disabled = false;
