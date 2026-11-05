@@ -92,7 +92,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.25.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.26.0 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -247,32 +247,34 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>0.25 is a speed release: a faster interpreter loop, cheaper calls and blocks, native sorting, and more of the JIT.</p>
+        <p>0.26 is another speed release: profile-guided builds, a leaner interpreter loop, faster text and regex work, and Int division that rounds down.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>A faster interpreter</h3>
-          <p>Handlers jump straight to the next instruction, Int literals fold into the
-            operation, and method calls skip work they repeated. Times against 0.24, without the JIT:</p>
-          <pre><code>loop      1177 → 726 ms
-fib        474 → 349 ms
-objects    464 → 295 ms</code></pre>
+          <h3>Profile-guided builds</h3>
+          <p>Release builds and packages are now optimized from a training profile, the loop checks
+            for signals only on backward jumps, and getters, setters and Float math skip the call
+            path. Times against 0.25, without the JIT:</p>
+          <pre><code>nbody        829 → 445 ms
+mandelbrot   311 → 150 ms
+fib          330 → 234 ms</code></pre>
         </article>
         <article class="new-card">
-          <h3>Blocks, 3x faster</h3>
-          <p><code>map</code>, <code>select</code>, <code>sum</code> and <code>Range#to_a</code> run
-            in C, and a block loads only the variables it uses. A block-heavy benchmark went
-            from 352 ms to 105 ms.</p>
-          <pre><code>xs.map() do |x| x * x end
-xs.select() do |x| x &gt; 0 end
-xs.sum()</code></pre>
+          <h3>Text and regex</h3>
+          <p>The regex engine is optimized and allocates less, <code>sub</code> and
+            <code>gsub</code> with a String pattern skip the Regexp, and Ints format without
+            <code>printf</code>.</p>
+          <pre><code>text     942 → 334 ms
+counts   185 →  84 ms
+regex    606 → 380 ms</code></pre>
         </article>
         <article class="new-card">
-          <h3>Native sort, more JIT</h3>
-          <p>Sorting all-Int or all-String arrays runs in C, and the JIT now compiles
-            <code>%</code> and Float arithmetic.</p>
-          <pre><code>sort                 1370 → 74 ms
-mandelbrot (JIT)      318 → 77 ms</code></pre>
+          <h3>Int <code>/</code> rounds down</h3>
+          <p>Dividing two Ints now floors, like Ruby and Python and like <code>%</code>
+            already did, so <code>(a / b) * b + a % b == a</code> holds for every sign.</p>
+          <pre><code>-7 / 2    # =&gt; -4  (was -3)
+7 / -2    # =&gt; -4
+-7 % 2    # =&gt; 1</code></pre>
         </article>
       </div>
 
@@ -932,8 +934,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.25.0/d6-lang-0.25.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.25.0/d6-lang-0.25.0-1.fc44.aarch64.rpm">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.26.0/d6-lang-0.26.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.26.0/d6-lang-0.26.0-1.fc44.aarch64.rpm">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -962,8 +964,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.25.0/d6-lang_0.25.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.25.0/d6-lang_0.25.0-1_arm64.deb">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.26.0/d6-lang_0.26.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.26.0/d6-lang_0.26.0-1_arm64.deb">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
