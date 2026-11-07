@@ -92,7 +92,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.27.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v0.28.0 · open source, pre-1.0</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -247,37 +247,32 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>0.27 makes calls and objects cheaper: less work per method call, leaner instances, and Int and Float fields the compiler can see.</p>
+        <p>0.28 is another speed release: faster regex and text work, cheaper getters and setters, and a <code>new</code> that fills simple objects directly.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Cheaper calls</h3>
-          <p>Arguments stay where they are, simple parameter types are checked inline, and a
-            warm call site finds its method in one cache lookup. Times against 0.26, without
-            the JIT:</p>
-          <pre><code>fib        232 → 192 ms
-trees      203 → 167 ms
-closures    93 →  82 ms</code></pre>
+          <h3>Text and regex</h3>
+          <p>Short Strings and Array headers are reused instead of freed, and the matcher
+            steps over ASCII text without decoding it. Times against 0.27, without the
+            JIT:</p>
+          <pre><code>regex   345 → 216 ms
+text    326 → 214 ms</code></pre>
         </article>
         <article class="new-card">
-          <h3>Cheaper objects</h3>
-          <p>Instance variables are read straight from the instance's shape, trivial getters
-            and setters are recognized once, and small instances are reused instead of
-            freed. Against 0.26:</p>
-          <pre><code>structs    350 → 261 ms
-objects    213 → 161 ms
-nbody      408 → 333 ms</code></pre>
+          <h3>Getters and setters</h3>
+          <p>A call site that keeps reaching the same getter or setter remembers it, and
+            reads or writes the field directly, even for class-typed fields. Against
+            0.27:</p>
+          <pre><code>nbody   339 → 288 ms
+trees   167 → 146 ms</code></pre>
         </article>
         <article class="new-card">
-          <h3>Typed fields</h3>
-          <p>When <code>initialize</code> sets a field first and every write stores an Int,
-            reading it is known to give an Int: math on it takes the Int fast path and the
-            return check is dropped.</p>
-          <pre><code>def initialize(x: Int)
-  @x = x
-end
-
-def double() -&gt; Int = @x * 2</code></pre>
+          <h3>Simple constructors</h3>
+          <p>An <code>initialize</code> that only copies its arguments into fields, like
+            every <code>struct</code>'s, no longer runs as a call: <code>new</code> fills
+            them itself. Against 0.27:</p>
+          <pre><code>structs 261 → 208 ms
+objects 155 → 132 ms</code></pre>
         </article>
       </div>
 
@@ -937,8 +932,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.27.0/d6-lang-0.27.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.27.0/d6-lang-0.27.0-1.fc44.aarch64.rpm">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.28.0/d6-lang-0.28.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.28.0/d6-lang-0.28.0-1.fc44.aarch64.rpm">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -967,8 +962,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.27.0/d6-lang_0.27.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.27.0/d6-lang_0.27.0-1_arm64.deb">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.28.0/d6-lang_0.28.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.28.0/d6-lang_0.28.0-1_arm64.deb">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
