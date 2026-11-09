@@ -247,7 +247,7 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>0.29 is a JIT release: with <code>DIAMOND_JIT=1</code>, compiled code now calls compiled code directly and handles objects and blocks itself. There is also a static build for any Linux.</p>
+        <p>0.29 is a JIT release: with <code>DIAMOND_JIT=1</code>, compiled code now calls compiled code directly and handles objects and blocks itself. Far more of your code compiles, too.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
@@ -267,12 +267,12 @@ poly    217 → 114 ms</code></pre>
 closures 120 →  78 ms</code></pre>
         </article>
         <article class="new-card">
-          <h3>Any Linux</h3>
-          <p>Each release now has a tarball of <code>d6</code>, <code>facet</code>,
-            <code>d6-lsp</code> and <code>d6-dap</code> as static executables, with the
-            database drivers and TLS built in, for x86-64 and 64-bit ARM:</p>
-          <pre><code>tar -xzf d6-0.29.0-linux-*.tar.gz
-d6-linux-*/d6 --version</code></pre>
+          <h3>Recursion and coverage</h3>
+          <p>A compiled function calls itself directly, and nearly every function now
+            compiles: the ones the JIT turns away fell from 3,041 to 17. Against 0.28, with
+            the JIT:</p>
+          <pre><code>fib     235 → 170 ms
+iterate 216 → 146 ms</code></pre>
         </article>
       </div>
 
@@ -906,19 +906,18 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
       <div class="section-head">
         <span class="eyebrow"><span class="dot"></span> Install</span>
         <h2>Build it, run it, ship it</h2>
-        <p>Fedora 44 and Ubuntu 26.04 install from a package, any other Linux from a static
-          tarball, and other platforms build from source. Bytecode is cached automatically between runs,
+        <p>Fedora 44 and Ubuntu 26.04 install from a package; other platforms build from
+          source. Bytecode is cached automatically between runs,
           and <code>d6 build</code> produces a self-contained native binary when you're
           ready to ship. A C23 compiler with <code>#embed</code> support is required
-          (GCC 15+ or Clang 19+) to build from source. On x86-64, packages and source builds target x86-64-v3
-          (AVX2, BMI2, FMA); the tarball runs on any x86-64. Pick your platform to get started.</p>
+          (GCC 15+ or Clang 19+) to build from source. On x86-64, the supported baseline is x86-64-v3
+          (AVX2, BMI2, FMA). Pick your platform to get started.</p>
       </div>
 
       <div class="tabs" data-group="install">
         <div class="tabs-nav" role="tablist" aria-label="Supported platforms">
           <button class="tab-btn active" data-tab="fedora" role="tab" aria-selected="true">Fedora</button>
           <button class="tab-btn" data-tab="ubuntu" role="tab" aria-selected="false">Ubuntu 26.04</button>
-          <button class="tab-btn" data-tab="linux" role="tab" aria-selected="false">Any Linux</button>
           <button class="tab-btn" data-tab="alpine" role="tab" aria-selected="false">Alpine</button>
           <button class="tab-btn" data-tab="freebsd" role="tab" aria-selected="false">FreeBSD</button>
           <button class="tab-btn" data-tab="macos" role="tab" aria-selected="false">macOS</button>
@@ -989,36 +988,6 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="line">./hi</div>
             </div>
           </div>
-        </div>
-
-        <div class="tab-panel" data-panel="linux">
-          <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.29.0/d6-0.29.0-linux-x86_64.tar.gz"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Linux</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.29.0/d6-0.29.0-linux-aarch64.tar.gz">64-bit ARM tarball</a>
-          </div>
-          <div class="terminal-window usage">
-            <div class="titlebar">
-              <div class="dots"><span></span><span></span><span></span></div>
-              <span class="filename">usage</span>
-              <button class="copy-btn" type="button" data-copy-target="term-usage-linux">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                <span class="copy-label">Copy</span>
-              </button>
-            </div>
-            <div class="terminal" id="term-usage-linux">
-              <div class="line comment"># Unpack it and put it on your PATH</div>
-              <div class="line">tar -xzf ~/Downloads/d6-0.29.0-linux-x86_64.tar.gz -C ~/.local</div>
-              <div class="line">export PATH="$HOME/.local/d6-linux-x86_64:$PATH"</div>
-              <div class="line comment gap"># Run a one-liner</div>
-              <div class="line">d6 -e '20 + 22'</div>
-              <div class="line comment"># =&gt; 42</div>
-              <div class="line comment gap"># ...or start the REPL</div>
-              <div class="line">d6</div>
-            </div>
-          </div>
-          <p class="tab-caption">Static executables for any distribution, built for baseline x86-64 or
-            64-bit ARM. They have no JIT and can't run <code>d6 build</code>; use a package or a
-            source build for those.</p>
         </div>
 
         <div class="tab-panel" data-panel="alpine">
