@@ -92,7 +92,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v0.29.0 · open source, pre-1.0</span>
+          <span class="eyebrow"><span class="dot"></span> v1.0.0-rc1 · open source, release candidate</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -247,37 +247,36 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>0.29 is a JIT release: with <code>DIAMOND_JIT=1</code>, compiled code now calls compiled code directly and handles objects and blocks itself. Far more of your code compiles, too.</p>
+        <p>1.0.0-rc1 is the first release candidate for d6 1.0: safe navigation, and a faster JIT for array stores and arithmetic with constants.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Native calls</h3>
-          <p>Compiled functions and methods call each other's machine code directly, with
-            a four-way class cache at each method call site. Times against 0.28, with
-            the JIT on:</p>
-          <pre><code>nbody   422 → 182 ms
-poly    217 → 114 ms</code></pre>
+          <h3>Safe navigation</h3>
+          <p><code>value&amp;.name()</code> calls <code>name</code> unless
+            <code>value</code> is nil, and is nil otherwise. The result's type includes
+            <code>Nil</code>, and the language server completes through it:</p>
+          <pre><code>pets = {"rex": "Rex"}
+p(pets["rex"]&amp;.upcase())   # "REX"
+p(pets["tom"]&amp;.upcase())   # nil</code></pre>
         </article>
         <article class="new-card">
-          <h3>Objects and blocks</h3>
-          <p>Compiled code creates objects, reads and writes their fields, checks their
-            types and runs <code>each</code>/<code>map</code> loops without leaving
-            machine code. Against 0.28, with the JIT:</p>
-          <pre><code>objects  178 → 108 ms
-closures 120 →  78 ms</code></pre>
+          <h3>Array stores</h3>
+          <p>Compiled code writes <code>array[i] = value</code> straight into the Array
+            when the index is in range, and <code>Array.new(n, value)</code> fills
+            faster. Against 0.29, with the JIT on:</p>
+          <pre><code>sieve   172 → 141 ms</code></pre>
         </article>
         <article class="new-card">
-          <h3>Recursion and coverage</h3>
-          <p>A compiled function calls itself directly, and nearly every function now
-            compiles: the ones the JIT turns away fell from 3,041 to 17. Against 0.28, with
-            the JIT:</p>
-          <pre><code>fib     235 → 170 ms
-iterate 216 → 146 ms</code></pre>
+          <h3>Constant operands</h3>
+          <p><code>i + 1</code>, <code>i &lt; 1000</code> and <code>x == 0</code>
+            check one operand instead of two, and <code>x % 10</code> multiplies by a
+            reciprocal instead of dividing. Against 0.29, with the JIT:</p>
+          <pre><code>loop    164 → 130 ms</code></pre>
         </article>
       </div>
 
       <div class="release-notes">
-        <p><strong>Pre-1.0.</strong> d6 is exercised mostly on Fedora and Ubuntu, with CI on
+        <p><strong>Release candidate.</strong> d6 is exercised mostly on Fedora and Ubuntu, with CI on
           macOS, FreeBSD, Alpine, and arm64. It hasn't had a security audit, so don't rely on it for
           security-sensitive work yet.</p>
         <a class="release-link" href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog &rarr;</a>
@@ -932,8 +931,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.29.0/d6-lang-0.29.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.29.0/d6-lang-0.29.0-1.fc44.aarch64.rpm">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc1/d6-lang-1.0.0-rc1-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc1/d6-lang-1.0.0-rc1-1.fc44.aarch64.rpm">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -962,8 +961,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v0.29.0/d6-lang_0.29.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v0.29.0/d6-lang_0.29.0-1_arm64.deb">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc1/d6-lang_1.0.0-rc1-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc1/d6-lang_1.0.0-rc1-1_arm64.deb">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
