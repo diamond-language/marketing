@@ -92,7 +92,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v1.0.0-rc1 · open source, release candidate</span>
+          <span class="eyebrow"><span class="dot"></span> v1.0.0-rc2 · open source, release candidate</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -247,31 +247,23 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>1.0.0-rc1 is the first release candidate for d6 1.0: safe navigation, and a faster JIT for array stores and arithmetic with constants.</p>
+        <p>1.0.0-rc2 is the second release candidate for d6 1.0, with fixes for safe calls, captured locals, and supervised workers.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Safe navigation</h3>
-          <p><code>value&amp;.name()</code> calls <code>name</code> unless
-            <code>value</code> is nil, and is nil otherwise. The result's type includes
-            <code>Nil</code>, and the language server completes through it:</p>
-          <pre><code>pets = {"rex": "Rex"}
-p(pets["rex"]&amp;.upcase())   # "REX"
-p(pets["tom"]&amp;.upcase())   # nil</code></pre>
+          <h3>Safe calls</h3>
+          <p><code>value&amp;.name()</code> skips its arguments when the receiver is nil.
+            Assignments in skipped arguments now preserve the local types used by later code.</p>
         </article>
         <article class="new-card">
-          <h3>Array stores</h3>
-          <p>Compiled code writes <code>array[i] = value</code> straight into the Array
-            when the index is in range, and <code>Array.new(n, value)</code> fills
-            faster. Against 0.29, with the JIT on:</p>
-          <pre><code>sieve   172 → 141 ms</code></pre>
+          <h3>Captured locals</h3>
+          <p>Retrying a rescued body keeps shared locals accessible. JIT errors after a
+            captured assignment preserve that assignment instead of replaying the closure.</p>
         </article>
         <article class="new-card">
-          <h3>Constant operands</h3>
-          <p><code>i + 1</code>, <code>i &lt; 1000</code> and <code>x == 0</code>
-            check one operand instead of two, and <code>x % 10</code> multiplies by a
-            reciprocal instead of dividing. Against 0.29, with the JIT:</p>
-          <pre><code>loop    164 → 130 ms</code></pre>
+          <h3>Cooperative cancellation</h3>
+          <p>Supervised workers stop promptly in native Array block loops and iterators
+            calling compiled blocks, including blocks without a loop of their own.</p>
         </article>
       </div>
 
@@ -931,8 +923,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc1/d6-lang-1.0.0-rc1-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc1/d6-lang-1.0.0-rc1-1.fc44.aarch64.rpm">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang-1.0.0-rc2-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang-1.0.0-rc2-1.fc44.aarch64.rpm">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
@@ -961,8 +953,8 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc1/d6-lang_1.0.0-rc1-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc1/d6-lang_1.0.0-rc1-1_arm64.deb">64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang_1.0.0-rc2-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang_1.0.0-rc2-1_arm64.deb">64-bit ARM package</a>
           </div>
           <div class="terminal-window usage">
             <div class="titlebar">
