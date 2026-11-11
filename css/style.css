@@ -737,6 +737,21 @@ section {
   font-size: 22px;
 }
 
+/* "Download for X" with the architecture on a smaller second line. */
+.btn-download-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+}
+
+.btn-download-label small {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
 .tab-caption {
   text-align: center;
   color: var(--text-dim);
@@ -769,34 +784,6 @@ section {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
-}
-
-.terminal-window.usage {
-  width: fit-content;
-  max-width: 100%;
-  margin: 32px auto 0;
-}
-
-/* Source builds: install steps on the left, usage on the right. */
-.install-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
-  align-items: start;
-}
-
-.install-row .terminal-window.usage {
-  margin: 0;
-}
-
-@media (max-width: 920px) {
-  .install-row {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .install-row .terminal-window.usage {
-    margin: 0 auto;
-  }
 }
 
 .terminal-window .titlebar {
