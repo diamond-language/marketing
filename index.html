@@ -923,61 +923,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang-1.0.0-rc2-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Fedora</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang-1.0.0-rc2-1.fc44.aarch64.rpm">64-bit ARM package</a>
-          </div>
-          <div class="terminal-window usage">
-            <div class="titlebar">
-              <div class="dots"><span></span><span></span><span></span></div>
-              <span class="filename">usage</span>
-              <button class="copy-btn" type="button" data-copy-target="term-usage-fedora">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                <span class="copy-label">Copy</span>
-              </button>
-            </div>
-            <div class="terminal" id="term-usage-fedora">
-              <div class="line comment"># Run a one-liner</div>
-              <div class="line">d6 -e '20 + 22'</div>
-              <div class="line comment"># =&gt; 42</div>
-              <div class="line comment gap"># ...or run a file</div>
-              <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-              <div class="line">d6 hi.d6</div>
-              <div class="line comment gap"># ...or start the REPL</div>
-              <div class="line">d6</div>
-              <div class="line comment gap"># Ship a standalone binary</div>
-              <div class="line">d6 build hi.d6 -o hi</div>
-              <div class="line">./hi</div>
-            </div>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang-1.0.0-rc2-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang-1.0.0-rc2-1.fc44.aarch64.rpm">Or get the 64-bit ARM (aarch64) package</a>
           </div>
         </div>
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang_1.0.0-rc2-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Download for Ubuntu</a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang_1.0.0-rc2-1_arm64.deb">64-bit ARM package</a>
-          </div>
-          <div class="terminal-window usage">
-            <div class="titlebar">
-              <div class="dots"><span></span><span></span><span></span></div>
-              <span class="filename">usage</span>
-              <button class="copy-btn" type="button" data-copy-target="term-usage-ubuntu">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                <span class="copy-label">Copy</span>
-              </button>
-            </div>
-            <div class="terminal" id="term-usage-ubuntu">
-              <div class="line comment"># Run a one-liner</div>
-              <div class="line">d6 -e '20 + 22'</div>
-              <div class="line comment"># =&gt; 42</div>
-              <div class="line comment gap"># ...or run a file</div>
-              <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-              <div class="line">d6 hi.d6</div>
-              <div class="line comment gap"># ...or start the REPL</div>
-              <div class="line">d6</div>
-              <div class="line comment gap"># Ship a standalone binary</div>
-              <div class="line">d6 build hi.d6 -o hi</div>
-              <div class="line">./hi</div>
-            </div>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang_1.0.0-rc2-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang_1.0.0-rc2-1_arm64.deb">Or get the 64-bit ARM (arm64) package</a>
           </div>
         </div>
 
@@ -1003,29 +957,6 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">make all facet</div>
                 <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
-              </div>
-            </div>
-            <div class="terminal-window usage">
-              <div class="titlebar">
-                <div class="dots"><span></span><span></span><span></span></div>
-                <span class="filename">usage</span>
-                <button class="copy-btn" type="button" data-copy-target="term-usage-alpine">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                  <span class="copy-label">Copy</span>
-                </button>
-              </div>
-              <div class="terminal" id="term-usage-alpine">
-                <div class="line comment"># Run a one-liner</div>
-                <div class="line">d6 -e '20 + 22'</div>
-                <div class="line comment"># =&gt; 42</div>
-                <div class="line comment gap"># ...or run a file</div>
-                <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-                <div class="line">d6 hi.d6</div>
-                <div class="line comment gap"># ...or start the REPL</div>
-                <div class="line">d6</div>
-                <div class="line comment gap"># Ship a standalone binary</div>
-                <div class="line">d6 build hi.d6 -o hi</div>
-                <div class="line">./hi</div>
               </div>
             </div>
           </div>
@@ -1055,29 +986,6 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
                 <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
-              </div>
-            </div>
-            <div class="terminal-window usage">
-              <div class="titlebar">
-                <div class="dots"><span></span><span></span><span></span></div>
-                <span class="filename">usage</span>
-                <button class="copy-btn" type="button" data-copy-target="term-usage-freebsd">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                  <span class="copy-label">Copy</span>
-                </button>
-              </div>
-              <div class="terminal" id="term-usage-freebsd">
-                <div class="line comment"># Run a one-liner</div>
-                <div class="line">d6 -e '20 + 22'</div>
-                <div class="line comment"># =&gt; 42</div>
-                <div class="line comment gap"># ...or run a file</div>
-                <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-                <div class="line">d6 hi.d6</div>
-                <div class="line comment gap"># ...or start the REPL</div>
-                <div class="line">d6</div>
-                <div class="line comment gap"># Ship a standalone binary</div>
-                <div class="line">d6 build hi.d6 -o hi</div>
-                <div class="line">./hi</div>
               </div>
             </div>
           </div>
@@ -1113,29 +1021,6 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">    -L$o/mariadb-connector-c/lib/mariadb"</div>
                 <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
-              </div>
-            </div>
-            <div class="terminal-window usage">
-              <div class="titlebar">
-                <div class="dots"><span></span><span></span><span></span></div>
-                <span class="filename">usage</span>
-                <button class="copy-btn" type="button" data-copy-target="term-usage-macos">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                  <span class="copy-label">Copy</span>
-                </button>
-              </div>
-              <div class="terminal" id="term-usage-macos">
-                <div class="line comment"># Run a one-liner</div>
-                <div class="line">d6 -e '20 + 22'</div>
-                <div class="line comment"># =&gt; 42</div>
-                <div class="line comment gap"># ...or run a file</div>
-                <div class="line">echo 'puts("Hi")' &gt; hi.d6</div>
-                <div class="line">d6 hi.d6</div>
-                <div class="line comment gap"># ...or start the REPL</div>
-                <div class="line">d6</div>
-                <div class="line comment gap"># Ship a standalone binary</div>
-                <div class="line">d6 build hi.d6 -o hi</div>
-                <div class="line">./hi</div>
               </div>
             </div>
           </div>
