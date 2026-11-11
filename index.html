@@ -92,7 +92,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v1.0.0-rc2 · open source, release candidate</span>
+          <span class="eyebrow"><span class="dot"></span> v1.0.0-rc3 · open source, release candidate</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -247,23 +247,23 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>1.0.0-rc2 is the second release candidate for d6 1.0, with fixes for safe calls, captured locals, and supervised workers.</p>
+        <p>1.0.0-rc3 is the third release candidate for d6 1.0, with smaller builds, corrected JIT dispatch, and broader runtime verification.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Safe calls</h3>
-          <p><code>value&amp;.name()</code> skips its arguments when the receiver is nil.
-            Assignments in skipped arguments now preserve the local types used by later code.</p>
+          <h3>Smaller builds</h3>
+          <p>Compact type metadata reduced Pheint's bytecode cache from 71 MB to 7.3 MB
+            and its executable from 76 MB to 11 MB. Existing caches rebuild automatically.</p>
         </article>
         <article class="new-card">
-          <h3>Captured locals</h3>
-          <p>Retrying a rescued body keeps shared locals accessible. JIT errors after a
-            captured assignment preserve that assignment instead of replaying the closure.</p>
+          <h3>Correct native dispatch</h3>
+          <p>JIT-compiled blocks correctly call methods on arrays, hashes, and strings
+            stored in captured instance variables, including nested blocks.</p>
         </article>
         <article class="new-card">
-          <h3>Cooperative cancellation</h3>
-          <p>Supervised workers stop promptly in native Array block loops and iterators
-            calling compiled blocks, including blocks without a loop of their own.</p>
+          <h3>Runtime verification</h3>
+          <p>New workflows exercise JSON, SQLite, subprocesses, files, and channels across
+            interpreter, JIT, GC stress, cached bytecode, and standalone executables.</p>
         </article>
       </div>
 
@@ -923,15 +923,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang-1.0.0-rc2-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora<small>x86-64 (Intel/AMD)</small></span></a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang-1.0.0-rc2-1.fc44.aarch64.rpm">Or get the 64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc3/d6-lang-1.0.0-rc3-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc3/d6-lang-1.0.0-rc3-1.fc44.aarch64.rpm">Or get the 64-bit ARM package</a>
           </div>
         </div>
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang_1.0.0-rc2-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc2/d6-lang_1.0.0-rc2-1_arm64.deb">Or get the 64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc3/d6-lang_1.0.0-rc3-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc3/d6-lang_1.0.0-rc3-1_arm64.deb">Or get the 64-bit ARM package</a>
           </div>
         </div>
 
