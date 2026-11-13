@@ -173,16 +173,22 @@ if (root) {
     return loading;
   };
 
-  const submit = async (line) => {
-    const instance = repl || await load().catch(() => null);
-    if (!instance) return;
-    const echo = document.createElement('div');
-    echo.className = 'repl-line repl-echo';
+  // Shows a line in the scrollback as typed at the current prompt.
+  const echo = (instance, line) => {
+    const row = document.createElement('div');
+    row.className = 'repl-line repl-echo';
     const prompt = document.createElement('span');
     prompt.className = 'repl-prompt';
     prompt.textContent = promptEl.textContent;
-    echo.append(prompt, colored(instance, line));
-    scrollback.append(echo);
+    row.append(prompt, colored(instance, line));
+    scrollback.append(row);
+    scrollback.scrollTop = scrollback.scrollHeight;
+  };
+
+  const submit = async (line) => {
+    const instance = repl || await load().catch(() => null);
+    if (!instance) return;
+    echo(instance, line);
     try {
       const result = instance.submit(line);
       if (result.kind === 'ok' && result.text) print(result.text);
@@ -272,7 +278,12 @@ if (root) {
         instance.reset();
         promptEl.textContent = instance.prompt;
         scrollback.textContent = '';
-        for (const line of button.dataset.replExample.split('\n')) await submit(line);
+        for (const line of button.dataset.replExample.split('\n')) {
+          // Comment lines explain the example: shown, not evaluated (submitted alone, each
+          // would print a stray nil).
+          if (/^\s*#/.test(line)) echo(instance, line);
+          else await submit(line);
+        }
       }
       busy = false;
       input.focus();
