@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>d6 — real types, one binary, nothing shared</title>
-<meta name="description" content="d6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
+<title>D6 — real types, one binary, nothing shared</title>
+<meta name="description" content="D6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://getdiamond.codes/">
 <meta property="og:url" content="https://getdiamond.codes/">
-<meta property="og:title" content="d6 — real types, one binary, nothing shared">
-<meta property="og:description" content="d6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
+<meta property="og:title" content="D6 — real types, one binary, nothing shared">
+<meta property="og:description" content="D6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <meta property="og:image" content="https://getdiamond.codes/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:site_name" content="d6">
+<meta property="og:site_name" content="D6">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="d6 — real types, one binary, nothing shared">
-<meta name="twitter:description" content="d6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
+<meta name="twitter:title" content="D6 — real types, one binary, nothing shared">
+<meta name="twitter:description" content="D6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
 <meta name="twitter:image" content="https://getdiamond.codes/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,7 +51,7 @@
         <path d="M11 5 L21 5 L28 13 L16 28 L4 13 Z" fill="none" stroke="#02040a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
         <path d="M11 5 L16 13 M21 5 L16 13 M4 13 L28 13 M16 13 L16 28" stroke="#090c14" stroke-width="1" stroke-opacity="0.32" stroke-linecap="round"/>
       </svg>
-      d6
+      D6
     </a>
     <nav class="nav-links" id="nav-links">
       <a href="#release">Recent changes</a>
@@ -94,7 +94,7 @@
         <div>
           <span class="eyebrow"><span class="dot"></span> v1.0.0-rc4 · open source, release candidate</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
-          <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
+          <p class="lead">D6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
             <code>d6 build</code> turns a program into one executable &mdash; cross-compiled,
             or fully static if you like. Threads copy values instead of sharing a heap.</p>
@@ -121,13 +121,13 @@
           </div>
           <div class="repl-body">
             <div class="repl-scrollback" data-repl-scrollback role="log" aria-live="polite">
-              <div class="repl-line repl-hint">d6 runs in your browser.</div>
+              <div class="repl-line repl-hint">D6 runs in your browser.</div>
               <div class="repl-line repl-hint">Type an expression, or pick an example below.</div>
             </div>
             <form class="repl-form" data-repl-form autocomplete="off">
               <span class="repl-prompt" data-repl-prompt>{&gt; </span>
               <span class="repl-field"><span class="repl-highlight" aria-hidden="true" data-repl-highlight></span>
-                <textarea class="repl-input" data-repl-input aria-label="d6 input" spellcheck="false" rows="1"
+                <textarea class="repl-input" data-repl-input aria-label="D6 input" spellcheck="false" rows="1"
                      autocapitalize="off" autocomplete="off" enterkeyhint="send" placeholder="1 + 2" role="combobox"
                      aria-autocomplete="list" aria-expanded="false" aria-controls="repl-completions" disabled></textarea>
                 <ul class="repl-completions" id="repl-completions" data-repl-completions role="listbox" hidden></ul></span>
@@ -155,7 +155,7 @@
       <div class="section-head">
         <span class="eyebrow"><span class="dot"></span> Familiar ground</span>
         <h2>You have probably written something like this</h2>
-        <p>Pieces of d6 will feel familiar depending on where you are coming from.
+        <p>Pieces of D6 will feel familiar depending on where you are coming from.
           The names are different; the ideas are not new.</p>
       </div>
       <div class="familiar-grid">
@@ -247,7 +247,7 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>1.0.0-rc4 is the fourth release candidate for d6 1.0, keeping compact program metadata compact in memory.</p>
+        <p>1.0.0-rc4 is the fourth release candidate for D6 1.0, keeping compact program metadata compact in memory.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
@@ -268,7 +268,7 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
       </div>
 
       <div class="release-notes">
-        <p><strong>Release candidate.</strong> d6 is exercised mostly on Fedora and Ubuntu, with CI on
+        <p><strong>Release candidate.</strong> D6 is exercised mostly on Fedora and Ubuntu, with CI on
           macOS, FreeBSD, Alpine, and arm64. It hasn't had a security audit, so don't rely on it for
           security-sensitive work yet.</p>
         <a class="release-link" href="https://github.com/diamond-language/diamond/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog &rarr;</a>
@@ -369,7 +369,7 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
         <h2>A type checker that catches real mistakes</h2>
         <p>Annotate as much or as little as you like. What you annotate is checked before the
           program starts wherever the compiler can prove a mistake, and when the call runs
-          wherever it can't. Each output is what d6 printed for the file shown.</p>
+          wherever it can't. Each output is what D6 printed for the file shown.</p>
       </div>
 
       <div class="tabs" data-group="types">
@@ -622,7 +622,7 @@ half(settings[<span class="tok-str">"port"</span>])                 <span class=
         <div class="internals-card">
           <h3>Tooling in the box</h3>
           <p>A language server, a Debug Adapter Protocol step debugger, a formatter, and a lexer
-            and parser written in d6 itself.</p>
+            and parser written in D6 itself.</p>
         </div>
       </div>
     </div>
@@ -859,7 +859,7 @@ puts(even?(<span class="tok-num">1_000_000</span>))</code></pre>
             <li><strong>No lazy loading.</strong> An association is fetched only by
               <code>preload</code>, one query for any number of entities.</li>
           </ul>
-          <p>After installing d6 below, start a new project directory:</p>
+          <p>After installing D6 below, start a new project directory:</p>
           <pre><code>mkdir demo &amp;&amp; cd demo
 facet init demo
 facet add mjolnir
@@ -953,7 +953,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line comment gap"># Download the source</div>
                 <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
                 <div class="line">cd diamond</div>
-                <div class="line comment gap"># Build d6</div>
+                <div class="line comment gap"># Build D6</div>
                 <div class="line">make all facet</div>
                 <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
@@ -980,7 +980,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line comment gap"># Download the source</div>
                 <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
                 <div class="line">cd diamond</div>
-                <div class="line comment gap"># Build d6 (FreeBSD's GNU Make is gmake, not make)</div>
+                <div class="line comment gap"># Build D6 (FreeBSD's GNU Make is gmake, not make)</div>
                 <div class="line">gmake all facet CC=clang \</div>
                 <div class="line">  CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
                 <div class="line">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
@@ -1009,7 +1009,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">o=$(brew --prefix)/opt</div>
                 <div class="line">export PATH="$o/coreutils/libexec/gnubin:$PATH"</div>
                 <div class="line">export PATH="$o/gnu-sed/libexec/gnubin:$o/bash/bin:$PATH"</div>
-                <div class="line comment gap"># Download and build d6</div>
+                <div class="line comment gap"># Download and build D6</div>
                 <div class="line">git clone https://github.com/diamond-language/diamond.git</div>
                 <div class="line">cd diamond</div>
                 <div class="line">make all facet CC=clang LDLIBS_CRYPT= \</div>
@@ -1041,7 +1041,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
       <div class="docs-grid">
         <a class="doc-link" href="docs/guide/">
-          <span><span class="label">The d6 guide</span><span class="sub">Start here, with runnable examples</span></span>
+          <span><span class="label">The D6 guide</span><span class="sub">Start here, with runnable examples</span></span>
           <span class="arrow" aria-hidden="true">&rarr;</span>
         </a>
         <a class="doc-link" href="docs/reference/classes-and-modules.html">
@@ -1121,7 +1121,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
             <path d="M11 5 L21 5 L28 13 L16 28 L4 13 Z" fill="none" stroke="#02040a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
             <path d="M11 5 L16 13 M21 5 L16 13 M4 13 L28 13 M16 13 L16 28" stroke="#090c14" stroke-width="1" stroke-opacity="0.32" stroke-linecap="round"/>
           </svg>
-          d6
+          D6
         </a>
         <p>An object-oriented language with gradual, checked typing and a register-bytecode VM
           written in C23. Open source under the MIT license.</p>
@@ -1155,7 +1155,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; <span id="year"></span> The d6 project. MIT licensed.</span>
+      <span>&copy; <span id="year"></span> The D6 project. MIT licensed.</span>
     </div>
   </div>
 </footer>
