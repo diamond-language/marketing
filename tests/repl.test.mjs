@@ -38,7 +38,10 @@ for (const [index, [name, expected]] of outcomes.entries()) {
   test(`homepage ${name} example`, () => {
     let result;
     const results = [];
-    for (const line of examples[index].split('\n')) results.push(result = repl.submit(line));
+    // Comment lines are shown but not submitted, as js/repl.js does.
+    for (const line of examples[index].split('\n')) {
+      if (!/^\s*#/.test(line)) results.push(result = repl.submit(line));
+    }
     if (name === 'Types') {
       // The call that may pass nil is rejected; the narrowed one runs.
       assert(results.some((each) => each.kind === 'error' && /expected String, got String \| Nil/.test(each.text)));
