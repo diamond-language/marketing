@@ -182,7 +182,6 @@ if (root) {
     prompt.textContent = promptEl.textContent;
     row.append(prompt, colored(instance, line));
     scrollback.append(row);
-    scrollback.scrollTop = scrollback.scrollHeight;
   };
 
   const submit = async (line) => {
@@ -278,12 +277,8 @@ if (root) {
         instance.reset();
         promptEl.textContent = instance.prompt;
         scrollback.textContent = '';
-        for (const line of button.dataset.replExample.split('\n')) {
-          // Comment lines explain the example: shown, not evaluated (submitted alone, each
-          // would print a stray nil).
-          if (/^\s*#/.test(line)) echo(instance, line);
-          else await submit(line);
-        }
+        // Comment lines explain the example; the REPL shows them and prints nothing for them.
+        for (const line of button.dataset.replExample.split('\n')) await submit(line);
       }
       busy = false;
       input.focus();

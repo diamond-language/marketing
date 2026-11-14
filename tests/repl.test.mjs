@@ -38,9 +38,12 @@ for (const [index, [name, expected]] of outcomes.entries()) {
   test(`homepage ${name} example`, () => {
     let result;
     const results = [];
-    // Comment lines are shown but not submitted, as js/repl.js does.
+    // Every line is submitted, as js/repl.js does; comment lines print nothing.
     for (const line of examples[index].split('\n')) {
-      if (!/^\s*#/.test(line)) results.push(result = repl.submit(line));
+      const each = repl.submit(line);
+      // A comment prints nothing: no output at the prompt, a continuation inside an entry.
+      if (/^\s*#/.test(line)) assert(each.kind === 'continue' || (each.kind === 'ok' && each.text === ''));
+      else results.push(result = each);
     }
     if (name === 'Types') {
       // The call that may pass nil is rejected; the narrowed one runs.
