@@ -124,8 +124,8 @@ img, svg {
   filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.55));
 }
 
-/* A soft highlight band sweeps across the gem on hover, like a glint. It sits
-   off to the left at rest and is clipped to the diamond, so nothing shows
+/* A soft highlight band sweeps across the die on hover, like a glint. It sits
+   off to the left at rest and is clipped to the die face, so nothing shows
    until the animation runs. */
 .logo-shimmer {
   transform: translateX(-4px);
@@ -252,15 +252,15 @@ img, svg {
   z-index: 0;
   opacity: 0.4;
   pointer-events: none;
-  /* Bottom point swings left, under the hero copy. */
-  transform: rotate(32deg);
+  /* A slight tilt that rocks back and forth, like a die settling. */
+  transform: rotate(8deg);
   transform-origin: 50% 50%;
   animation: facet-sway 40s ease-in-out infinite alternate;
 }
 
 @keyframes facet-sway {
-  from { transform: rotate(26deg); }
-  to { transform: rotate(38deg); }
+  from { transform: rotate(2deg); }
+  to { transform: rotate(14deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
