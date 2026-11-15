@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
-# Run as root on the droplet, beside nginx.conf and the staged index.html.
+# Moves the site to rolld6.codes. Run as root on the droplet from a directory
+# holding this script, nginx.conf and the new index.html (canonical rolld6.codes).
+# Rolls back nginx and index.html if any check fails; safe to rerun.
 set -euo pipefail
 cd -- "$(dirname -- "$0")"
 if [[ -f activated ]]; then
     exit 0
 fi
 
-# DNS may still be propagating. Leave the working site alone on failure.
+# Leave the working site alone if the certificate can't be issued yet.
 certbot certonly --non-interactive --webroot -w /var/www/letsencrypt \
-    -d getdiamond.codes --cert-name getdiamond.codes --keep-until-expiring
+    -d rolld6.codes --cert-name rolld6.codes --keep-until-expiring
 
 backup="/root/marketing-domain-backup-$(date -u +%Y%m%dT%H%M%SZ)"
 mkdir -m 700 "$backup"
@@ -25,13 +27,15 @@ install -m 644 index.html /var/www/dilang.tech/index.html
 nginx -t
 systemctl reload nginx
 # nginx reload returns before the new workers finish taking over.
-curl --retry 5 --retry-all-errors --retry-delay 1 --fail --silent --show-error --resolve getdiamond.codes:443:127.0.0.1 \
-    https://getdiamond.codes/ | grep -F 'rel="canonical" href="https://getdiamond.codes/"'
-curl --fail --silent --show-error --resolve dilang.tech:443:127.0.0.1 \
-    --head 'https://dilang.tech/wasm/?domain-check=1' \
-    | tr -d '\r' | grep -Fi 'location: https://getdiamond.codes/wasm/?domain-check=1'
+curl --retry 5 --retry-all-errors --retry-delay 1 --fail --silent --show-error --resolve rolld6.codes:443:127.0.0.1 \
+    https://rolld6.codes/ | grep -F 'rel="canonical" href="https://rolld6.codes/"'
+for old in getdiamond.codes dilang.tech; do
+    curl --fail --silent --show-error --resolve "$old:443:127.0.0.1" \
+        --head "https://$old/docs/?domain-check=1" \
+        | tr -d '\r' | grep -Fi 'location: https://rolld6.codes/docs/?domain-check=1'
+done
 curl --fail --silent --show-error --resolve cuts.dilang.tech:443:127.0.0.1 \
     https://cuts.dilang.tech/health
 trap - ERR
 touch activated
-systemctl disable --now diamond-marketing-domain.timer
+echo "rolld6.codes is live; backup in $backup"
