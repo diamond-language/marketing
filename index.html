@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://rolld6.codes/">
 <meta property="og:title" content="d6 — real types, one binary, nothing shared">
 <meta property="og:description" content="d6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
-<meta property="og:image" content="https://rolld6.codes/og-image.png">
+<meta property="og:image" content="https://rolld6.codes/og-image.png?v=rolld6">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="d6">
@@ -20,7 +20,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="d6 — real types, one binary, nothing shared">
 <meta name="twitter:description" content="d6 is an object-oriented language with checked gradual typing, a register-bytecode VM with an optional JIT, standalone executables (cross-compiled or fully static), isolated-heap concurrency, and a REPL that runs in your browser.">
-<meta name="twitter:image" content="https://rolld6.codes/og-image.png">
+<meta name="twitter:image" content="https://rolld6.codes/og-image.png?v=rolld6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
@@ -98,7 +98,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v1.0.0-rc5 · open source, release candidate</span>
+          <span class="eyebrow"><span class="dot"></span> v1.0.0-rc6 · open source, release candidate</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -253,23 +253,23 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>1.0.0-rc5 is the fifth release candidate for d6 1.0, with everyday collection conveniences and faster JIT-compiled code.</p>
+        <p>1.0.0-rc6 is the sixth release candidate for d6 1.0: Ruby's answers for negative literals and rounding, signals that reach blocked servers, and docs for every cut.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Everyday argument shapes</h3>
-          <p><code>any?</code> without a block, <code>sum(0.0)</code>, <code>min(n)</code>, <code>flatten(depth)</code>,
-            <code>merge</code> with a conflict block and more no longer raise arity errors.</p>
+          <h3>Ruby's answers</h3>
+          <p><code>-2.abs()</code> is 2, <code>4.35.floor(2)</code> is 4.35, <code>chomp("")</code> strips trailing
+            newlines, and <code>Hash.new(0)</code> and <code>Array.new(n) do |i| ... end</code> are new.</p>
         </article>
         <article class="new-card">
-          <h3>Faster JIT-compiled code</h3>
-          <p>With the JIT on, fib takes half the cycles and mandelbrot a third less;
-            <code>select</code>, <code>reduce</code> and <code>times</code> run their blocks as native loops.</p>
+          <h3>Signals reach blocked servers</h3>
+          <p>A <code>Signal.trap</code> handler now runs even when the signal lands just before
+            <code>accept</code>, <code>receive</code>, a socket <code>read</code> or <code>IO.poll</code> starts waiting.</p>
         </article>
         <article class="new-card">
-          <h3>No silent thread failures</h3>
-          <p>A thread that fails and is never joined now prints its exception and
-            backtrace on stderr instead of losing it.</p>
+          <h3>Docs for every cut</h3>
+          <p>Each published cut has a <a href="/docs/cuts/index.html">docs page</a>: its README and an
+            API reference built from <code>##</code> doc comments.</p>
         </article>
       </div>
 
@@ -929,15 +929,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc5/d6-lang-1.0.0-rc5-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora<small>x86-64 (Intel/AMD)</small></span></a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc5/d6-lang-1.0.0-rc5-1.fc44.aarch64.rpm">Or get the 64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc6/d6-lang-1.0.0-rc6-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc6/d6-lang-1.0.0-rc6-1.fc44.aarch64.rpm">Or get the 64-bit ARM package</a>
           </div>
         </div>
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc5/d6-lang_1.0.0-rc5-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
-            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc5/d6-lang_1.0.0-rc5-1_arm64.deb">Or get the 64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc6/d6-lang_1.0.0-rc6-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/diamond/releases/download/v1.0.0-rc6/d6-lang_1.0.0-rc6-1_arm64.deb">Or get the 64-bit ARM package</a>
           </div>
         </div>
 
