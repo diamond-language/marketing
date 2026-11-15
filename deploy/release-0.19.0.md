@@ -33,7 +33,7 @@ legacy-domain path/query redirects working. `/wasm/` itself returned 403;
 `nginx.conf` now redirects that legacy directory URL to `/#repl`. Deploy the
 configuration with the page, scripts, styles, and module; updating HTML alone
 does not fix that route. Preserve the existing TLS/ACME configuration and
-`cuts.dilang.tech` service. Validate nginx before reloading it.
+`cuts.rolld6.codes` service. Validate nginx before reloading it.
 
 No browser surface was available during preparation. Before deployment, verify
 desktop and mobile layout, horizontal scrolling of the longer build commands,
