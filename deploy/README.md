@@ -1,6 +1,15 @@
 # Canonical marketing domain
 
-`getdiamond.codes` is the canonical marketing origin. `dilang.tech` redirects
+`rolld6.codes` is the canonical marketing origin (since 2026-11-14). `getdiamond.codes` and
+`dilang.tech` redirect to it with the path and query preserved. `cuts.dilang.tech` and the SSH
+hostname `root@dilang.tech` stay unchanged (the registry moves to `cuts.d6.codes` once that name
+is set up). To switch, stage `activate.sh`, `nginx.conf` and the new `index.html` in one directory
+on the droplet and run `activate.sh` as root: it issues the certificate, installs both, checks the
+new origin and both redirects, and rolls back on any failure.
+
+## History: getdiamond.codes (2026-10-22)
+
+`getdiamond.codes` became the canonical origin on 2026-10-22, and `dilang.tech` began redirecting
 with the path and query preserved. `cuts.dilang.tech` and the SSH hostname
 `root@dilang.tech` stay unchanged. All services use the existing droplet at
 `142.93.192.149`; the static document root remains `/var/www/dilang.tech`.
