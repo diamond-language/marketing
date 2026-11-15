@@ -3,7 +3,7 @@
 Prepared on 2026-10-23. Ship this revision alongside Diamond 0.19.0 and its
 cut publication. The homepage version and highlights describe that release.
 Production outcomes are recorded in the
-[0.19 release record](https://github.com/diamond-language/diamond/blob/main/docs/release-0.19.0.md).
+[0.19 release record](https://github.com/diamond-language/d6/blob/main/docs/release-0.19.0.md).
 
 The review corrected `.d6`/`.d6c` examples, legacy `.di` compatibility and import
 precedence, missing source checkout steps, C23/compiler prerequisites, Ubuntu's
@@ -33,7 +33,7 @@ legacy-domain path/query redirects working. `/wasm/` itself returned 403;
 `nginx.conf` now redirects that legacy directory URL to `/#repl`. Deploy the
 configuration with the page, scripts, styles, and module; updating HTML alone
 does not fix that route. Preserve the existing TLS/ACME configuration and
-`cuts.dilang.tech` service. Validate nginx before reloading it.
+`cuts.rolld6.codes` service. Validate nginx before reloading it.
 
 No browser surface was available during preparation. Before deployment, verify
 desktop and mobile layout, horizontal scrolling of the longer build commands,
