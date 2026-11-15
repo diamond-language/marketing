@@ -13,9 +13,9 @@
   <g transform="translate(265 315) scale(11) translate(-16 -16)">
     <rect x="6.2" y="6.2" width="19.6" height="19.6" rx="3.4" transform="rotate(45 16 16)" fill="url(#die)" stroke="#02040a" stroke-width="0.6"/>
     <g fill="#ffffff" transform="rotate(45 16 16)">
-      <circle cx="13.3" cy="10.6" r="1.75"/><circle cx="18.7" cy="10.6" r="1.75"/>
-      <circle cx="13.3" cy="16" r="1.75"/><circle cx="18.7" cy="16" r="1.75"/>
-      <circle cx="13.3" cy="21.4" r="1.75"/><circle cx="18.7" cy="21.4" r="1.75"/>
+      <circle cx="13.8" cy="11.6" r="1.4"/><circle cx="18.2" cy="11.6" r="1.4"/>
+      <circle cx="13.8" cy="16" r="1.4"/><circle cx="18.2" cy="16" r="1.4"/>
+      <circle cx="13.8" cy="20.4" r="1.4"/><circle cx="18.2" cy="20.4" r="1.4"/>
     </g>
   </g>
   <text x="500" y="340" font-family="Noto Sans" font-weight="700" font-size="150" fill="#eef1fa">d6</text>
