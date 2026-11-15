@@ -6,3 +6,5 @@ and the logo is the six face of a die. Follow-up #40 (`5be1a57`, deployed the sa
 image's source and is not served. The served files' sha256 matched the checkout
 after the rsync. The /docs pages pick up the favicon from here; their "d6 docs"
 wordmark comes with diamond #575.
+
+Second follow-up #41 (`20693a4`, same day) shrank the pips (radius 1.75 to 1.4, grid pulled toward the centre) for more padding inside the die.
