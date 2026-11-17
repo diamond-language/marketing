@@ -98,7 +98,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v1.0.0-rc6 · open source, release candidate</span>
+          <span class="eyebrow"><span class="dot"></span> v1.0.0 · open source</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -253,28 +253,28 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
     <div class="container">
       <div class="section-head">
         <h2>Recent changes</h2>
-        <p>1.0.0-rc6 is the sixth release candidate for d6 1.0: Ruby's answers for negative literals and rounding, signals that reach blocked servers, and docs for every cut.</p>
+        <p>d6 1.0 is here: the language and tools of seven release candidates, now with a compatibility promise.</p>
       </div>
       <div class="whats-new">
         <article class="new-card">
-          <h3>Ruby's answers</h3>
-          <p><code>-2.abs()</code> is 2, <code>4.35.floor(2)</code> is 4.35, <code>chomp("")</code> strips trailing
-            newlines, and <code>Hash.new(0)</code> and <code>Array.new(n) do |i| ... end</code> are new.</p>
+          <h3>A stable 1.x</h3>
+          <p>Patch releases fix bugs, minor releases add features, and nothing in 1.x breaks a program,
+            project or cut that works today. <a href="/docs/reference/compatibility.html">What that covers</a>.</p>
         </article>
         <article class="new-card">
-          <h3>Signals reach blocked servers</h3>
-          <p>A <code>Signal.trap</code> handler now runs even when the signal lands just before
-            <code>accept</code>, <code>receive</code>, a socket <code>read</code> or <code>IO.poll</code> starts waiting.</p>
+          <h3>Install with mise</h3>
+          <p>Each release ships Linux tarballs that <a href="/docs/guide/getting-started.html#with-mise-or-unpacked-anywhere">mise
+            installs directly</a>, with no plugin and no compiler, or that unpack anywhere.</p>
         </article>
         <article class="new-card">
-          <h3>Docs for every cut</h3>
-          <p>Each published cut has a <a href="/docs/cuts/index.html">docs page</a>: its README and an
-            API reference built from <code>##</code> doc comments.</p>
+          <h3>VS Code extension</h3>
+          <p>Highlighting, diagnostics, completion and debugging, now in the
+            <a href="https://marketplace.visualstudio.com/items?itemName=rolld6.d6" target="_blank" rel="noopener">Visual Studio Marketplace</a>.</p>
         </article>
       </div>
 
       <div class="release-notes">
-        <p><strong>Release candidate.</strong> d6 is exercised mostly on Fedora and Ubuntu, with CI on
+        <p><strong>Where it runs.</strong> d6 is exercised mostly on Fedora and Ubuntu, with CI on
           macOS, FreeBSD, Alpine, and arm64. It hasn't had a security audit, so don't rely on it for
           security-sensitive work yet.</p>
         <a class="release-link" href="https://github.com/diamond-language/d6/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Full changelog &rarr;</a>
@@ -929,15 +929,15 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/d6/releases/download/v1.0.0-rc6/d6-lang-1.0.0-rc6-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora<small>x86-64 (Intel/AMD)</small></span></a>
-            <a class="package-alt" href="https://github.com/diamond-language/d6/releases/download/v1.0.0-rc6/d6-lang-1.0.0-rc6-1.fc44.aarch64.rpm">Or get the 64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/d6/releases/download/v1.0.0/d6-lang-1.0.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/d6/releases/download/v1.0.0/d6-lang-1.0.0-1.fc44.aarch64.rpm">Or get the 64-bit ARM package</a>
           </div>
         </div>
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/d6/releases/download/v1.0.0-rc6/d6-lang_1.0.0-rc6-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
-            <a class="package-alt" href="https://github.com/diamond-language/d6/releases/download/v1.0.0-rc6/d6-lang_1.0.0-rc6-1_arm64.deb">Or get the 64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/d6/releases/download/v1.0.0/d6-lang_1.0.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/d6/releases/download/v1.0.0/d6-lang_1.0.0-1_arm64.deb">Or get the 64-bit ARM package</a>
           </div>
         </div>
 
@@ -958,7 +958,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">  mariadb-connector-c-dev zlib-dev libucontext libucontext-dev</div>
                 <div class="line comment gap"># Download the source</div>
                 <div class="line">git clone https://github.com/diamond-language/d6.git</div>
-                <div class="line">cd diamond</div>
+                <div class="line">cd d6</div>
                 <div class="line comment gap"># Build d6</div>
                 <div class="line">make all facet</div>
                 <div class="line comment gap"># Put d6 and facet on PATH</div>
@@ -985,7 +985,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">  mariadb-connector-c</div>
                 <div class="line comment gap"># Download the source</div>
                 <div class="line">git clone https://github.com/diamond-language/d6.git</div>
-                <div class="line">cd diamond</div>
+                <div class="line">cd d6</div>
                 <div class="line comment gap"># Build d6 (FreeBSD's GNU Make is gmake, not make)</div>
                 <div class="line">gmake all facet CC=clang \</div>
                 <div class="line">  CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
@@ -1017,7 +1017,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">export PATH="$o/gnu-sed/libexec/gnubin:$o/bash/bin:$PATH"</div>
                 <div class="line comment gap"># Download and build d6</div>
                 <div class="line">git clone https://github.com/diamond-language/d6.git</div>
-                <div class="line">cd diamond</div>
+                <div class="line">cd d6</div>
                 <div class="line">make all facet CC=clang LDLIBS_CRYPT= \</div>
                 <div class="line">  CPPFLAGS_EXTRA="-I$o/openssl@3/include -I$o/sqlite/include \</div>
                 <div class="line">    -I$o/postgresql@16/include -I$o/mariadb-connector-c/include \</div>
