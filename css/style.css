@@ -763,6 +763,11 @@ section {
   white-space: nowrap;
 }
 
+.tab-caption a {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
 .platform-note {
   text-align: center;
   color: var(--text-faint);
@@ -772,6 +777,11 @@ section {
 }
 
 .platform-note a {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.section-head p a {
   color: var(--cyan);
   font-weight: 600;
 }
@@ -843,6 +853,11 @@ section {
 .terminal .line:not(.comment)::before {
   content: "$ ";
   color: var(--cyan);
+}
+
+/* A line continuing the command above it (after a trailing backslash) gets no prompt. */
+.terminal .line.cont::before {
+  content: "  ";
 }
 
 .terminal .line.gap {

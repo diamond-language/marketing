@@ -98,7 +98,7 @@
     <div class="container">
       <div class="hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> v1.0.0 · open source</span>
+          <span class="eyebrow"><span class="dot"></span> v1.0.1 · open source</span>
           <h1>Real <span class="grad">types</span>.<br>One <span class="grad">binary</span>.<br>Isolated heaps.</h1>
           <p class="lead">d6 is a typed, object-oriented language. The compiler checks the
             annotations you write, a register VM with an optional JIT runs the result, and
@@ -263,8 +263,8 @@ changeset = <span class="tok-const">Mjolnir</span>:<span class="tok-str">:Change
         </article>
         <article class="new-card">
           <h3>Install with mise</h3>
-          <p>Each release ships Linux tarballs that <a href="/docs/guide/getting-started.html#with-mise-or-unpacked-anywhere">mise
-            installs directly</a>, with no plugin and no compiler, or that unpack anywhere.</p>
+          <p>Each release ships Linux tarballs with OpenSSL built in, which <a href="/docs/guide/getting-started.html#with-mise">mise
+            installs directly</a> on any recent glibc distribution, or that unpack anywhere.</p>
         </article>
         <article class="new-card">
           <h3>VS Code extension</h3>
@@ -903,8 +903,9 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
       <div class="section-head">
         <span class="eyebrow"><span class="dot"></span> Install</span>
         <h2>Build it, run it, ship it</h2>
-        <p>Fedora 44 and Ubuntu 26.04 install from a package; other platforms build from
-          source. Bytecode is cached automatically between runs,
+        <p>Fedora 44 and 45 and Ubuntu 26.04 install from a package, mise installs d6 on other
+          glibc Linux distributions, and other platforms build from source
+          (<a href="/docs/guide/getting-started.html#1-install">how they compare</a>). Bytecode is cached automatically between runs,
           and <code>d6 build</code> produces a self-contained native binary when you're
           ready to ship. A C23 compiler with <code>#embed</code> support is required
           (GCC 15+ or Clang 19+) to build from source. On x86-64, the supported baseline is x86-64-v3
@@ -915,6 +916,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
         <div class="tabs-nav" role="tablist" aria-label="Supported platforms">
           <button class="tab-btn active" data-tab="fedora" role="tab" aria-selected="true">Fedora</button>
           <button class="tab-btn" data-tab="ubuntu" role="tab" aria-selected="false">Ubuntu 26.04</button>
+          <button class="tab-btn" data-tab="mise" role="tab" aria-selected="false">mise</button>
           <button class="tab-btn" data-tab="alpine" role="tab" aria-selected="false">Alpine</button>
           <button class="tab-btn" data-tab="freebsd" role="tab" aria-selected="false">FreeBSD</button>
           <button class="tab-btn" data-tab="macos" role="tab" aria-selected="false">macOS</button>
@@ -929,16 +931,47 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
 
         <div class="tab-panel active" data-panel="fedora">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/d6/releases/download/v1.0.0/d6-lang-1.0.0-1.fc44.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora<small>x86-64 (Intel/AMD)</small></span></a>
-            <a class="package-alt" href="https://github.com/diamond-language/d6/releases/download/v1.0.0/d6-lang-1.0.0-1.fc44.aarch64.rpm">Or get the 64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/d6/releases/download/v1.0.1/d6-lang-1.0.1-1.fc45.x86_64.rpm"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Fedora 45<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/d6/releases/download/v1.0.1/d6-lang-1.0.1-1.fc45.aarch64.rpm">Or get the 64-bit ARM package</a>
+            <span class="package-alt">Fedora 44:
+              <a href="https://github.com/diamond-language/d6/releases/download/v1.0.1/d6-lang-1.0.1-1.fc44.x86_64.rpm">x86-64</a> ·
+              <a href="https://github.com/diamond-language/d6/releases/download/v1.0.1/d6-lang-1.0.1-1.fc44.aarch64.rpm">64-bit ARM</a></span>
           </div>
         </div>
 
         <div class="tab-panel" data-panel="ubuntu">
           <div class="package-download">
-            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/d6/releases/download/v1.0.0/d6-lang_1.0.0-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
-            <a class="package-alt" href="https://github.com/diamond-language/d6/releases/download/v1.0.0/d6-lang_1.0.0-1_arm64.deb">Or get the 64-bit ARM package</a>
+            <a class="btn btn-primary btn-download" href="https://github.com/diamond-language/d6/releases/download/v1.0.1/d6-lang_1.0.1-1_amd64.deb"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="btn-download-label">Download for Ubuntu<small>x86-64 (Intel/AMD)</small></span></a>
+            <a class="package-alt" href="https://github.com/diamond-language/d6/releases/download/v1.0.1/d6-lang_1.0.1-1_arm64.deb">Or get the 64-bit ARM package</a>
           </div>
+        </div>
+
+        <div class="tab-panel" data-panel="mise">
+          <div class="install-row">
+            <div class="terminal-window">
+              <div class="titlebar">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <span class="filename">mise</span>
+                <button class="copy-btn" type="button" data-copy-target="term-mise">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 8.5V2.7A1.2 1.2 0 0 1 3.7 1.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+              <div class="terminal" id="term-mise">
+                <div class="line comment"># Prebuilt: nothing to compile, no root</div>
+                <div class="line">mise use -g github:diamond-language/d6</div>
+                <div class="line comment gap"># Or build each release from source with the asdf plugin</div>
+                <div class="line">mise plugins install d6 \</div>
+                <div class="line cont">  https://github.com/diamond-language/asdf-diamond.git</div>
+                <div class="line">mise use -g d6@latest</div>
+              </div>
+            </div>
+          </div>
+          <p class="tab-caption">The prebuilt tarball runs on Linux with glibc 2.38 or later, on x86-64-v3 or 64-bit
+            ARM, with the SQLite, libpq, MariaDB and zlib libraries installed. OpenSSL is built in.
+            mise offers a new release 24 hours after it's published. The plugin needs what a
+            source build needs, and has each release as soon as it's tagged.
+            <a href="/docs/guide/getting-started.html#with-mise">Exact requirements and trade-offs</a>.</p>
         </div>
 
         <div class="tab-panel" data-panel="alpine">
@@ -955,7 +988,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="terminal" id="term-alpine">
                 <div class="line comment"># Install system dependencies (musl -- also needs libucontext)</div>
                 <div class="line">apk add git make gcc musl-dev openssl-dev sqlite-dev libpq-dev \</div>
-                <div class="line">  mariadb-connector-c-dev zlib-dev libucontext libucontext-dev</div>
+                <div class="line cont">  mariadb-connector-c-dev zlib-dev libucontext libucontext-dev</div>
                 <div class="line comment gap"># Download the source</div>
                 <div class="line">git clone https://github.com/diamond-language/d6.git</div>
                 <div class="line">cd d6</div>
@@ -982,14 +1015,14 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="terminal" id="term-freebsd">
                 <div class="line comment"># Install system dependencies</div>
                 <div class="line">pkg install git gmake sqlite3 openssl postgresql16-client \</div>
-                <div class="line">  mariadb-connector-c</div>
+                <div class="line cont">  mariadb-connector-c</div>
                 <div class="line comment gap"># Download the source</div>
                 <div class="line">git clone https://github.com/diamond-language/d6.git</div>
                 <div class="line">cd d6</div>
                 <div class="line comment gap"># Build d6 (FreeBSD's GNU Make is gmake, not make)</div>
                 <div class="line">gmake all facet CC=clang \</div>
-                <div class="line">  CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
-                <div class="line">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
+                <div class="line cont">  CPPFLAGS_EXTRA='-I/usr/local/include -I/usr/local/include/mariadb' \</div>
+                <div class="line cont">  LDFLAGS_EXTRA='-L/usr/local/lib -L/usr/local/lib/mariadb'</div>
                 <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
               </div>
@@ -1011,7 +1044,7 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
               <div class="terminal" id="term-macos">
                 <div class="line comment"># Install Xcode command-line tools and Homebrew first; Clang 19+</div>
                 <div class="line">brew install coreutils gnu-sed bash openssl@3 sqlite \</div>
-                <div class="line">  postgresql@16 mariadb-connector-c</div>
+                <div class="line cont">  postgresql@16 mariadb-connector-c</div>
                 <div class="line">o=$(brew --prefix)/opt</div>
                 <div class="line">export PATH="$o/coreutils/libexec/gnubin:$PATH"</div>
                 <div class="line">export PATH="$o/gnu-sed/libexec/gnubin:$o/bash/bin:$PATH"</div>
@@ -1019,12 +1052,12 @@ repo.<span class="tok-fn">transaction</span>() <span class="tok-kw">do</span> |t
                 <div class="line">git clone https://github.com/diamond-language/d6.git</div>
                 <div class="line">cd d6</div>
                 <div class="line">make all facet CC=clang LDLIBS_CRYPT= \</div>
-                <div class="line">  CPPFLAGS_EXTRA="-I$o/openssl@3/include -I$o/sqlite/include \</div>
-                <div class="line">    -I$o/postgresql@16/include -I$o/mariadb-connector-c/include \</div>
-                <div class="line">    -I$o/mariadb-connector-c/include/mariadb" \</div>
-                <div class="line">  LDFLAGS_EXTRA="-L$o/openssl@3/lib -L$o/sqlite/lib \</div>
-                <div class="line">    -L$o/postgresql@16/lib -L$o/mariadb-connector-c/lib \</div>
-                <div class="line">    -L$o/mariadb-connector-c/lib/mariadb"</div>
+                <div class="line cont">  CPPFLAGS_EXTRA="-I$o/openssl@3/include -I$o/sqlite/include \</div>
+                <div class="line cont">    -I$o/postgresql@16/include -I$o/mariadb-connector-c/include \</div>
+                <div class="line cont">    -I$o/mariadb-connector-c/include/mariadb" \</div>
+                <div class="line cont">  LDFLAGS_EXTRA="-L$o/openssl@3/lib -L$o/sqlite/lib \</div>
+                <div class="line cont">    -L$o/postgresql@16/lib -L$o/mariadb-connector-c/lib \</div>
+                <div class="line cont">    -L$o/mariadb-connector-c/lib/mariadb"</div>
                 <div class="line comment gap"># Put d6 and facet on PATH</div>
                 <div class="line">export PATH="$PWD/build:$PATH"</div>
               </div>
