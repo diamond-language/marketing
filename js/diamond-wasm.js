@@ -129,6 +129,7 @@ function makeWasi(state) {
       return SUCCESS;
     },
     fd_fdstat_set_flags: unsupported,
+    fd_filestat_set_times: unsupported,          // File.touch: the filesystem is read-only
     fd_filestat_get(fd, out) {
       const file = open.get(fd);
       if (file === undefined) return EBADF;
